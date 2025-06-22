@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
+import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
 import { ClientProxy } from '@nestjs/microservices';
 import { CreateEventDto } from '../../../event-service/src/dto/create-event.dto';
 import { Observable } from 'rxjs';
@@ -13,7 +14,7 @@ export class EventsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Observable<Event | null> {
+  findOne(@Param('id', ParseMongoIdPipe) id: string): Observable<Event | null> {
     return this.client.send({ cmd: 'events.findOne' }, { id });
   }
 
