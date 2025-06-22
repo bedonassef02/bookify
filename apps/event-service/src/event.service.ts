@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Event, EventDocument } from './entities/event.entity';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class EventService {
@@ -22,7 +23,10 @@ export class EventService {
   async findOne(id: string): Promise<Event | null> {
     const event = await this.eventModel.findById(id).exec();
     if (!event) {
-      throw new NotFoundException(`Event with ID ${id} not found`);
+      throw new RpcException({
+        status: HttpStatus.NOT_FOUND,
+        message: `Event with ID ${id} not found`,
+      });
     }
     return event;
   }
@@ -33,7 +37,10 @@ export class EventService {
       .exec();
 
     if (!updatedEvent) {
-      throw new NotFoundException(`Event with ID ${id} not found`);
+      throw new RpcException({
+        status: HttpStatus.NOT_FOUND,
+        message: `Event with ID ${id} not found`,
+      });
     }
 
     return updatedEvent;
