@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class EventService {
-  getHello(): string {
-    return 'Hello World!';
+  findAll(): [] {
+    return [];
+  }
+
+  findOne(id: string): string {
+    return `Event #${id}`;
   }
 }
