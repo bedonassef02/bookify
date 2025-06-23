@@ -1,10 +1,8 @@
 import { Controller } from '@nestjs/common';
 import { EventService } from './event.service';
 import { MessagePattern } from '@nestjs/microservices';
-import { CreateEventDto } from '@app/shared/dto/create-event.dto';
+import { CreateEventDto, UpdateEventDto, PATTERNS } from '@app/shared';
 import { Event } from './entities/event.entity';
-import { UpdateEventDto } from '@app/shared/dto/update-event.dto';
-import { PATTERNS } from '@app/shared';
 
 @Controller()
 export class EventController {

@@ -1,8 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EventController } from './event.controller';
 import { EventService } from './event.service';
-import { CreateEventDto } from '@app/shared/dto/create-event.dto';
-import { UpdateEventDto } from '@app/shared/dto/update-event.dto';
+import { CreateEventDto, UpdateEventDto } from '@app/shared';
 
 describe('EventController', () => {
   let controller: EventController;

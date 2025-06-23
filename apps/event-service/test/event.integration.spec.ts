@@ -9,7 +9,7 @@ import { EventController } from '../src/event.controller';
 import { EventService } from '../src/event.service';
 import { EventRepository } from '../src/repositories/event.repository';
 import { Event, EventSchema } from '../src/entities/event.entity';
-import { CreateEventDto } from '@app/shared/dto/create-event.dto';
+import { CreateEventDto } from '@app/shared';
 
 describe('Event Service Integration Tests', () => {
   let module: TestingModule;
