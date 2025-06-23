@@ -23,6 +23,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
             queueOptions: {
               durable: false,
             },
+            socketOptions: {
+              connectionTimeout: 5000,
+              heartbeatIntervalInSeconds: 30,
+            },
           },
         }),
       },
