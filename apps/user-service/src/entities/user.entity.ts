@@ -22,9 +22,6 @@ export class User {
 
   @Prop({ default: 'attendee' })
   role: string;
-
-  @Prop({ default: true })
-  isActive: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

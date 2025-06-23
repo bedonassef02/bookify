@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserController } from './user.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CacheModule } from '@nestjs/cache-manager';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -8,6 +7,8 @@ import { User, UserSchema } from './entities/user.entity';
 import { UserRepository } from './repositories/user.repository';
 import { HashingService } from './hashing/hashing.service';
 import { BcryptService } from './hashing/bcrypt.service';
+import { AuthenticationService } from './authentication/authentication.service';
+import { AuthenticationController } from './authentication/authentication.controller';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { BcryptService } from './hashing/bcrypt.service';
       provide: HashingService,
       useClass: BcryptService,
     },
+    AuthenticationService,
   ],
-  controllers: [UserController],
+  controllers: [AuthenticationController],
 })
 export class AppModule {}

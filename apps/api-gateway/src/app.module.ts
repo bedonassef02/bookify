@@ -4,6 +4,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { CacheModule } from '@nestjs/cache-manager';
 import { ConfigModule } from '@nestjs/config';
 import { ExceptionFilter } from './common/filters/exception.filter';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ExceptionFilter } from './common/filters/exception.filter';
       ttl: 60000,
     }),
     EventsModule,
+    UsersModule,
   ],
   providers: [
     {
