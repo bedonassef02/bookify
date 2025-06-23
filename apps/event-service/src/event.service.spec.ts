@@ -2,9 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { EventService } from './event.service';
 import { EventRepository } from './repositories/event.repository';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { CreateEventDto, UpdateEventDto } from '@app/shared';
-import { RpcException } from '@nestjs/microservices';
-import { HttpStatus } from '@nestjs/common';
+import {
+  CreateEventDto,
+  RpcNotFoundException,
+  UpdateEventDto,
+} from '@app/shared';
 import { Cache } from 'cache-manager';
 
 describe('EventService', () => {
@@ -145,10 +147,9 @@ describe('EventService', () => {
       mockRepository.findById.mockResolvedValue(null);
 
       await expect(service.findOne('507f1f77bcf86cd799439011')).rejects.toThrow(
-        new RpcException({
-          status: HttpStatus.NOT_FOUND,
-          message: 'Event with ID 507f1f77bcf86cd799439011 not found',
-        }),
+        new RpcNotFoundException(
+          'Event with ID 507f1f77bcf86cd799439011 not found',
+        ),
       );
     });
   });
@@ -187,10 +188,9 @@ describe('EventService', () => {
       await expect(
         service.update('507f1f77bcf86cd799439011', { title: 'Updated' }),
       ).rejects.toThrow(
-        new RpcException({
-          status: HttpStatus.NOT_FOUND,
-          message: 'Event with ID 507f1f77bcf86cd799439011 not found',
-        }),
+        new RpcNotFoundException(
+          'Event with ID 507f1f77bcf86cd799439011 not found',
+        ),
       );
     });
   });

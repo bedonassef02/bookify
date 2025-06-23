@@ -1,9 +1,9 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserService } from '../user.service';
 import { HashingService } from '../hashing/hashing.service';
 import { UserDocument } from '../entities/user.entity';
-import { RpcException } from '@nestjs/microservices';
 import { SignUpDto } from '@app/shared';
+import { RpcConflictException } from '@app/shared';
 
 @Injectable()
 export class AuthenticationService {
@@ -18,10 +18,7 @@ export class AuthenticationService {
     );
 
     if (user) {
-      throw new RpcException({
-        status: HttpStatus.CONFLICT,
-        message: 'User already exists',
-      });
+      throw new RpcConflictException('User already exists');
     }
     signUpDto.password = await this.hashingService.hash(signUpDto.password);
 

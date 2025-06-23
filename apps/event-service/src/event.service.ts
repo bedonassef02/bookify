@@ -1,6 +1,9 @@
-import { HttpStatus, Injectable, Inject } from '@nestjs/common';
-import { CreateEventDto, UpdateEventDto } from '@app/shared';
-import { RpcException } from '@nestjs/microservices';
+import { Injectable, Inject } from '@nestjs/common';
+import {
+  CreateEventDto,
+  RpcNotFoundException,
+  UpdateEventDto,
+} from '@app/shared';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { EventRepository } from './repositories/event.repository';
@@ -34,10 +37,7 @@ export class EventService {
 
     const event = await this.eventRepository.findById(id);
     if (!event) {
-      throw new RpcException({
-        status: HttpStatus.NOT_FOUND,
-        message: `Event with ID ${id} not found`,
-      });
+      throw new RpcNotFoundException(`Event with ID ${id} not found`);
     }
 
     await this.cacheManager.set(`event_${id}`, event, 30000);
@@ -48,10 +48,7 @@ export class EventService {
     const updatedEvent = await this.eventRepository.update(id, eventDto);
 
     if (!updatedEvent) {
-      throw new RpcException({
-        status: HttpStatus.NOT_FOUND,
-        message: `Event with ID ${id} not found`,
-      });
+      throw new RpcNotFoundException(`Event with ID ${id} not found`);
     }
 
     await this.cacheManager.set(`event_${id}`, updatedEvent, 30000);

@@ -1,8 +1,8 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserRepository } from './repositories/user.repository';
-import { RpcException } from '@nestjs/microservices';
 import { UserDocument } from './entities/user.entity';
 import { CreateUserDto } from '@app/shared';
+import { RpcNotFoundException } from '@app/shared';
 
 @Injectable()
 export class UserService {
@@ -14,10 +14,7 @@ export class UserService {
       return user;
     }
 
-    throw new RpcException({
-      status: HttpStatus.NOT_FOUND,
-      message: 'User not found',
-    });
+    throw new RpcNotFoundException('User not found');
   }
 
   findByEmail(email: string): Promise<UserDocument | null> {
