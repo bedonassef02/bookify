@@ -4,10 +4,12 @@ import { EventService } from './event.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EventSchema } from './entities/event.entity';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    CacheModule.register(),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
