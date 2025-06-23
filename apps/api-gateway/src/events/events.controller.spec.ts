@@ -5,6 +5,7 @@ import { CreateEventDto } from '../../../event-service/src/dto/create-event.dto'
 import { UpdateEventDto } from '../../../event-service/src/dto/update-event.dto';
 import { of } from 'rxjs';
 import { CacheModule } from '@nestjs/cache-manager';
+import { PATTERNS } from '@app/shared';
 
 describe('EventsController (API Gateway)', () => {
   let controller: EventsController;
@@ -55,7 +56,7 @@ describe('EventsController (API Gateway)', () => {
       const result = controller.findAll();
 
       expect(clientProxy.send).toHaveBeenCalledWith(
-        { cmd: 'events.findAll' },
+        PATTERNS.EVENTS.FIND_ALL,
         {},
       );
       result.subscribe((data) => {
@@ -71,10 +72,9 @@ describe('EventsController (API Gateway)', () => {
 
       const result = controller.findOne(id);
 
-      expect(clientProxy.send).toHaveBeenCalledWith(
-        { cmd: 'events.findOne' },
-        { id },
-      );
+      expect(clientProxy.send).toHaveBeenCalledWith(PATTERNS.EVENTS.FIND_ONE, {
+        id,
+      });
       result.subscribe((data) => {
         expect(data).toEqual(mockEvent);
       });
@@ -97,7 +97,7 @@ describe('EventsController (API Gateway)', () => {
       const result = controller.create(createEventDto);
 
       expect(clientProxy.send).toHaveBeenCalledWith(
-        { cmd: 'events.create' },
+        PATTERNS.EVENTS.CREATE,
         createEventDto,
       );
       result.subscribe((data) => {
@@ -118,10 +118,10 @@ describe('EventsController (API Gateway)', () => {
 
       const result = controller.update(id, updateEventDto);
 
-      expect(clientProxy.send).toHaveBeenCalledWith(
-        { cmd: 'events.update' },
-        { id, eventDto: updateEventDto },
-      );
+      expect(clientProxy.send).toHaveBeenCalledWith(PATTERNS.EVENTS.UPDATE, {
+        id,
+        eventDto: updateEventDto,
+      });
       result.subscribe((data) => {
         expect(data).toEqual(mockEvent);
       });
@@ -135,10 +135,9 @@ describe('EventsController (API Gateway)', () => {
 
       const result = controller.remove(id);
 
-      expect(clientProxy.send).toHaveBeenCalledWith(
-        { cmd: 'events.remove' },
-        { id },
-      );
+      expect(clientProxy.send).toHaveBeenCalledWith(PATTERNS.EVENTS.REMOVE, {
+        id,
+      });
       result.subscribe((data) => {
         expect(data).toBeUndefined();
       });

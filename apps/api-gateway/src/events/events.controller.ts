@@ -26,6 +26,7 @@ import {
   ApiOkResponse,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
+import { PATTERNS } from '@app/shared';
 
 @ApiTags('events')
 @Controller('events')
@@ -44,7 +45,7 @@ export class EventsController {
   })
   @CacheKey('events')
   findAll() {
-    return this.client.send({ cmd: 'events.findAll' }, {});
+    return this.client.send(PATTERNS.EVENTS.FIND_ALL, {});
   }
 
   @Get(':id')
@@ -67,7 +68,7 @@ export class EventsController {
     description: 'Invalid ID format',
   })
   findOne(@Param('id', ParseMongoIdPipe) id: string): Observable<Event | null> {
-    return this.client.send({ cmd: 'events.findOne' }, { id });
+    return this.client.send(PATTERNS.EVENTS.FIND_ONE, { id });
   }
 
   @Post()
@@ -83,7 +84,7 @@ export class EventsController {
   })
   @HttpCode(HttpStatus.CREATED)
   create(@Body() eventDto: CreateEventDto) {
-    return this.client.send({ cmd: 'events.create' }, eventDto);
+    return this.client.send(PATTERNS.EVENTS.CREATE, eventDto);
   }
 
   @Patch(':id')
@@ -109,7 +110,7 @@ export class EventsController {
     @Param('id', ParseMongoIdPipe) id: string,
     @Body() eventDto: UpdateEventDto,
   ) {
-    return this.client.send({ cmd: 'events.update' }, { id, eventDto });
+    return this.client.send(PATTERNS.EVENTS.UPDATE, { id, eventDto });
   }
 
   @Delete(':id')
@@ -133,6 +134,6 @@ export class EventsController {
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', ParseMongoIdPipe) id: string) {
-    return this.client.send({ cmd: 'events.remove' }, { id });
+    return this.client.send(PATTERNS.EVENTS.REMOVE, { id });
   }
 }

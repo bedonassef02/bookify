@@ -4,32 +4,33 @@ import { MessagePattern } from '@nestjs/microservices';
 import { CreateEventDto } from './dto/create-event.dto';
 import { Event } from './entities/event.entity';
 import { UpdateEventDto } from './dto/update-event.dto';
+import { PATTERNS } from '@app/shared';
 
 @Controller()
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 
-  @MessagePattern({ cmd: 'events.findAll' })
+  @MessagePattern(PATTERNS.EVENTS.FIND_ALL)
   async findAll(): Promise<Event[]> {
     return this.eventService.findAll();
   }
 
-  @MessagePattern({ cmd: 'events.findOne' })
+  @MessagePattern(PATTERNS.EVENTS.FIND_ONE)
   async findOne(data: { id: string }): Promise<Event | null> {
     return this.eventService.findOne(data.id);
   }
 
-  @MessagePattern({ cmd: 'events.create' })
+  @MessagePattern(PATTERNS.EVENTS.CREATE)
   async create(eventDto: CreateEventDto): Promise<Event> {
     return this.eventService.create(eventDto);
   }
 
-  @MessagePattern({ cmd: 'events.update' })
+  @MessagePattern(PATTERNS.EVENTS.UPDATE)
   async update(data: { id: string; eventDto: UpdateEventDto }): Promise<Event> {
     return this.eventService.update(data.id, data.eventDto);
   }
 
-  @MessagePattern({ cmd: 'events.remove' })
+  @MessagePattern(PATTERNS.EVENTS.REMOVE)
   async remove(data: { id: string }): Promise<Event | null> {
     return this.eventService.remove(data.id);
   }
