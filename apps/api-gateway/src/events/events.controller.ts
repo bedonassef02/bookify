@@ -13,8 +13,6 @@ import {
 } from '@nestjs/common';
 import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
 import { ClientProxy } from '@nestjs/microservices';
-import { CreateEventDto } from '../../../event-service/src/dto/create-event.dto';
-import { UpdateEventDto } from '../../../event-service/src/dto/update-event.dto';
 import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
 import {
   ApiTags,
@@ -26,7 +24,7 @@ import {
   ApiOkResponse,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
-import { PATTERNS } from '@app/shared';
+import { CreateEventDto, PATTERNS, UpdateEventDto } from '@app/shared';
 
 @ApiTags('events')
 @Controller('events')

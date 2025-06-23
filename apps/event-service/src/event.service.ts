@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable, Inject } from '@nestjs/common';
-import { CreateEventDto } from './dto/create-event.dto';
-import { UpdateEventDto } from './dto/update-event.dto';
+import { CreateEventDto } from '@app/shared/dto/create-event.dto';
+import { UpdateEventDto } from '@app/shared/dto/update-event.dto';
 import { RpcException } from '@nestjs/microservices';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';

@@ -1,11 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EventsController } from './events.controller';
 import { ClientProxy } from '@nestjs/microservices';
-import { CreateEventDto } from '../../../event-service/src/dto/create-event.dto';
-import { UpdateEventDto } from '../../../event-service/src/dto/update-event.dto';
 import { of } from 'rxjs';
 import { CacheModule } from '@nestjs/cache-manager';
-import { PATTERNS } from '@app/shared';
+import { CreateEventDto, PATTERNS, UpdateEventDto } from '@app/shared';
 
 describe('EventsController (API Gateway)', () => {
   let controller: EventsController;
