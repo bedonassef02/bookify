@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { EventsModule } from './events/events.module';
-import { APP_INTERCEPTOR } from '@nestjs/core';
-import { RpcExceptionInterceptor } from './common/interceptors/rpc-exception.interceptor';
+import { APP_FILTER } from '@nestjs/core';
 import { CacheModule } from '@nestjs/cache-manager';
 import { ConfigModule } from '@nestjs/config';
+import { ExceptionFilter } from './common/filters/exception.filter';
 
 @Module({
   imports: [
@@ -16,8 +16,8 @@ import { ConfigModule } from '@nestjs/config';
   ],
   providers: [
     {
-      provide: APP_INTERCEPTOR,
-      useClass: RpcExceptionInterceptor,
+      provide: APP_FILTER,
+      useClass: ExceptionFilter,
     },
   ],
 })
