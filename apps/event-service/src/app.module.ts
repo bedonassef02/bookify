@@ -3,8 +3,9 @@ import { EventController } from './event.controller';
 import { EventService } from './event.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { EventSchema } from './entities/event.entity';
+import { Event, EventSchema } from './entities/event.entity';
 import { CacheModule } from '@nestjs/cache-manager';
+import { EventRepository } from './repositories/event.repository';
 
 @Module({
   imports: [
@@ -20,6 +21,6 @@ import { CacheModule } from '@nestjs/cache-manager';
     MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }]),
   ],
   controllers: [EventController],
-  providers: [EventService],
+  providers: [EventService, EventRepository],
 })
 export class AppModule {}

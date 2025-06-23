@@ -1,23 +1,21 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Event, EventDocument } from './entities/event.entity';
+import { HttpStatus, Injectable, Inject } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { RpcException } from '@nestjs/microservices';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Inject } from '@nestjs/common';
 import { Cache } from 'cache-manager';
+import { EventRepository } from './repositories/event.repository';
+import { Event } from './entities/event.entity';
 
 @Injectable()
 export class EventService {
   constructor(
-    @InjectModel(Event.name) private eventModel: Model<EventDocument>,
+    private readonly eventRepository: EventRepository,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async create(eventDto: CreateEventDto): Promise<Event> {
-    const createdEvent = await this.eventModel.create(eventDto);
+    const createdEvent = await this.eventRepository.create(eventDto);
     await this.cacheManager.del('events');
     return createdEvent;
   }
@@ -26,7 +24,7 @@ export class EventService {
     const cached = await this.cacheManager.get<Event[]>('events');
     if (cached) return cached;
 
-    const events = await this.eventModel.find().exec();
+    const events = await this.eventRepository.findAll();
     await this.cacheManager.set('events', events, 30000);
     return events;
   }
@@ -35,7 +33,7 @@ export class EventService {
     const cached = await this.cacheManager.get<Event>(`event_${id}`);
     if (cached) return cached;
 
-    const event = await this.eventModel.findById(id).exec();
+    const event = await this.eventRepository.findById(id);
     if (!event) {
       throw new RpcException({
         status: HttpStatus.NOT_FOUND,
@@ -48,9 +46,7 @@ export class EventService {
   }
 
   async update(id: string, eventDto: UpdateEventDto): Promise<Event> {
-    const updatedEvent = await this.eventModel
-      .findByIdAndUpdate(id, eventDto, { new: true })
-      .exec();
+    const updatedEvent = await this.eventRepository.update(id, eventDto);
 
     if (!updatedEvent) {
       throw new RpcException({
@@ -66,7 +62,7 @@ export class EventService {
   }
 
   async remove(id: string): Promise<Event | null> {
-    const deletedEvent = await this.eventModel.findByIdAndDelete(id).exec();
+    const deletedEvent = await this.eventRepository.delete(id);
     if (deletedEvent) {
       await this.cacheManager.del(`event_${id}`);
       await this.cacheManager.del('events');
