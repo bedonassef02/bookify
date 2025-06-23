@@ -2,9 +2,16 @@ import { Module } from '@nestjs/common';
 import { EventsModule } from './events/events.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { RpcExceptionInterceptor } from './common/interceptors/rpc-exception.interceptor';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
-  imports: [EventsModule],
+  imports: [
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 60000,
+    }),
+    EventsModule,
+  ],
   providers: [
     {
       provide: APP_INTERCEPTOR,

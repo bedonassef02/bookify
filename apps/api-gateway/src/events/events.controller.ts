@@ -7,18 +7,22 @@ import {
   Param,
   Post,
   Patch,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
 import { ClientProxy } from '@nestjs/microservices';
 import { CreateEventDto } from '../../../event-service/src/dto/create-event.dto';
 import { Observable } from 'rxjs';
 import { UpdateEventDto } from '../../../event-service/src/dto/update-event.dto';
+import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
 
 @Controller('events')
+@UseInterceptors(CacheInterceptor)
 export class EventsController {
   constructor(@Inject('EVENT_SERVICE') private client: ClientProxy) {}
 
   @Get()
+  @CacheKey('events')
   findAll() {
     return this.client.send({ cmd: 'events.findAll' }, {});
   }
