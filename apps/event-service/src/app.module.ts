@@ -9,13 +9,16 @@ import { EventRepository } from './repositories/event.repository';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      expandVariables: true,
+    }),
     CacheModule.register(),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         uri: configService.get<string>('MONGODB_URI'),
+        dbName: 'eventdb',
       }),
     }),
     MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }]),
