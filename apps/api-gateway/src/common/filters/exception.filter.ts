@@ -3,31 +3,18 @@ import {
   Catch,
   ExceptionFilter as NestExceptionFilter,
   HttpException,
-  HttpStatus,
 } from '@nestjs/common';
 import { Response } from 'express';
 
 @Catch()
-export class ExceptionFilter<T extends Error> implements NestExceptionFilter {
-  catch(exception: T, host: ArgumentsHost) {
-    const ctx = host.switchToHttp();
-    const response = ctx.getResponse<Response>();
-
-    let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-    let message = 'Internal Server Error';
+export class ExceptionFilter implements NestExceptionFilter {
+  catch(exception: any, host: ArgumentsHost) {
+    const response = host.switchToHttp().getResponse<Response>();
 
     if (exception instanceof HttpException) {
-      statusCode = exception.getStatus();
-      message = exception.message;
+      response.status(exception.getStatus()).json(exception.getResponse());
     } else {
-      if ('status' in exception) statusCode = exception.status as number;
-
-      if ('message' in exception) message = exception.message;
+      response.status(exception.statusCode).json(exception);
     }
-
-    response.status(statusCode).json({
-      statusCode,
-      message,
-    });
   }
 }
