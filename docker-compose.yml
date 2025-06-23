@@ -29,6 +29,17 @@ services:
       - rabbitmq
       - mongodb
 
+  user-service:
+    build:
+      context: .
+      dockerfile: apps/user-service/Dockerfile
+    environment:
+      RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672
+      MONGODB_URI: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@mongodb:27017/userdb?authSource=admin
+    depends_on:
+      - rabbitmq
+      - mongodb
+
   api-gateway:
     build:
       context: .
@@ -40,4 +51,5 @@ services:
       RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672
     depends_on:
       - event-service
+      - user-service
       - rabbitmq
