@@ -1,9 +1,7 @@
 import { Model, Document } from 'mongoose';
-import { IBaseRepository } from '../interfaces';
+import { IRepository } from '../interfaces';
 
-export abstract class BaseRepository<T extends Document>
-  implements IBaseRepository<T>
-{
+export abstract class Repository<T extends Document> implements IRepository<T> {
   constructor(protected readonly model: Model<T>) {}
 
   async create(createDto: any): Promise<T> {

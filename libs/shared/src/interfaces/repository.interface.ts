@@ -1,4 +1,4 @@
-export interface IBaseRepository<T> {
+export interface IRepository<T> {
   create(createDto: any): Promise<T>;
   findAll(): Promise<T[]>;
   findById(id: string): Promise<T | null>;
