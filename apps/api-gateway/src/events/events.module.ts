@@ -1,36 +1,10 @@
 import { Module } from '@nestjs/common';
 import { EventsController } from './events.controller';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ClientModule } from '../common/modules/client.module';
 
 @Module({
   imports: [
-    ClientsModule.registerAsync([
-      {
-        name: 'EVENT_SERVICE',
-        imports: [ConfigModule],
-        inject: [ConfigService],
-        useFactory: (configService: ConfigService) => ({
-          transport: Transport.RMQ,
-          options: {
-            urls: [
-              configService.get<string>(
-                'RABBITMQ_URL',
-                'amqp://localhost:5672',
-              ),
-            ],
-            queue: 'events_queue',
-            queueOptions: {
-              durable: false,
-            },
-            socketOptions: {
-              connectionTimeout: 5000,
-              heartbeatIntervalInSeconds: 30,
-            },
-          },
-        }),
-      },
-    ]),
+    ClientModule.register({ name: 'EVENT_SERVICE', queue: 'events_queue' }),
   ],
   controllers: [EventsController],
 })
