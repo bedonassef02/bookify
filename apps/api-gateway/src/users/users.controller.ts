@@ -1,6 +1,6 @@
 import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { AuthResponse, PATTERNS, SignInDto, SignUpDto } from '@app/shared';
+import { AuthResponse, Patterns, SignInDto, SignUpDto } from '@app/shared';
 import { Observable } from 'rxjs';
 import { Public } from './auth/decorators/public.decorator';
 
@@ -11,12 +11,12 @@ export class UsersController {
   @Public()
   @Post('sign-up')
   signUp(@Body() signUpDto: SignUpDto): Observable<AuthResponse> {
-    return this.client.send(PATTERNS.USERS.SIGN_UP, signUpDto);
+    return this.client.send(Patterns.USERS.SIGN_UP, signUpDto);
   }
 
   @Public()
   @Post('sign-in')
   signIn(@Body() signInDto: SignInDto): Observable<AuthResponse> {
-    return this.client.send(PATTERNS.USERS.SIGN_IN, signInDto);
+    return this.client.send(Patterns.USERS.SIGN_IN, signInDto);
   }
 }

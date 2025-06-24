@@ -1,4 +1,4 @@
-export const PATTERNS = {
+export const Patterns = {
   EVENTS: {
     FIND_ALL: 'events.findAll',
     FIND_ONE: 'events.findOne',

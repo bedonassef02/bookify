@@ -9,7 +9,7 @@ import { HashingService } from './hashing/hashing.service';
 import { BcryptService } from './hashing/bcrypt.service';
 import { AuthenticationService } from './authentication/authentication.service';
 import { AuthenticationController } from './authentication/authentication.controller';
-import { DatabaseModule } from '@app/shared';
+import { DatabaseModule, Jwt } from '@app/shared';
 import { JwtModule } from '@nestjs/jwt';
 import { TokenService } from './services/token.service';
 
@@ -22,7 +22,7 @@ import { TokenService } from './services/token.service';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET', 'secret'),
+        secret: configService.get<string>(Jwt.SECRET, 'secret'),
       }),
     }),
     CacheModule.register(),

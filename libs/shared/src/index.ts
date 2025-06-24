@@ -2,7 +2,7 @@ export * from './shared.module';
 export * from './interceptors';
 export * from './interfaces';
 export * from './repositories';
-export * from './constants';
+export * from './enums';
 export * from './dto';
 export * from './exceptions';
 export * from './modules';

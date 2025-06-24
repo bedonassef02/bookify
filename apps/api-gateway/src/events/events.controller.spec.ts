@@ -3,7 +3,7 @@ import { EventsController } from './events.controller';
 import { ClientProxy } from '@nestjs/microservices';
 import { of } from 'rxjs';
 import { CacheModule } from '@nestjs/cache-manager';
-import { CreateEventDto, PATTERNS, UpdateEventDto } from '@app/shared';
+import { CreateEventDto, Patterns, UpdateEventDto } from '@app/shared';
 
 describe('EventsController (API Gateway)', () => {
   let controller: EventsController;
@@ -54,7 +54,7 @@ describe('EventsController (API Gateway)', () => {
       const result = controller.findAll();
 
       expect(clientProxy.send).toHaveBeenCalledWith(
-        PATTERNS.EVENTS.FIND_ALL,
+        Patterns.EVENTS.FIND_ALL,
         {},
       );
       result.subscribe((data) => {
@@ -70,7 +70,7 @@ describe('EventsController (API Gateway)', () => {
 
       const result = controller.findOne(id);
 
-      expect(clientProxy.send).toHaveBeenCalledWith(PATTERNS.EVENTS.FIND_ONE, {
+      expect(clientProxy.send).toHaveBeenCalledWith(Patterns.EVENTS.FIND_ONE, {
         id,
       });
       result.subscribe((data) => {
@@ -95,7 +95,7 @@ describe('EventsController (API Gateway)', () => {
       const result = controller.create(createEventDto);
 
       expect(clientProxy.send).toHaveBeenCalledWith(
-        PATTERNS.EVENTS.CREATE,
+        Patterns.EVENTS.CREATE,
         createEventDto,
       );
       result.subscribe((data) => {
@@ -116,7 +116,7 @@ describe('EventsController (API Gateway)', () => {
 
       const result = controller.update(id, updateEventDto);
 
-      expect(clientProxy.send).toHaveBeenCalledWith(PATTERNS.EVENTS.UPDATE, {
+      expect(clientProxy.send).toHaveBeenCalledWith(Patterns.EVENTS.UPDATE, {
         id,
         eventDto: updateEventDto,
       });
@@ -133,7 +133,7 @@ describe('EventsController (API Gateway)', () => {
 
       const result = controller.remove(id);
 
-      expect(clientProxy.send).toHaveBeenCalledWith(PATTERNS.EVENTS.REMOVE, {
+      expect(clientProxy.send).toHaveBeenCalledWith(Patterns.EVENTS.REMOVE, {
         id,
       });
       result.subscribe((data) => {
