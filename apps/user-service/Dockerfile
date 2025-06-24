@@ -4,15 +4,16 @@ WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
+
+RUN npm ci
+
+# Copy configuration files
 COPY tsconfig*.json ./
 COPY nest-cli.json ./
 
 # Copy source code
 COPY libs ./libs
-COPY apps/event-service ./apps/user-service
-
-# Install dependencies
-RUN npm ci
+COPY apps/user-service ./apps/user-service
 
 # Build the application
 RUN npm run build user-service

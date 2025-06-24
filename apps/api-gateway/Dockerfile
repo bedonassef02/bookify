@@ -4,15 +4,16 @@ WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
+
+RUN npm ci
+
+# Copy configuration files
 COPY tsconfig*.json ./
 COPY nest-cli.json ./
 
 # Copy source code
 COPY libs ./libs
 COPY apps/api-gateway ./apps/api-gateway
-
-# Install dependencies
-RUN npm ci
 
 # Build the application
 RUN npm run build api-gateway
