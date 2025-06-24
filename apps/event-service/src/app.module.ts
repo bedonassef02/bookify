@@ -6,7 +6,8 @@ import { ConfigModule } from '@nestjs/config';
 import { Event, EventSchema } from './entities/event.entity';
 import { CacheModule } from '@nestjs/cache-manager';
 import { EventRepository } from './repositories/event.repository';
-import { DatabaseModule } from '@app/shared';
+import { DatabaseModule, LoggingInterceptor } from '@app/shared';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -18,6 +19,13 @@ import { DatabaseModule } from '@app/shared';
     MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }]),
   ],
   controllers: [EventController],
-  providers: [EventService, EventRepository],
+  providers: [
+    EventService,
+    EventRepository,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
+  ],
 })
 export class AppModule {}

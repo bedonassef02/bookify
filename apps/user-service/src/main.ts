@@ -1,21 +1,8 @@
-import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Transport, MicroserviceOptions } from '@nestjs/microservices';
+import { RmqMicroserviceBootstrap } from '@app/shared/bootstrap';
 
 async function bootstrap() {
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    AppModule,
-    {
-      transport: Transport.RMQ,
-      options: {
-        urls: [process.env.RABBITMQ_URL ?? 'amqp://localhost:5672'],
-        queue: 'users_queue',
-        queueOptions: {
-          durable: false,
-        },
-      },
-    },
-  );
+  const app = await RmqMicroserviceBootstrap(AppModule, 'users_queue');
 
   await app.listen();
 }
