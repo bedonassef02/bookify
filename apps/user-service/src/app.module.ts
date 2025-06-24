@@ -11,6 +11,7 @@ import { AuthenticationService } from './authentication/authentication.service';
 import { AuthenticationController } from './authentication/authentication.controller';
 import { DatabaseModule } from '@app/shared';
 import { JwtModule } from '@nestjs/jwt';
+import { TokenService } from './services/token.service';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { JwtModule } from '@nestjs/jwt';
       useClass: BcryptService,
     },
     AuthenticationService,
+    TokenService,
   ],
   controllers: [AuthenticationController],
 })
