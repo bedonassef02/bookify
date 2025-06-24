@@ -9,8 +9,7 @@ import { HashingService } from './hashing/hashing.service';
 import { BcryptService } from './hashing/bcrypt.service';
 import { AuthenticationService } from './authentication/authentication.service';
 import { AuthenticationController } from './authentication/authentication.controller';
-import { DatabaseModule, Jwt } from '@app/shared';
-import { JwtModule } from '@nestjs/jwt';
+import { DatabaseModule, JwtModule } from '@app/shared';
 import { TokenService } from './services/token.service';
 
 @Module({
@@ -18,13 +17,7 @@ import { TokenService } from './services/token.service';
     ConfigModule.forRoot({
       expandVariables: true,
     }),
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>(Jwt.SECRET, 'secret'),
-      }),
-    }),
+    JwtModule,
     CacheModule.register(),
     DatabaseModule.register({ dbName: 'userdb' }),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
