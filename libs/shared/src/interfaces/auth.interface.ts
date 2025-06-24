@@ -1,4 +1,4 @@
-import { UserDocument } from '../../../../apps/user-service/src/entities/user.entity';
+import { Document } from 'mongoose';
 
 export interface AuthTokens {
   accessToken: string;
@@ -6,6 +6,6 @@ export interface AuthTokens {
 }
 
 export interface AuthResponse {
-  user: Partial<UserDocument>;
+  user: Partial<Document>;
   tokens: AuthTokens;
 }
