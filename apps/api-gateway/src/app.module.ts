@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
 import { EventsModule } from './events/events.module';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { CacheModule } from '@nestjs/cache-manager';
 import { ConfigModule } from '@nestjs/config';
 import { ExceptionFilter } from './common/filters/exception.filter';
 import { UsersModule } from './users/users.module';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
+import { AuthModule } from './users/auth/auth.module';
+import { JwtAuthGuard } from './users/auth/guards/auth.guard';
+import { RolesGuard } from './users/auth/guards/roles.guard';
 
 @Module({
   imports: [
@@ -17,6 +20,7 @@ import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
     }),
     EventsModule,
     UsersModule,
+    AuthModule,
   ],
   providers: [
     {
@@ -30,6 +34,14 @@ import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
     {
       provide: APP_INTERCEPTOR,
       useClass: TimeoutInterceptor,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })
