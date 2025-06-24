@@ -8,5 +8,6 @@ export const PATTERNS = {
   },
   USERS: {
     SIGN_UP: 'users.signUp',
+    SIGN_IN: 'users.signIn',
   },
 };
