@@ -5,3 +5,4 @@ export * from './repositories';
 export * from './constants';
 export * from './dto';
 export * from './exceptions';
+export * from './modules';
