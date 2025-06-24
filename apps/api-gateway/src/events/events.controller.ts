@@ -25,6 +25,7 @@ import {
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { CreateEventDto, Patterns, UpdateEventDto } from '@app/shared';
+import { Public } from '../users/auth/decorators/public.decorator';
 
 @ApiTags('events')
 @Controller('events')
@@ -32,6 +33,7 @@ import { CreateEventDto, Patterns, UpdateEventDto } from '@app/shared';
 export class EventsController {
   constructor(@Inject('EVENT_SERVICE') private client: ClientProxy) {}
 
+  @Public()
   @Get()
   @ApiOperation({
     summary: 'Get all events',
@@ -46,6 +48,7 @@ export class EventsController {
     return this.client.send(Patterns.EVENTS.FIND_ALL, {});
   }
 
+  @Public()
   @Get(':id')
   @ApiOperation({
     summary: 'Get event by ID',
