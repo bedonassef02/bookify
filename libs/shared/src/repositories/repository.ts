@@ -1,5 +1,6 @@
 import { Model, Document } from 'mongoose';
 import { IRepository } from '../interfaces';
+import { QueryDto } from '@app/shared/dto/query.dto';
 
 export abstract class Repository<T extends Document> implements IRepository<T> {
   constructor(protected readonly model: Model<T>) {}
@@ -9,8 +10,14 @@ export abstract class Repository<T extends Document> implements IRepository<T> {
     return created.save();
   }
 
-  async findAll(): Promise<T[]> {
-    return this.model.find().exec();
+  async findAll(query: QueryDto): Promise<T[]> {
+    return this.model
+      .find() // @todo: add filter
+      .limit(query.limit)
+      .skip(query.skip)
+      .select(query.select)
+      .sort(query.order)
+      .exec();
   }
 
   async findById(id: string): Promise<T | null> {
