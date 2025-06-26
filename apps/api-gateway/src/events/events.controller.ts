@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   HttpStatus,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
 import { ClientProxy } from '@nestjs/microservices';
@@ -26,6 +27,7 @@ import {
 import { Observable } from 'rxjs';
 import { CreateEventDto, Patterns, UpdateEventDto } from '@app/shared';
 import { Public } from '../users/auth/decorators/public.decorator';
+import { QueryDto } from '@app/shared';
 
 @ApiTags('events')
 @Controller('events')
@@ -44,8 +46,8 @@ export class EventsController {
     description: 'List of events retrieved successfully',
   })
   @CacheKey('events')
-  findAll() {
-    return this.client.send(Patterns.EVENTS.FIND_ALL, {});
+  findAll(@Query() query: QueryDto): Observable<Event[]> {
+    return this.client.send(Patterns.EVENTS.FIND_ALL, query);
   }
 
   @Public()

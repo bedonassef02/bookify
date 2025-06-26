@@ -8,6 +8,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { EventRepository } from './repositories/event.repository';
 import { Event } from './entities/event.entity';
+import { QueryDto } from '@app/shared';
 
 @Injectable()
 export class EventService {
@@ -22,11 +23,11 @@ export class EventService {
     return createdEvent;
   }
 
-  async findAll(): Promise<Event[]> {
-    const cached = await this.cacheManager.get<Event[]>('events');
+  async findAll(query: QueryDto): Promise<Event[]> {
+    const cached = await this.cacheManager.get<Event[]>('events'); // @todo: add query params
     if (cached) return cached;
 
-    const events = await this.eventRepository.findAll();
+    const events = await this.eventRepository.findAll(query);
     await this.cacheManager.set('events', events, 30000);
     return events;
   }

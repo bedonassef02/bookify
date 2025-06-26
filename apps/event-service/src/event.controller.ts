@@ -3,14 +3,15 @@ import { EventService } from './event.service';
 import { MessagePattern } from '@nestjs/microservices';
 import { CreateEventDto, UpdateEventDto, Patterns } from '@app/shared';
 import { Event } from './entities/event.entity';
+import { QueryDto } from '@app/shared';
 
 @Controller()
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 
   @MessagePattern(Patterns.EVENTS.FIND_ALL)
-  async findAll(): Promise<Event[]> {
-    return this.eventService.findAll();
+  async findAll(query: QueryDto): Promise<Event[]> {
+    return this.eventService.findAll(new QueryDto(query));
   }
 
   @MessagePattern(Patterns.EVENTS.FIND_ONE)
