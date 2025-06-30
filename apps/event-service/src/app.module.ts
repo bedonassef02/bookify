@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
-import { EventController } from './event.controller';
-import { EventService } from './event.service';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { CacheModule } from '@nestjs/cache-manager';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
-import { Event, EventSchema } from './entities/event.entity';
-import { CacheModule } from '@nestjs/cache-manager';
-import { EventRepository } from './repositories/event.repository';
 import { DatabaseModule, LoggingInterceptor } from '@app/shared';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { EventController } from './event.controller';
+import { EventService } from './event.service';
+import { EventRepository } from './repositories/event.repository';
+import { Event, EventSchema } from './entities/event.entity';
+import { Booking, BookingSchema } from './entities/booking.entity';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     CacheModule.register(),
     DatabaseModule.register({ dbName: 'eventdb' }),
     MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }]),
+    MongooseModule.forFeature([{ name: Booking.name, schema: BookingSchema }]),
   ],
   controllers: [EventController],
   providers: [
