@@ -6,6 +6,7 @@ import {
   Min,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsFutureDate } from '@app/shared/decorators';
 
 export class CreateEventDto {
   @ApiProperty({
@@ -31,6 +32,7 @@ export class CreateEventDto {
   })
   @IsDateString()
   @IsNotEmpty()
+  @IsFutureDate()
   date: Date;
 
   @ApiProperty({

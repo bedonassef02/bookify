@@ -6,3 +6,4 @@ export * from './enums';
 export * from './dto';
 export * from './exceptions';
 export * from './modules';
+export * from './decorators';
