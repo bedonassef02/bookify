@@ -1,7 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
-export type EventDocument = Event & Document;
+export type EventDocument = Event &
+  Document & {
+    isFull(): boolean;
+    availableSeats(): number;
+    bookSeats(seats: number): boolean;
+    cancelBooking(seats: number): boolean;
+  };
 
 @Schema({ timestamps: true })
 export class Event {
@@ -31,3 +37,27 @@ export class Event {
 }
 
 export const EventSchema = SchemaFactory.createForClass(Event);
+
+EventSchema.methods.isFull = function (): boolean {
+  return this.bookedSeats >= this.capacity;
+};
+
+EventSchema.methods.availableSeats = function (): number {
+  return this.capacity - this.bookedSeats;
+};
+
+EventSchema.methods.bookSeats = function (seats: number): boolean {
+  if (!this.isActive || this.isFull() || this.availableSeats() < seats) {
+    return false;
+  }
+  this.bookedSeats += seats;
+  return true;
+};
+
+EventSchema.methods.cancelBooking = function (seats: number): boolean {
+  if (this.bookedSeats - seats < 0) {
+    return false;
+  }
+  this.bookedSeats -= seats;
+  return true;
+};
