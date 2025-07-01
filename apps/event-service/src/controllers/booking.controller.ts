@@ -13,4 +13,11 @@ export class BookingController {
   ): Promise<BookingDocument | null> {
     return this.bookingService.bookSeats(bookDto);
   }
+
+  @MessagePattern(Patterns.EVENTS.CANCEL_BOOKING)
+  async cancelBooking(
+    @Payload() bookDto: BookDto,
+  ): Promise<BookingDocument | null> {
+    return this.bookingService.cancelBooking(bookDto);
+  }
 }

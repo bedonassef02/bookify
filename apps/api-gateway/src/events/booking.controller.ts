@@ -22,4 +22,17 @@ export class BookingController {
   ) {
     return this.client.send(Patterns.EVENTS.BOOK_SEATS, { user, event, seats });
   }
+
+  @Post('cancel')
+  cancelEvent(
+    @CurrentUser('userId') user: string,
+    @Param('event') event: string,
+    @Body('seats', ParseIntPipe) seats: number,
+  ) {
+    return this.client.send(Patterns.EVENTS.CANCEL_BOOKING, {
+      user,
+      event,
+      seats,
+    });
+  }
 }
