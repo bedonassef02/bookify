@@ -21,10 +21,11 @@ export class LoggingInterceptor implements NestInterceptor {
     const now = Date.now();
 
     return next.handle().pipe(
-      tap(() => {
+      tap((response) => {
         const elapsedTime = Date.now() - now;
         this.logger.debug(`[${pattern}] - (${elapsedTime}ms)`);
         this.logger.verbose(JSON.stringify(data));
+        this.logger.verbose(JSON.stringify(response));
       }),
     );
   }
