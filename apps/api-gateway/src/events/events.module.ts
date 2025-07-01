@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { EventsController } from './events.controller';
-import { ClientModule } from '../common/modules/client.module';
+import { ClientModule } from '@app/shared';
 import { BookingController } from './booking.controller';
 
 @Module({
