@@ -47,4 +47,8 @@ export class BookingService {
 
     return this.bookingRepository.delete((booking._id as string).toString());
   }
+
+  async findAllByUser(user: string): Promise<BookingDocument[]> {
+    return this.bookingRepository.findAllByUser(user);
+  }
 }

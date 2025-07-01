@@ -7,6 +7,7 @@ export const Patterns = {
     REMOVE: 'events.remove',
     BOOK_SEATS: 'events.bookSeats',
     CANCEL_BOOKING: 'events.cancelBooking',
+    FIND_ALL_BY_USER: 'events.findAllByUser',
   },
   USERS: {
     SIGN_UP: 'users.signUp',

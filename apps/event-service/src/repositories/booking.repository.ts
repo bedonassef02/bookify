@@ -28,4 +28,8 @@ export class BookingRepository extends Repository<BookingDocument> {
   findByUser(event: string, user: string): Promise<BookingDocument | null> {
     return this.model.findOne({ event, user });
   }
+
+  findAllByUser(user: string): Promise<BookingDocument[]> {
+    return this.model.find({ user });
+  }
 }
