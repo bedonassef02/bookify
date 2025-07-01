@@ -1,13 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { BookingRepository } from '../repositories/booking.repository';
 import { BookingDocument } from '../entities/booking.entity';
-import { BookDto } from '@app/shared';
+import { BookDto, RpcBadRequestException } from '@app/shared';
 
 @Injectable()
 export class BookingService {
   constructor(private readonly bookingRepository: BookingRepository) {}
 
-  async bookSeats(bookDto: BookDto): Promise<BookingDocument | null> {
+  async bookSeats(bookDto: BookDto): Promise<BookingDocument> {
+    const canBook = await this.bookingRepository.canBook(
+      bookDto.event,
+      bookDto.seats,
+    );
+
+    if (!canBook) {
+      throw new RpcBadRequestException(`Not enough available seats`);
+    }
+
     const booking = await this.bookingRepository.findByUser(
       bookDto.event,
       bookDto.user,
@@ -18,7 +27,7 @@ export class BookingService {
       return booking.save();
     }
 
-    return this.bookingRepository.bookSeats(bookDto);
+    return this.bookingRepository.create(bookDto);
   }
 
   async cancelBooking(bookDto: BookDto): Promise<BookingDocument | null> {
@@ -28,7 +37,7 @@ export class BookingService {
     );
 
     if (!booking) {
-      return null;
+      throw new RpcBadRequestException(`Booking not found`);
     }
 
     if (booking.seats > bookDto.seats) {
