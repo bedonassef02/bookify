@@ -9,6 +9,9 @@ import { EventService } from './event.service';
 import { EventRepository } from './repositories/event.repository';
 import { Event, EventSchema } from './entities/event.entity';
 import { Booking, BookingSchema } from './entities/booking.entity';
+import { BookingController } from './controllers/booking.controller';
+import { BookingService } from './services/booking.service';
+import { BookingRepository } from './repositories/booking.repository';
 
 @Module({
   imports: [
@@ -20,7 +23,7 @@ import { Booking, BookingSchema } from './entities/booking.entity';
     MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }]),
     MongooseModule.forFeature([{ name: Booking.name, schema: BookingSchema }]),
   ],
-  controllers: [EventController],
+  controllers: [EventController, BookingController],
   providers: [
     EventService,
     EventRepository,
@@ -28,6 +31,8 @@ import { Booking, BookingSchema } from './entities/booking.entity';
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
     },
+    BookingService,
+    BookingRepository,
   ],
 })
 export class AppModule {}

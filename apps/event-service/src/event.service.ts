@@ -7,7 +7,7 @@ import {
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { EventRepository } from './repositories/event.repository';
-import { Event, EventDocument } from './entities/event.entity';
+import { Event } from './entities/event.entity';
 import { QueryDto } from '@app/shared';
 
 @Injectable()
@@ -65,9 +65,5 @@ export class EventService {
       await this.cacheManager.del('events');
     }
     return deletedEvent;
-  }
-
-  bookSeats(id: string, seats: number): Promise<EventDocument | null> {
-    return this.eventRepository.bookSeats(id, seats);
   }
 }

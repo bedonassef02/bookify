@@ -33,9 +33,4 @@ export class EventController {
   async remove(data: { id: string }): Promise<Event | null> {
     return this.eventService.remove(data.id);
   }
-
-  @MessagePattern(Patterns.EVENTS.BOOK_SEATS)
-  async bookSeats(data: { id: string; seats: number }): Promise<Event | null> {
-    return this.eventService.bookSeats(data.id, data.seats);
-  }
 }
