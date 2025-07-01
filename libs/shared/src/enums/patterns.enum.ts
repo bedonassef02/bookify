@@ -5,9 +5,11 @@ export const Patterns = {
     CREATE: 'events.create',
     UPDATE: 'events.update',
     REMOVE: 'events.remove',
-    BOOK_SEATS: 'events.bookSeats',
-    CANCEL_BOOKING: 'events.cancelBooking',
-    FIND_ALL_BY_USER: 'events.findAllByUser',
+  },
+  BOOKING: {
+    BOOK_SEATS: 'booking.bookSeats',
+    CANCEL_BOOKING: 'booking.cancelBooking',
+    FIND_ALL_BY_USER: 'booking.findAllByUser',
   },
   USERS: {
     SIGN_UP: 'users.signUp',
