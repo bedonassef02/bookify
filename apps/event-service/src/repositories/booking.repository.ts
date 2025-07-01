@@ -24,4 +24,8 @@ export class BookingRepository extends Repository<BookingDocument> {
 
     return this.create(bookDto);
   }
+
+  findByUser(event: string, user: string): Promise<BookingDocument | null> {
+    return this.model.findOne({ event, user });
+  }
 }

@@ -7,7 +7,17 @@ import { BookDto } from '@app/shared';
 export class BookingService {
   constructor(private readonly bookingRepository: BookingRepository) {}
 
-  bookSeats(bookDto: BookDto): Promise<BookingDocument | null> {
+  async bookSeats(bookDto: BookDto): Promise<BookingDocument | null> {
+    const booking = await this.bookingRepository.findByUser(
+      bookDto.event,
+      bookDto.user,
+    );
+
+    if (booking) {
+      booking.seats += bookDto.seats;
+      return booking.save();
+    }
+
     return this.bookingRepository.bookSeats(bookDto);
   }
 }
