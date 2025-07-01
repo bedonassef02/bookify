@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Repository } from '@app/shared';
+import { BookDto, Repository, RpcNotFoundException } from '@app/shared';
 import { Booking, BookingDocument } from '../entities/booking.entity';
 import { EventRepository } from './event.repository';
 
@@ -14,16 +14,14 @@ export class BookingRepository extends Repository<BookingDocument> {
     super(bookingModel);
   }
 
-  async bookSeats(
-    id: string,
-    user: string,
-    seats: number,
-  ): Promise<BookingDocument | null> {
-    const event = await this.eventRepository.findById(id);
-    if (!event || !event.bookSeats(seats)) {
-      return null;
+  async bookSeats(bookDto: BookDto): Promise<BookingDocument | null> {
+    const event = await this.eventRepository.findById(bookDto.event);
+    if (!event || !event.bookSeats(bookDto.seats)) {
+      throw new RpcNotFoundException(
+        `Event with ID ${bookDto.event} not found`,
+      );
     }
 
-    return this.create({ event: id, user, seats });
+    return this.create(bookDto);
   }
 }
