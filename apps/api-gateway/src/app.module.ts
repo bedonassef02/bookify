@@ -10,6 +10,7 @@ import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 import { AuthModule } from './users/auth/auth.module';
 import { JwtAuthGuard } from './users/auth/guards/auth.guard';
 import { RolesGuard } from './users/auth/guards/roles.guard';
+import { BookingModule } from './booking/booking.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { RolesGuard } from './users/auth/guards/roles.guard';
     EventsModule,
     UsersModule,
     AuthModule,
+    BookingModule,
   ],
   providers: [
     {
