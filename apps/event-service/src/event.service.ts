@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import {
   CreateEventDto,
+  Patterns,
   RpcNotFoundException,
   UpdateEventDto,
 } from '@app/shared';
@@ -9,12 +10,15 @@ import { Cache } from 'cache-manager';
 import { EventRepository } from './repositories/event.repository';
 import { Event } from './entities/event.entity';
 import { QueryDto } from '@app/shared';
+import { ClientProxy } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class EventService {
   constructor(
     private readonly eventRepository: EventRepository,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    @Inject('BOOKING_SERVICE') private bookingService: ClientProxy,
   ) {}
 
   async create(eventDto: CreateEventDto): Promise<Event> {
@@ -64,6 +68,13 @@ export class EventService {
       await this.cacheManager.del(`event_${id}`);
       await this.cacheManager.del('events');
     }
+
+    await firstValueFrom(
+      this.bookingService.send(Patterns.BOOKING.DELETE_MANY_BY_EVENT, {
+        event: id,
+      }),
+    );
+
     return deletedEvent;
   }
 }
