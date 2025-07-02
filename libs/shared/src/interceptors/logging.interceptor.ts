@@ -6,7 +6,7 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { RmqContext } from '@nestjs/microservices';
 
 @Injectable()
@@ -26,6 +26,13 @@ export class LoggingInterceptor implements NestInterceptor {
         this.logger.debug(`[${pattern}] - (${elapsedTime}ms)`);
         this.logger.verbose(JSON.stringify(data));
         this.logger.verbose(JSON.stringify(response));
+      }),
+      catchError((error) => {
+        const elapsedTime = Date.now() - now;
+        this.logger.error(`[${pattern}] - (${elapsedTime}ms)`);
+        this.logger.error(JSON.stringify(data));
+        this.logger.error(JSON.stringify(error));
+        throw error;
       }),
     );
   }
