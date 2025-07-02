@@ -17,4 +17,11 @@ export class BookingRepository extends Repository<BookingDocument> {
   findAllByUser(user: string): Promise<BookingDocument[]> {
     return this.model.find({ user });
   }
+
+  async deleteManyByEvent(event: string): Promise<BookingDocument[]> {
+    const bookings = this.model.find({ event }).select('user');
+    await this.model.deleteMany({ event });
+
+    return bookings;
+  }
 }

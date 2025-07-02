@@ -59,4 +59,8 @@ export class BookingService {
 
     return existingEvent.capacity - existingEvent.bookedSeats >= seats;
   }
+
+  deleteManyByEvent(event: string): Promise<BookingDocument[]> {
+    return this.bookingRepository.deleteManyByEvent(event);
+  }
 }
