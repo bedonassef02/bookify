@@ -15,8 +15,14 @@ export class NotificationService {
     this.email = this.configService.get<string>('EMAIL_ADDRESS', '');
   }
 
-  sendMail(mailDto: MailDto) {
+  async sendMail(mailDto: MailDto) {
     mailDto.from = this.email;
-    return this.mailService.sendMail(mailDto);
+    if (Array.isArray(mailDto.to)) {
+      for (let i = 0; i < mailDto.to.length; i++) {
+        await this.mailService.sendMail({ ...mailDto, to: mailDto.to[i] });
+      }
+      return;
+    }
+    await this.mailService.sendMail(mailDto);
   }
 }
