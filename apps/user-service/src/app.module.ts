@@ -12,6 +12,7 @@ import { AuthenticationController } from './authentication/authentication.contro
 import { DatabaseModule, JwtModule, LoggingInterceptor } from '@app/shared';
 import { TokenService } from './services/token.service';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { UserController } from './user.controller';
 
 @Module({
   imports: [
@@ -37,6 +38,6 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     AuthenticationService,
     TokenService,
   ],
-  controllers: [AuthenticationController],
+  controllers: [UserController, AuthenticationController],
 })
 export class AppModule {}

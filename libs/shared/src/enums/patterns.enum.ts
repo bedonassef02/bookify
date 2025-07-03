@@ -16,6 +16,7 @@ export const Patterns = {
     SIGN_UP: 'users.signUp',
     SIGN_IN: 'users.signIn',
     VALIDATE_TOKEN: 'users.validateToken',
+    FIND_ONE: 'users.findOne',
   },
   NOTIFICATIONS: {
     SEND_EMAIL: 'notifications.sendEmail',
