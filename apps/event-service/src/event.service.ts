@@ -50,21 +50,26 @@ export class EventService {
   }
 
   async update(id: string, eventDto: UpdateEventDto): Promise<Event> {
-    const updatedEvent = await this.eventRepository.update(id, eventDto);
+    const event = await this.eventRepository.update(id, eventDto);
 
-    if (!updatedEvent) {
+    if (!event) {
       throw new RpcNotFoundException(`Event with ID ${id} not found`);
     }
 
-    await this.cacheManager.set(`event_${id}`, updatedEvent, 30000);
+    await this.cacheManager.set(`event_${id}`, event, 30000);
     await this.cacheManager.del('events');
 
-    return updatedEvent;
+    return event;
   }
 
-  async remove(id: string): Promise<Event | null> {
-    const deletedEvent = await this.eventRepository.delete(id);
-    if (deletedEvent) {
+  async remove(id: string): Promise<Event> {
+    const event = await this.eventRepository.delete(id);
+
+    if (!event) {
+      throw new RpcNotFoundException(`Event with ID ${id} not found`);
+    }
+
+    if (event) {
       await this.cacheManager.del(`event_${id}`);
       await this.cacheManager.del('events');
     }
@@ -75,6 +80,6 @@ export class EventService {
       }),
     );
 
-    return deletedEvent;
+    return event;
   }
 }
