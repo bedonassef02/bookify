@@ -13,4 +13,11 @@ export class UserRepository extends Repository<UserDocument> {
   async findByEmail(email: string): Promise<UserDocument | null> {
     return this.model.findOne({ email }).exec();
   }
+
+  async findEmailsByIds(ids: string[]): Promise<string[]> {
+    return this.model
+      .find({ _id: { $in: ids } }, 'email')
+      .exec()
+      .then((users) => users.map((user) => user.email));
+  }
 }

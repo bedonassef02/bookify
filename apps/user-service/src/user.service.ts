@@ -24,4 +24,8 @@ export class UserService {
   create(createDto: CreateUserDto): Promise<UserDocument> {
     return this.userRepository.create(createDto);
   }
+
+  async findEmailsByIds(ids: string[]): Promise<string[]> {
+    return this.userRepository.findEmailsByIds(ids);
+  }
 }
