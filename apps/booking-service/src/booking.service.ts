@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
   BookDto,
+  MailDto,
   Patterns,
   RpcBadRequestException,
   RpcNotFoundException,
@@ -15,6 +16,8 @@ export class BookingService {
   constructor(
     private bookingRepository: BookingRepository,
     @Inject('EVENT_SERVICE') private client: ClientProxy,
+    @Inject('NOTIFICATION_SERVICE') private notificationService: ClientProxy,
+    @Inject('USER_SERVICE') private userService: ClientProxy,
   ) {}
 
   findAllByUser(user: string): Promise<BookingDocument[]> {
@@ -60,7 +63,24 @@ export class BookingService {
     return existingEvent.capacity - existingEvent.bookedSeats >= seats;
   }
 
-  deleteManyByEvent(event: string): Promise<BookingDocument[]> {
-    return this.bookingRepository.deleteManyByEvent(event);
+  async deleteManyByEvent(event: string): Promise<BookingDocument[]> {
+    const bookings = await this.bookingRepository.deleteManyByEvent(event);
+    const emails = await firstValueFrom(
+      this.userService.send(Patterns.USERS.FIND_EMAILS_BY_IDS, {
+        ids: bookings.map((booking) => booking.user),
+      }),
+    );
+
+    const mailDto: MailDto = {
+      to: emails,
+      subject: 'Booking Cancelled',
+      text: `Your booking for event ${event} has been cancelled.`,
+    };
+
+    await firstValueFrom(
+      this.notificationService.emit(Patterns.NOTIFICATIONS.SEND_EMAIL, mailDto),
+    );
+
+    return bookings;
   }
 }

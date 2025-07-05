@@ -19,7 +19,7 @@ export class BookingRepository extends Repository<BookingDocument> {
   }
 
   async deleteManyByEvent(event: string): Promise<BookingDocument[]> {
-    const bookings = this.model.find({ event }).select('user');
+    const bookings = await this.model.find({ event }).select('user');
     await this.model.deleteMany({ event });
 
     return bookings;
