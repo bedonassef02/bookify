@@ -6,7 +6,7 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
@@ -17,13 +17,21 @@ export class LoggingInterceptor implements NestInterceptor {
     const response = context.switchToHttp().getResponse();
     const now = Date.now();
 
+    const statusCode = response.statusCode;
     return next.handle().pipe(
       tap(() => {
-        const statusCode = response.statusCode;
         const elapsedTime = Date.now() - now;
         this.logger.debug(
           `[${request.method}] ${request.url} - [${statusCode}] ${elapsedTime}ms`,
         );
+      }),
+      catchError((error) => {
+        const elapsedTime = Date.now() - now;
+        this.logger.error(
+          `[${request.method}] ${request.url} - [${statusCode}] ${elapsedTime}ms`,
+        );
+        this.logger.error(JSON.stringify(error));
+        throw error;
       }),
     );
   }
