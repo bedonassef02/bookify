@@ -3,14 +3,11 @@ import { NotificationController } from './notification.controller';
 import { NotificationService } from './notification.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { LoggingInterceptor } from '@app/shared';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { CoreModule } from '@app/shared';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      expandVariables: true,
-    }),
+    CoreModule.forRoot(),
     MailerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -29,12 +26,6 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     }),
   ],
   controllers: [NotificationController],
-  providers: [
-    NotificationService,
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: LoggingInterceptor,
-    },
-  ],
+  providers: [NotificationService],
 })
 export class AppModule {}

@@ -1,25 +1,14 @@
 import { Module } from '@nestjs/common';
 import { BookingController } from './booking.controller';
 import { BookingService } from './booking.service';
-import {
-  ClientModule,
-  DatabaseModule,
-  ExceptionFilter,
-  LoggingInterceptor,
-} from '@app/shared';
+import { ClientModule, DatabaseModule, CoreModule } from '@app/shared';
 import { BookingRepository } from './repositories/booking.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Booking, BookingSchema } from './entities/booking.entity';
-import { ConfigModule } from '@nestjs/config';
-import { CacheModule } from '@nestjs/cache-manager';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      expandVariables: true,
-    }),
-    CacheModule.register(),
+    CoreModule.forRoot(),
     ClientModule.register({
       name: 'USER_SERVICE',
       queue: 'users_queue',
@@ -33,17 +22,6 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
     MongooseModule.forFeature([{ name: Booking.name, schema: BookingSchema }]),
   ],
   controllers: [BookingController],
-  providers: [
-    BookingService,
-    BookingRepository,
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: LoggingInterceptor,
-    },
-    {
-      provide: APP_FILTER,
-      useClass: ExceptionFilter,
-    },
-  ],
+  providers: [BookingService, BookingRepository],
 })
 export class AppModule {}
