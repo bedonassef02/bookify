@@ -7,3 +7,4 @@ export * from './dto';
 export * from './exceptions';
 export * from './modules';
 export * from './decorators';
+export * from './filters';
