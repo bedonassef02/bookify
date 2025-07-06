@@ -75,7 +75,7 @@ export class EventService {
     }
 
     await firstValueFrom(
-      this.bookingService.send(Patterns.BOOKING.DELETE_MANY_BY_EVENT, {
+      this.bookingService.send(Patterns.BOOKING.CANCEL_MANY_BY_EVENT, {
         event: id,
       }),
     );

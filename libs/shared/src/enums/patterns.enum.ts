@@ -10,7 +10,7 @@ export const Patterns = {
     BOOK_SEATS: 'booking.bookSeats',
     CANCEL_BOOKING: 'booking.cancelBooking',
     FIND_ALL_BY_USER: 'booking.findAllByUser',
-    DELETE_MANY_BY_EVENT: 'booking.deleteManyByEvent',
+    CANCEL_MANY_BY_EVENT: 'booking.cancelManyByEvent',
   },
   USERS: {
     SIGN_UP: 'users.signUp',

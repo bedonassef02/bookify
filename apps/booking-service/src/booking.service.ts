@@ -63,8 +63,8 @@ export class BookingService {
     return existingEvent.capacity - existingEvent.bookedSeats >= seats;
   }
 
-  async deleteManyByEvent(event: string): Promise<BookingDocument[]> {
-    const bookings = await this.bookingRepository.deleteManyByEvent(event);
+  async cancelManyByEvent(event: string): Promise<void> {
+    const bookings = await this.bookingRepository.cancelManyByEvent(event);
     const emails = await firstValueFrom(
       this.userService.send(Patterns.USERS.FIND_EMAILS_BY_IDS, {
         ids: bookings.map((booking) => booking.user),
@@ -80,7 +80,5 @@ export class BookingService {
     await firstValueFrom(
       this.notificationService.emit(Patterns.NOTIFICATIONS.SEND_EMAIL, mailDto),
     );
-
-    return bookings;
   }
 }

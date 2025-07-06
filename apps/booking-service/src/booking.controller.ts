@@ -18,10 +18,8 @@ export class BookingController {
     return this.bookingService.bookSeats(bookDto);
   }
 
-  @MessagePattern(Patterns.BOOKING.DELETE_MANY_BY_EVENT)
-  deleteManyByEvent(
-    @Payload('event') event: string,
-  ): Promise<BookingDocument[]> {
-    return this.bookingService.deleteManyByEvent(event);
+  @MessagePattern(Patterns.BOOKING.CANCEL_MANY_BY_EVENT)
+  cancelManyByEvent(@Payload('event') event: string): Promise<void> {
+    return this.bookingService.cancelManyByEvent(event);
   }
 }

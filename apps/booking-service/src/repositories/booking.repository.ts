@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Repository } from '@app/shared';
+import { BookingStatus, Repository } from '@app/shared';
 import { Booking, BookingDocument } from '../entities/booking.entity';
 
 @Injectable()
@@ -18,9 +18,10 @@ export class BookingRepository extends Repository<BookingDocument> {
     return this.model.find({ user });
   }
 
-  async deleteManyByEvent(event: string): Promise<BookingDocument[]> {
-    const bookings = await this.model.find({ event }).select('user');
-    await this.model.deleteMany({ event });
+  async cancelManyByEvent(event: string): Promise<BookingDocument[]> {
+    const bookings = await this.model.find({ event }).select('user').lean();
+
+    await this.model.updateMany({ event }, { status: BookingStatus.CANCELLED });
 
     return bookings;
   }
