@@ -21,7 +21,7 @@ export class User {
   @Prop()
   phoneNumber?: string;
 
-  @Prop({ default: Role.ATTENDEE })
+  @Prop({ default: Role.USER })
   role: string;
 }
 
