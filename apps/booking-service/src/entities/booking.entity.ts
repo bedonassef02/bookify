@@ -6,14 +6,11 @@ export type BookingDocument = Booking & Document;
 
 @Schema({ timestamps: true })
 export class Booking {
-  @Prop({ type: Types.ObjectId, required: true, ref: 'Event' })
+  @Prop({ type: Types.ObjectId, required: true })
   event: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, required: true })
   user: Types.ObjectId;
-
-  @Prop({ default: 1, min: 1 })
-  seats: number;
 
   @Prop({
     type: String,

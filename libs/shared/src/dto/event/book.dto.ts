@@ -1,4 +1,4 @@
-import { IsInt, IsMongoId, IsOptional, Min } from 'class-validator';
+import { IsMongoId, IsOptional } from 'class-validator';
 
 export class BookDto {
   @IsOptional()
@@ -6,8 +6,4 @@ export class BookDto {
 
   @IsMongoId()
   event: string;
-
-  @IsInt()
-  @Min(1)
-  seats: number;
 }

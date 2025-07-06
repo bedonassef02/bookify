@@ -1,13 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
-export type EventDocument = Event &
-  Document & {
-    isFull(): boolean;
-    availableSeats(): number;
-    bookSeats(seats: number): boolean;
-    cancelBooking(seats: number): boolean;
-  };
+export type EventDocument = Event & Document;
 
 @Schema({ timestamps: true })
 export class Event {

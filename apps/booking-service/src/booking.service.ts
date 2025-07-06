@@ -4,6 +4,7 @@ import {
   MailDto,
   Patterns,
   RpcBadRequestException,
+  RpcConflictException,
   RpcNotFoundException,
 } from '@app/shared';
 import { ClientProxy } from '@nestjs/microservices';
@@ -25,7 +26,7 @@ export class BookingService {
   }
 
   async bookSeats(bookDto: BookDto): Promise<BookingDocument> {
-    const canBook = await this.canBook(bookDto.event, bookDto.seats);
+    const canBook: boolean = await this.canBook(bookDto.event);
 
     if (!canBook) {
       throw new RpcBadRequestException(`Not enough available seats`);
@@ -37,30 +38,20 @@ export class BookingService {
     );
 
     if (booking) {
-      booking.seats += bookDto.seats;
-      await firstValueFrom(
-        this.client.send(Patterns.EVENTS.UPDATE, {
-          id: bookDto.event,
-          eventDto: { bookedSeats: booking.seats },
-        }),
+      throw new RpcConflictException(
+        'User already has a booking for this event',
       );
-
-      return booking.save();
     }
 
     return this.bookingRepository.create(bookDto);
   }
 
-  private async canBook(event: string, seats: number): Promise<boolean> {
+  private async canBook(event: string): Promise<boolean> {
     const existingEvent = await firstValueFrom(
       this.client.send(Patterns.EVENTS.FIND_ONE, { id: event }),
     );
 
-    if (!existingEvent) {
-      throw new RpcNotFoundException(`Event with ID ${event} not found`);
-    }
-
-    return existingEvent.capacity - existingEvent.bookedSeats >= seats;
+    return existingEvent.capacity > existingEvent.bookedSeats;
   }
 
   async cancelManyByEvent(event: string): Promise<void> {
