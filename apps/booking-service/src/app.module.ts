@@ -7,6 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Booking, BookingSchema } from './entities/booking.entity';
 import { NotificationService } from './services/notification.service';
 import { EventService } from './services/event.service';
+import { UserService } from './services/user.service';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { EventService } from './services/event.service';
     BookingRepository,
     NotificationService,
     EventService,
+    UserService,
   ],
 })
 export class AppModule {}
