@@ -18,6 +18,10 @@ export class BookingRepository extends Repository<BookingDocument> {
     return this.model.find({ user });
   }
 
+  findAllByEvent(event: string): Promise<BookingDocument[]> {
+    return this.model.find({ event });
+  }
+
   async cancelManyByEvent(event: string): Promise<BookingDocument[]> {
     const bookings = await this.model.find({ event }).select('user').lean();
 

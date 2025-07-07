@@ -5,7 +5,6 @@ import {
   Patterns,
   RpcBadRequestException,
   RpcConflictException,
-  RpcNotFoundException,
 } from '@app/shared';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -23,6 +22,10 @@ export class BookingService {
 
   findAllByUser(user: string): Promise<BookingDocument[]> {
     return this.bookingRepository.findAllByUser(user);
+  }
+
+  findAllByEvent(event: string): Promise<BookingDocument[]> {
+    return this.bookingRepository.findAllByEvent(event);
   }
 
   async bookSeats(bookDto: BookDto): Promise<BookingDocument> {
