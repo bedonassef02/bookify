@@ -52,12 +52,4 @@ export class CreateEventDto {
   @IsNotEmpty()
   @Min(1)
   capacity: number;
-
-  @ApiProperty({
-    description: 'MongoDB ObjectId of the event organizer',
-    example: '507f1f77bcf86cd799439011',
-  })
-  @IsString()
-  @IsNotEmpty()
-  organizerId: string;
 }

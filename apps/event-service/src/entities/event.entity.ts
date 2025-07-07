@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Document } from 'mongoose';
 
 export type EventDocument = Event & Document;
 
@@ -10,9 +10,6 @@ export class Event {
 
   @Prop({ required: true })
   description: string;
-
-  @Prop({ type: Types.ObjectId, required: true })
-  organizerId: Types.ObjectId;
 
   @Prop({ required: true })
   date: Date;
