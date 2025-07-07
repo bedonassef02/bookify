@@ -1,7 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import {
   CreateEventDto,
-  Patterns,
   RpcNotFoundException,
   UpdateEventDto,
 } from '@app/shared';
@@ -10,15 +9,14 @@ import { Cache } from 'cache-manager';
 import { EventRepository } from './repositories/event.repository';
 import { Event } from './entities/event.entity';
 import { QueryDto } from '@app/shared';
-import { ClientProxy } from '@nestjs/microservices';
-import { firstValueFrom } from 'rxjs';
+import { BookingService } from './services/booking.service';
 
 @Injectable()
 export class EventService {
   constructor(
     private readonly eventRepository: EventRepository,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
-    @Inject('BOOKING_SERVICE') private bookingService: ClientProxy,
+    private bookingService: BookingService,
   ) {}
 
   async create(eventDto: CreateEventDto): Promise<Event> {
@@ -51,7 +49,6 @@ export class EventService {
 
   async update(id: string, eventDto: UpdateEventDto): Promise<Event> {
     const event = await this.eventRepository.update(id, eventDto);
-
     if (!event) {
       throw new RpcNotFoundException(`Event with ID ${id} not found`);
     }
@@ -64,21 +61,14 @@ export class EventService {
 
   async remove(id: string): Promise<Event> {
     const event = await this.eventRepository.delete(id);
-
     if (!event) {
       throw new RpcNotFoundException(`Event with ID ${id} not found`);
     }
 
-    if (event) {
-      await this.cacheManager.del(`event_${id}`);
-      await this.cacheManager.del('events');
-    }
+    await this.cacheManager.del(`event_${id}`);
+    await this.cacheManager.del('events');
 
-    await firstValueFrom(
-      this.bookingService.send(Patterns.BOOKING.CANCEL_MANY_BY_EVENT, {
-        event: id,
-      }),
-    );
+    this.bookingService.cancelManyByEvent(id);
 
     return event;
   }
