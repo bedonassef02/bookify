@@ -9,16 +9,12 @@ import { Booking, BookingSchema } from './entities/booking.entity';
 @Module({
   imports: [
     CoreModule.forRoot(),
-    ClientModule.register({
-      name: 'USER_SERVICE',
-      queue: 'users_queue',
-    }),
-    ClientModule.register({
-      name: 'NOTIFICATION_SERVICE',
-      queue: 'notification_queue',
-    }),
+    ClientModule.register([
+      { name: 'USER_SERVICE', queue: 'users_queue' },
+      { name: 'NOTIFICATION_SERVICE', queue: 'notification_queue' },
+      { name: 'EVENT_SERVICE', queue: 'events_queue' },
+    ]),
     DatabaseModule.register({ dbName: 'bookingdb' }),
-    ClientModule.register({ name: 'EVENT_SERVICE', queue: 'events_queue' }),
     MongooseModule.forFeature([{ name: Booking.name, schema: BookingSchema }]),
   ],
   controllers: [BookingController],
