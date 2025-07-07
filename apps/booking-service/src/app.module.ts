@@ -5,6 +5,7 @@ import { ClientModule, DatabaseModule, CoreModule } from '@app/shared';
 import { BookingRepository } from './repositories/booking.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Booking, BookingSchema } from './entities/booking.entity';
+import { NotificationService } from './services/notification.service';
 
 @Module({
   imports: [
@@ -18,6 +19,6 @@ import { Booking, BookingSchema } from './entities/booking.entity';
     MongooseModule.forFeature([{ name: Booking.name, schema: BookingSchema }]),
   ],
   controllers: [BookingController],
-  providers: [BookingService, BookingRepository],
+  providers: [BookingService, BookingRepository, NotificationService],
 })
 export class AppModule {}

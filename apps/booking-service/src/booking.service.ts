@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
   BookDto,
-  MailDto,
   Patterns,
   RpcBadRequestException,
   RpcConflictException,
@@ -10,14 +9,15 @@ import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { BookingRepository } from './repositories/booking.repository';
 import { BookingDocument } from './entities/booking.entity';
+import { NotificationService } from './services/notification.service';
 
 @Injectable()
 export class BookingService {
   constructor(
     private bookingRepository: BookingRepository,
     @Inject('EVENT_SERVICE') private client: ClientProxy,
-    @Inject('NOTIFICATION_SERVICE') private notificationService: ClientProxy,
     @Inject('USER_SERVICE') private userService: ClientProxy,
+    private notificationService: NotificationService,
   ) {}
 
   findAllByUser(user: string): Promise<BookingDocument[]> {
@@ -59,20 +59,12 @@ export class BookingService {
 
   async cancelManyByEvent(event: string): Promise<void> {
     const bookings = await this.bookingRepository.cancelManyByEvent(event);
-    const emails = await firstValueFrom(
+    const emails: string[] = await firstValueFrom(
       this.userService.send(Patterns.USERS.FIND_EMAILS_BY_IDS, {
         ids: bookings.map((booking) => booking.user),
       }),
     );
 
-    const mailDto: MailDto = {
-      to: emails,
-      subject: 'Booking Cancelled',
-      text: `Your booking for event ${event} has been cancelled.`,
-    };
-
-    await firstValueFrom(
-      this.notificationService.emit(Patterns.NOTIFICATIONS.SEND_EMAIL, mailDto),
-    );
+    this.notificationService.cancel(emails, event);
   }
 }
