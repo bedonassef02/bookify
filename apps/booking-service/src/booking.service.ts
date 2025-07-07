@@ -15,7 +15,7 @@ import { NotificationService } from './services/notification.service';
 export class BookingService {
   constructor(
     private bookingRepository: BookingRepository,
-    @Inject('EVENT_SERVICE') private client: ClientProxy,
+    @Inject('EVENT_SERVICE') private eventService: ClientProxy,
     @Inject('USER_SERVICE') private userService: ClientProxy,
     private notificationService: NotificationService,
   ) {}
@@ -29,11 +29,7 @@ export class BookingService {
   }
 
   async bookSeats(bookDto: BookDto): Promise<BookingDocument> {
-    const canBook: boolean = await this.canBook(bookDto.event);
-
-    if (!canBook) {
-      throw new RpcBadRequestException(`Not enough available seats`);
-    }
+    const seats: number = await this.getBookedSeats(bookDto.event);
 
     const booking = await this.bookingRepository.findByUser(
       bookDto.event,
@@ -46,15 +42,24 @@ export class BookingService {
       );
     }
 
+    this.eventService.emit(Patterns.EVENTS.UPDATE, {
+      id: bookDto.event,
+      eventDto: { bookedSeats: seats + 1 },
+    });
+
     return this.bookingRepository.create(bookDto);
   }
 
-  private async canBook(event: string): Promise<boolean> {
-    const existingEvent = await firstValueFrom(
-      this.client.send(Patterns.EVENTS.FIND_ONE, { id: event }),
+  private async getBookedSeats(event: string): Promise<number> {
+    const existingEvent: any = await firstValueFrom(
+      this.eventService.send(Patterns.EVENTS.FIND_ONE, { id: event }),
     );
 
-    return existingEvent.capacity > existingEvent.bookedSeats;
+    if (existingEvent.capacity <= existingEvent.bookedSeats) {
+      throw new RpcBadRequestException(`Not enough available seats`);
+    }
+
+    return existingEvent.bookedSeats;
   }
 
   async cancelManyByEvent(event: string): Promise<void> {
