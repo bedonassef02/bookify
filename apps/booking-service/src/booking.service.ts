@@ -1,21 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
-import {
-  BookDto,
-  Patterns,
-  RpcBadRequestException,
-  RpcConflictException,
-} from '@app/shared';
+import { BookDto, Patterns, RpcConflictException } from '@app/shared';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { BookingRepository } from './repositories/booking.repository';
 import { BookingDocument } from './entities/booking.entity';
 import { NotificationService } from './services/notification.service';
+import { EventService } from './services/event.service';
 
 @Injectable()
 export class BookingService {
   constructor(
     private bookingRepository: BookingRepository,
-    @Inject('EVENT_SERVICE') private eventService: ClientProxy,
+    private eventService: EventService,
     @Inject('USER_SERVICE') private userService: ClientProxy,
     private notificationService: NotificationService,
   ) {}
@@ -29,7 +25,7 @@ export class BookingService {
   }
 
   async bookSeats(bookDto: BookDto): Promise<BookingDocument> {
-    const seats: number = await this.getBookedSeats(bookDto.event);
+    const seats: number = await this.eventService.getBookedSeats(bookDto.event);
 
     const booking = await this.bookingRepository.findByUser(
       bookDto.event,
@@ -42,24 +38,9 @@ export class BookingService {
       );
     }
 
-    this.eventService.emit(Patterns.EVENTS.UPDATE, {
-      id: bookDto.event,
-      eventDto: { bookedSeats: seats + 1 },
-    });
+    this.eventService.updateBookedSeats(bookDto.event, seats);
 
     return this.bookingRepository.create(bookDto);
-  }
-
-  private async getBookedSeats(event: string): Promise<number> {
-    const existingEvent: any = await firstValueFrom(
-      this.eventService.send(Patterns.EVENTS.FIND_ONE, { id: event }),
-    );
-
-    if (existingEvent.capacity <= existingEvent.bookedSeats) {
-      throw new RpcBadRequestException(`Not enough available seats`);
-    }
-
-    return existingEvent.bookedSeats;
   }
 
   async cancelManyByEvent(event: string): Promise<void> {
