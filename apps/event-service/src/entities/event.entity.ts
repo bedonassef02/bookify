@@ -14,6 +14,9 @@ export class Event {
   @Prop({ required: true })
   date: Date;
 
+  @Prop({ required: true, default: 1 })
+  duration: number;
+
   @Prop({ required: true })
   location: string;
 

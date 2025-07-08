@@ -4,6 +4,7 @@ import {
   IsNumber,
   IsNotEmpty,
   Min,
+  Max,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsFutureDate } from '@app/shared/decorators';
@@ -36,6 +37,18 @@ export class CreateEventDto {
   date: Date;
 
   @ApiProperty({
+    description: 'Event duration in hours',
+    example: 1,
+    minimum: 1,
+    maximum: 6,
+  })
+  @IsNotEmpty()
+  @IsNumber()
+  @Min(1)
+  @Max(6)
+  duration: Date;
+
+  @ApiProperty({
     description: 'Event location',
     example: 'Convention Center, San Francisco, CA',
   })
@@ -47,9 +60,11 @@ export class CreateEventDto {
     description: 'Maximum number of attendees',
     example: 500,
     minimum: 1,
+    maximum: 5000,
   })
   @IsNumber()
   @IsNotEmpty()
   @Min(1)
+  @Max(5000)
   capacity: number;
 }
