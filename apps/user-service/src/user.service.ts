@@ -1,20 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from './repositories/user.repository';
 import { UserDocument } from './entities/user.entity';
-import { CreateUserDto } from '@app/shared';
+import { CreateUserDto, UserType } from '@app/shared';
 import { RpcNotFoundException } from '@app/shared';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async findOne(id: string): Promise<UserDocument> {
+  async findOne(id: string): Promise<UserType> {
     const user = await this.userRepository.findById(id);
-    if (user) {
-      return user;
+    if (!user) {
+      throw new RpcNotFoundException('User not found');
     }
 
-    throw new RpcNotFoundException('User not found');
+    return plainToInstance(UserType, user, { excludePrefixes: ['password'] });
   }
 
   findByEmail(email: string): Promise<UserDocument | null> {
