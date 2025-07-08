@@ -8,22 +8,11 @@ import {
   Post,
   Patch,
   UseInterceptors,
-  HttpStatus,
-  HttpCode,
   Query,
 } from '@nestjs/common';
 import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
 import { ClientProxy } from '@nestjs/microservices';
 import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiParam,
-  ApiBadRequestResponse,
-  ApiNotFoundResponse,
-  ApiCreatedResponse,
-  ApiOkResponse,
-} from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import {
   CreateEventDto,
@@ -32,10 +21,11 @@ import {
   UpdateEventDto,
   EventType,
   QueryDto,
+  Role,
 } from '@app/shared';
 import { Public } from '../users/auth/decorators/public.decorator';
+import { Roles } from '../users/auth/decorators/roles.decorator';
 
-@ApiTags('events')
 @Controller('events')
 @UseInterceptors(CacheInterceptor)
 export class EventsController {
@@ -43,14 +33,6 @@ export class EventsController {
 
   @Public()
   @Get()
-  @ApiOperation({
-    summary: 'Get all events',
-    description:
-      'Retrieves a list of all events. Results are cached for performance.',
-  })
-  @ApiOkResponse({
-    description: 'List of events retrieved successfully',
-  })
   @CacheKey('events')
   findAll(@Query() query: QueryDto): Observable<EventType[]> {
     return this.client.send(Patterns.EVENTS.FIND_ALL, query);
@@ -58,63 +40,18 @@ export class EventsController {
 
   @Public()
   @Get(':id')
-  @ApiOperation({
-    summary: 'Get event by ID',
-    description: 'Retrieves a single event by its MongoDB ObjectId',
-  })
-  @ApiParam({
-    name: 'id',
-    description: 'MongoDB ObjectId of the event',
-    example: '507f1f77bcf86cd799439011',
-  })
-  @ApiOkResponse({
-    description: 'Event found',
-  })
-  @ApiNotFoundResponse({
-    description: 'Event not found',
-  })
-  @ApiBadRequestResponse({
-    description: 'Invalid ID format',
-  })
   findOne(@Param('id', ParseMongoIdPipe) id: string): Observable<EventType> {
     return this.client.send(Patterns.EVENTS.FIND_ONE, { id });
   }
 
   @Post()
-  @ApiOperation({
-    summary: 'Create a new event',
-    description: 'Creates a new event with the provided information',
-  })
-  @ApiCreatedResponse({
-    description: 'Event created successfully',
-  })
-  @ApiBadRequestResponse({
-    description: 'Invalid input data',
-  })
-  @HttpCode(HttpStatus.CREATED)
+  @Roles(Role.ADMIN)
   create(@Body() eventDto: CreateEventDto): Observable<EventType> {
     return this.client.send(Patterns.EVENTS.CREATE, eventDto);
   }
 
   @Patch(':id')
-  @ApiOperation({
-    summary: 'Update an event',
-    description: 'Updates an existing event with partial data',
-  })
-  @ApiParam({
-    name: 'id',
-    description: 'MongoDB ObjectId of the event to update',
-    example: '507f1f77bcf86cd799439011',
-  })
-  @ApiOkResponse({
-    description: 'Event updated successfully',
-  })
-  @ApiNotFoundResponse({
-    description: 'Event not found',
-  })
-  @ApiBadRequestResponse({
-    description: 'Invalid input data or ID format',
-  })
+  @Roles(Role.ADMIN)
   update(
     @Param('id', ParseMongoIdPipe) id: string,
     @Body() eventDto: UpdateEventDto,
@@ -123,25 +60,7 @@ export class EventsController {
   }
 
   @Delete(':id')
-  @ApiOperation({
-    summary: 'Delete an event',
-    description: 'Permanently deletes an event by its ID',
-  })
-  @ApiParam({
-    name: 'id',
-    description: 'MongoDB ObjectId of the event to delete',
-    example: '507f1f77bcf86cd799439011',
-  })
-  @ApiOkResponse({
-    description: 'Event deleted successfully',
-  })
-  @ApiNotFoundResponse({
-    description: 'Event not found',
-  })
-  @ApiBadRequestResponse({
-    description: 'Invalid ID format',
-  })
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @Roles(Role.ADMIN)
   remove(@Param('id', ParseMongoIdPipe) id: string): Observable<void> {
     return this.client.send(Patterns.EVENTS.REMOVE, { id });
   }
