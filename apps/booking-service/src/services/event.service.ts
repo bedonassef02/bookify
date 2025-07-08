@@ -21,6 +21,19 @@ export class EventService {
   async getBookedSeats(id: string): Promise<number> {
     const event: EventType = await this.findOne(id);
 
+    this.check(event);
+
+    return event.bookedSeats;
+  }
+
+  updateBookedSeats(id: string, seats: number): void {
+    this.eventService.emit(Patterns.EVENTS.UPDATE, {
+      id,
+      eventDto: { bookedSeats: seats + 1 },
+    });
+  }
+
+  private check(event: EventType): void {
     if (event.date >= new Date()) {
       throw new BadRequestException(
         "Booking for this Event isn't available now",
@@ -34,14 +47,5 @@ export class EventService {
     if (event.capacity <= event.bookedSeats) {
       throw new RpcBadRequestException(`Not enough available seats`);
     }
-
-    return event.bookedSeats;
-  }
-
-  updateBookedSeats(id: string, seats: number): void {
-    this.eventService.emit(Patterns.EVENTS.UPDATE, {
-      id,
-      eventDto: { bookedSeats: seats + 1 },
-    });
   }
 }
