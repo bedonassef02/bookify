@@ -1,5 +1,5 @@
 import { AppModule } from './app.module';
-import { RmqMicroserviceBootstrap } from '@app/shared/bootstrap';
+import { RmqMicroserviceBootstrap } from '@app/shared';
 
 async function bootstrap() {
   const app = await RmqMicroserviceBootstrap(AppModule, 'booking_queue');
