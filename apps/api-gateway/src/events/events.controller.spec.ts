@@ -3,7 +3,12 @@ import { EventsController } from './events.controller';
 import { ClientProxy } from '@nestjs/microservices';
 import { of } from 'rxjs';
 import { CacheModule } from '@nestjs/cache-manager';
-import { CreateEventDto, Patterns, UpdateEventDto } from '@app/shared';
+import {
+  CreateEventDto,
+  EVENT_SERVICE,
+  Patterns,
+  UpdateEventDto,
+} from '@app/shared';
 
 describe('EventsController (API Gateway)', () => {
   let controller: EventsController;
@@ -32,14 +37,14 @@ describe('EventsController (API Gateway)', () => {
       controllers: [EventsController],
       providers: [
         {
-          provide: 'EVENT_SERVICE',
+          provide: EVENT_SERVICE,
           useValue: mockClientProxy,
         },
       ],
     }).compile();
 
     controller = module.get<EventsController>(EventsController);
-    clientProxy = module.get<ClientProxy>('EVENT_SERVICE');
+    clientProxy = module.get<ClientProxy>(EVENT_SERVICE);
   });
 
   afterEach(() => {

@@ -25,7 +25,12 @@ import {
   ApiOkResponse,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
-import { CreateEventDto, Patterns, UpdateEventDto } from '@app/shared';
+import {
+  CreateEventDto,
+  EVENT_SERVICE,
+  Patterns,
+  UpdateEventDto,
+} from '@app/shared';
 import { Public } from '../users/auth/decorators/public.decorator';
 import { QueryDto } from '@app/shared';
 
@@ -33,7 +38,7 @@ import { QueryDto } from '@app/shared';
 @Controller('events')
 @UseInterceptors(CacheInterceptor)
 export class EventsController {
-  constructor(@Inject('EVENT_SERVICE') private client: ClientProxy) {}
+  constructor(@Inject(EVENT_SERVICE) private client: ClientProxy) {}
 
   @Public()
   @Get()

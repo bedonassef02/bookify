@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { Patterns, RpcBadRequestException } from '@app/shared';
+import { EVENT_SERVICE, Patterns, RpcBadRequestException } from '@app/shared';
 
 @Injectable()
 export class EventService {
-  constructor(@Inject('EVENT_SERVICE') private eventService: ClientProxy) {}
+  constructor(@Inject(EVENT_SERVICE) private eventService: ClientProxy) {}
 
   findOne(id: string): Promise<any> {
     return firstValueFrom(

@@ -1,13 +1,13 @@
 import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
 import { CurrentUser } from '../users/auth/decorators/current-user.decorator';
-import { BookDto, Patterns, Role } from '@app/shared';
+import { BookDto, BOOKING_SERVICE, Patterns, Role } from '@app/shared';
 import { ClientProxy } from '@nestjs/microservices';
 import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
 import { Roles } from '../users/auth/decorators/roles.decorator';
 
 @Controller('booking')
 export class BookingController {
-  constructor(@Inject('BOOKING_SERVICE') private client: ClientProxy) {}
+  constructor(@Inject(BOOKING_SERVICE) private client: ClientProxy) {}
 
   @Get()
   findAll(@CurrentUser('userId') user: string) {

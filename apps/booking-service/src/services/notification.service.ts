@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { MailDto, Patterns } from '@app/shared';
+import { MailDto, NOTIFICATION_SERVICE, Patterns } from '@app/shared';
 
 @Injectable()
 export class NotificationService {
   constructor(
-    @Inject('NOTIFICATION_SERVICE') private notificationService: ClientProxy,
+    @Inject(NOTIFICATION_SERVICE) private notificationService: ClientProxy,
   ) {}
 
   cancel(emails: string | string[], event: string): void {

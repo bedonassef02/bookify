@@ -7,7 +7,7 @@ import {
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 interface Options {
-  name: string;
+  name: string | symbol;
   queue: string;
 }
 
