@@ -30,9 +30,10 @@ import {
   EVENT_SERVICE,
   Patterns,
   UpdateEventDto,
+  EventType,
+  QueryDto,
 } from '@app/shared';
 import { Public } from '../users/auth/decorators/public.decorator';
-import { QueryDto } from '@app/shared';
 
 @ApiTags('events')
 @Controller('events')
@@ -51,7 +52,7 @@ export class EventsController {
     description: 'List of events retrieved successfully',
   })
   @CacheKey('events')
-  findAll(@Query() query: QueryDto): Observable<Event[]> {
+  findAll(@Query() query: QueryDto): Observable<EventType[]> {
     return this.client.send(Patterns.EVENTS.FIND_ALL, query);
   }
 
@@ -75,7 +76,7 @@ export class EventsController {
   @ApiBadRequestResponse({
     description: 'Invalid ID format',
   })
-  findOne(@Param('id', ParseMongoIdPipe) id: string): Observable<Event | null> {
+  findOne(@Param('id', ParseMongoIdPipe) id: string): Observable<EventType> {
     return this.client.send(Patterns.EVENTS.FIND_ONE, { id });
   }
 
@@ -91,7 +92,7 @@ export class EventsController {
     description: 'Invalid input data',
   })
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() eventDto: CreateEventDto) {
+  create(@Body() eventDto: CreateEventDto): Observable<EventType> {
     return this.client.send(Patterns.EVENTS.CREATE, eventDto);
   }
 
@@ -117,7 +118,7 @@ export class EventsController {
   update(
     @Param('id', ParseMongoIdPipe) id: string,
     @Body() eventDto: UpdateEventDto,
-  ) {
+  ): Observable<EventType> {
     return this.client.send(Patterns.EVENTS.UPDATE, { id, eventDto });
   }
 
@@ -141,7 +142,7 @@ export class EventsController {
     description: 'Invalid ID format',
   })
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', ParseMongoIdPipe) id: string) {
+  remove(@Param('id', ParseMongoIdPipe) id: string): Observable<void> {
     return this.client.send(Patterns.EVENTS.REMOVE, { id });
   }
 }
