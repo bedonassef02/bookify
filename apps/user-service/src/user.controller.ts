@@ -1,11 +1,17 @@
 import { Controller } from '@nestjs/common';
 import { UserService } from './user.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { Patterns, UserType } from '@app/shared';
+import { Patterns, QueryDto, UserType } from '@app/shared';
+import { UserDocument } from './entities/user.entity';
 
 @Controller()
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @MessagePattern(Patterns.USERS.FIND_ALL)
+  findAll(query: QueryDto): Promise<UserDocument[]> {
+    return this.userService.findAll(query);
+  }
 
   @MessagePattern(Patterns.USERS.FIND_ONE)
   findOne(id: string): Promise<UserType> {

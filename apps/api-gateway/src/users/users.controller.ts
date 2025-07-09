@@ -1,8 +1,10 @@
-import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post, Query } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import {
   AuthResponse,
   Patterns,
+  QueryDto,
+  Role,
   SignInDto,
   SignUpDto,
   USER_SERVICE,
@@ -11,6 +13,7 @@ import {
 import { Observable } from 'rxjs';
 import { Public } from './auth/decorators/public.decorator';
 import { CurrentUser } from './auth/decorators/current-user.decorator';
+import { Roles } from './auth/decorators/roles.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -26,6 +29,12 @@ export class UsersController {
   @Post('sign-in')
   signIn(@Body() signInDto: SignInDto): Observable<AuthResponse> {
     return this.client.send(Patterns.USERS.SIGN_IN, signInDto);
+  }
+
+  @Roles(Role.ADMIN)
+  @Get()
+  findAll(@Query() query: QueryDto): Observable<UserType[]> {
+    return this.client.send(Patterns.USERS.FIND_ALL, query);
   }
 
   @Get('me')
