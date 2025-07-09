@@ -20,7 +20,9 @@ export class UserService {
       throw new RpcNotFoundException('User not found');
     }
 
-    return plainToInstance(UserType, user, { excludePrefixes: ['password'] });
+    return plainToInstance(UserType, user.toObject(), {
+      excludePrefixes: ['password', 'role'],
+    });
   }
 
   findByEmail(email: string): Promise<UserDocument | null> {
