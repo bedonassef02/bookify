@@ -3,11 +3,15 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtAuthGuard } from './guards/auth.guard';
 import { RolesGuard } from './guards/roles.guard';
-import { JwtModule } from '@app/shared';
+import { ClientModule, JwtModule, USER_SERVICE } from '@app/shared';
 import { AuthController } from './auth.controller';
 
 @Module({
-  imports: [PassportModule.register({ defaultStrategy: 'jwt' }), JwtModule],
+  imports: [
+    JwtModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    ClientModule.register({ name: USER_SERVICE, queue: 'users_queue' }),
+  ],
   providers: [JwtStrategy, JwtAuthGuard, RolesGuard],
   controllers: [AuthController],
   exports: [JwtModule, JwtStrategy, JwtAuthGuard, RolesGuard],
