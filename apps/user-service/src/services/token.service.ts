@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UserDocument } from '../entities/user.entity';
-import { AuthTokens, RpcUnauthorizedException } from '@app/shared';
+import { AuthTokens, RpcUnauthorizedException, UserType } from '@app/shared';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
@@ -22,9 +21,9 @@ export class TokenService {
     }
   }
 
-  async generate(user: Partial<UserDocument>): Promise<AuthTokens> {
+  async generate(user: UserType): Promise<AuthTokens> {
     const payload = {
-      sub: (user._id as string) || user.id,
+      sub: user.id,
       email: user.email,
       role: user.role,
     };
@@ -33,7 +32,7 @@ export class TokenService {
       this.jwtService.signAsync(payload, {
         expiresIn: this.configService.get<string>(JWT_ACCESS_TOKEN_TTL, '15m'),
       }),
-      this.generateRefreshToken(user._id as string),
+      this.generateRefreshToken(user.id),
     ]);
 
     return {

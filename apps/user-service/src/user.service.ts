@@ -1,23 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from './repositories/user.repository';
 import { UserDocument } from './entities/user.entity';
-import {
-  CreateUserDto,
-  QueryDto,
-  RpcBadRequestException,
-  RpcUnauthorizedException,
-  UserType,
-} from '@app/shared';
+import { CreateUserDto, QueryDto, UserType } from '@app/shared';
 import { RpcNotFoundException } from '@app/shared';
 import { plainToInstance } from 'class-transformer';
 import { ChangePasswordDto } from '@app/shared/dto/user/change-password.dto';
-import { HashingService } from './hashing/hashing.service';
+import { PasswordService } from './services/password.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
-    private readonly hashingService: HashingService,
+    private readonly passwordService: PasswordService,
   ) {}
 
   findAll(query: QueryDto): Promise<UserDocument[]> {
@@ -53,31 +47,18 @@ export class UserService {
     passwordDto: ChangePasswordDto,
   ): Promise<boolean> {
     const user = await this.userRepository.findById(id);
+    if (!user) throw new RpcNotFoundException('User not found');
 
-    if (!user) {
-      throw new RpcNotFoundException('User not found');
-    }
-
-    const isPasswordValid = await this.hashingService.compare(
+    await this.passwordService.verify(
       passwordDto.currentPassword,
       user.password,
     );
-    if (!isPasswordValid) {
-      throw new RpcUnauthorizedException(
-        'Password is not match our credentials',
-      );
-    }
-
-    const isSamePassword = await this.hashingService.compare(
+    await this.passwordService.ensureDifferent(
       passwordDto.newPassword,
       user.password,
     );
 
-    if (isSamePassword) {
-      throw new RpcBadRequestException('Password is not changed');
-    }
-
-    const password = await this.hashingService.hash(passwordDto.newPassword);
+    const password = await this.passwordService.hash(passwordDto.newPassword);
     await this.userRepository.update(id, { password });
 
     return true;

@@ -11,6 +11,7 @@ import { AuthenticationController } from './authentication/authentication.contro
 import { DatabaseModule, JwtModule, CoreModule } from '@app/shared';
 import { TokenService } from './services/token.service';
 import { UserController } from './user.controller';
+import { PasswordService } from './services/password.service';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { UserController } from './user.controller';
     },
     AuthenticationService,
     TokenService,
+    PasswordService,
   ],
   controllers: [UserController, AuthenticationController],
 })
