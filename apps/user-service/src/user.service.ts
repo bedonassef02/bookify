@@ -44,6 +44,6 @@ export class UserService {
   }
 
   sanitize(user: UserDocument, excludePrefixes = ['password']): UserType {
-    return plainToInstance(UserType, user, { excludePrefixes });
+    return plainToInstance(UserType, user.toObject(), { excludePrefixes });
   }
 }
