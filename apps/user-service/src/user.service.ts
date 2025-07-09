@@ -4,6 +4,7 @@ import { UserDocument } from './entities/user.entity';
 import {
   CreateUserDto,
   QueryDto,
+  RpcBadRequestException,
   RpcUnauthorizedException,
   UserType,
 } from '@app/shared';
@@ -65,6 +66,15 @@ export class UserService {
       throw new RpcUnauthorizedException(
         'Password is not match our credentials',
       );
+    }
+
+    const isSamePassword = await this.hashingService.compare(
+      passwordDto.newPassword,
+      user.password,
+    );
+
+    if (isSamePassword) {
+      throw new RpcBadRequestException('Password is not changed');
     }
 
     const password = await this.hashingService.hash(passwordDto.newPassword);
