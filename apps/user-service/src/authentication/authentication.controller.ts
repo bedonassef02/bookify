@@ -8,17 +8,17 @@ import { ChangePasswordDto } from '@app/shared/dto/user/change-password.dto';
 export class AuthenticationController {
   constructor(private readonly authService: AuthenticationService) {}
 
-  @MessagePattern(Patterns.USERS.SIGN_UP)
+  @MessagePattern(Patterns.AUTH.SIGN_UP)
   async signUp(signUpDto: SignUpDto): Promise<AuthResponse> {
     return this.authService.signUp(signUpDto);
   }
 
-  @MessagePattern(Patterns.USERS.SIGN_IN)
+  @MessagePattern(Patterns.AUTH.SIGN_IN)
   async signIn(signInDto: SignInDto): Promise<AuthResponse> {
     return this.authService.signIn(signInDto);
   }
 
-  @MessagePattern(Patterns.USERS.CHANGE_PASSWORD)
+  @MessagePattern(Patterns.AUTH.CHANGE_PASSWORD)
   changePassword(
     @Payload('id') id: string,
     @Payload('passwordDto') passwordDto: ChangePasswordDto,

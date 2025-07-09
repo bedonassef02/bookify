@@ -14,12 +14,14 @@ export const Patterns = {
     CANCEL_MANY_BY_EVENT: 'booking.cancelManyByEvent',
   },
   USERS: {
-    SIGN_UP: 'users.signUp',
-    SIGN_IN: 'users.signIn',
     FIND_ONE: 'users.findOne',
     FIND_ALL: 'users.findAll',
     FIND_EMAILS_BY_IDS: 'users.findEmailsByIds',
-    CHANGE_PASSWORD: 'users.changePassword',
+  },
+  AUTH: {
+    SIGN_IN: 'auth.signIn',
+    SIGN_UP: 'auth.signUp',
+    CHANGE_PASSWORD: 'auth.changePassword',
   },
   NOTIFICATIONS: {
     SEND_EMAIL: 'notifications.sendEmail',

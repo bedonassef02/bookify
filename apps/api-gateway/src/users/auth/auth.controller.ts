@@ -18,15 +18,15 @@ export class AuthController {
   constructor(@Inject(USER_SERVICE) private client: ClientProxy) {}
 
   @Public()
-  @Post('sign-up')
-  signUp(@Body() signUpDto: SignUpDto): Observable<AuthResponse> {
-    return this.client.send(Patterns.USERS.SIGN_UP, signUpDto);
+  @Post('sign-in')
+  signIn(@Body() signInDto: SignInDto): Observable<AuthResponse> {
+    return this.client.send(Patterns.AUTH.SIGN_IN, signInDto);
   }
 
   @Public()
-  @Post('sign-in')
-  signIn(@Body() signInDto: SignInDto): Observable<AuthResponse> {
-    return this.client.send(Patterns.USERS.SIGN_IN, signInDto);
+  @Post('sign-up')
+  signUp(@Body() signUpDto: SignUpDto): Observable<AuthResponse> {
+    return this.client.send(Patterns.AUTH.SIGN_UP, signUpDto);
   }
 
   @Put('change-password')
@@ -34,7 +34,7 @@ export class AuthController {
     @CurrentUser('userId') id: string,
     @Body() passwordDto: ChangePasswordDto,
   ): Observable<UserType> {
-    return this.client.send(Patterns.USERS.CHANGE_PASSWORD, {
+    return this.client.send(Patterns.AUTH.CHANGE_PASSWORD, {
       id,
       passwordDto,
     });
