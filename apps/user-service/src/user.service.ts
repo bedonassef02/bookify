@@ -34,8 +34,13 @@ export class UserService {
     return this.userRepository.findEmailsByIds(ids);
   }
 
-  update(id: string, userDto: UpdateUserDto): Promise<UserDocument | null> {
-    return this.userRepository.update(id, userDto);
+  async update(id: string, userDto: UpdateUserDto): Promise<UserDocument> {
+    const user = await this.userRepository.update(id, userDto);
+    if (!user) {
+      throw new RpcNotFoundException('User not found');
+    }
+
+    return user;
   }
 
   sanitize(user: UserDocument, excludePrefixes = ['password']): UserType {

@@ -17,6 +17,7 @@ export const Patterns = {
     FIND_ONE: 'users.findOne',
     FIND_ALL: 'users.findAll',
     FIND_EMAILS_BY_IDS: 'users.findEmailsByIds',
+    UPDATE: 'users.update',
   },
   AUTH: {
     SIGN_IN: 'auth.signIn',

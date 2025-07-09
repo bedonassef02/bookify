@@ -1,6 +1,13 @@
-import { Controller, Get, Inject, Query } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Patch, Query } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { Patterns, QueryDto, Role, USER_SERVICE, UserType } from '@app/shared';
+import {
+  Patterns,
+  QueryDto,
+  Role,
+  UpdateProfileDto,
+  USER_SERVICE,
+  UserType,
+} from '@app/shared';
 import { Observable } from 'rxjs';
 import { CurrentUser } from './auth/decorators/current-user.decorator';
 import { Roles } from './auth/decorators/roles.decorator';
@@ -18,5 +25,13 @@ export class UsersController {
   @Get('me')
   me(@CurrentUser('userId') id: string): Observable<UserType> {
     return this.client.send(Patterns.USERS.FIND_ONE, { id });
+  }
+
+  @Patch('me')
+  update(
+    @CurrentUser('userId') id: string,
+    @Body() userDto: UpdateProfileDto,
+  ): Observable<UserType> {
+    return this.client.send(Patterns.USERS.UPDATE, { id, userDto });
   }
 }

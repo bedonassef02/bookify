@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { UserService } from './user.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { Patterns, QueryDto, UserType } from '@app/shared';
+import { Patterns, QueryDto, UpdateUserDto, UserType } from '@app/shared';
 import { UserDocument } from './entities/user.entity';
 
 @Controller()
@@ -22,5 +22,14 @@ export class UserController {
   @MessagePattern(Patterns.USERS.FIND_EMAILS_BY_IDS)
   findEmailsByIds(@Payload('ids') ids: string[]): Promise<string[]> {
     return this.userService.findEmailsByIds(ids);
+  }
+
+  @MessagePattern(Patterns.USERS.UPDATE)
+  async update(
+    @Payload('id') id: string,
+    @Payload('userDto') userDto: UpdateUserDto,
+  ): Promise<UserType> {
+    const user = await this.userService.update(id, userDto);
+    return this.userService.sanitize(user);
   }
 }
