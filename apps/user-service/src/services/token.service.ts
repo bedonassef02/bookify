@@ -4,6 +4,7 @@ import { AuthTokens, RpcUnauthorizedException } from '@app/shared';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
+import { JWT_ACCESS_TOKEN_TTL } from '../constants/jwt.constans';
 
 @Injectable()
 export class TokenService {
@@ -30,10 +31,7 @@ export class TokenService {
 
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {
-        expiresIn: this.configService.get<string>(
-          'JWT_ACCESS_TOKEN_TTL',
-          '15m',
-        ),
+        expiresIn: this.configService.get<string>(JWT_ACCESS_TOKEN_TTL, '15m'),
       }),
       this.generateRefreshToken(user._id as string),
     ]);
