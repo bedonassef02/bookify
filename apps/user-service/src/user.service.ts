@@ -1,13 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from './repositories/user.repository';
 import { UserDocument } from './entities/user.entity';
-import { CreateUserDto, QueryDto, UserType } from '@app/shared';
+import {
+  CreateUserDto,
+  QueryDto,
+  RpcUnauthorizedException,
+  UserType,
+} from '@app/shared';
 import { RpcNotFoundException } from '@app/shared';
 import { plainToInstance } from 'class-transformer';
+import { ChangePasswordDto } from '@app/shared/dto/user/change-password.dto';
+import { HashingService } from './hashing/hashing.service';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly hashingService: HashingService,
+  ) {}
 
   findAll(query: QueryDto): Promise<UserDocument[]> {
     query.fields = '-password,-role';
@@ -35,5 +45,31 @@ export class UserService {
 
   async findEmailsByIds(ids: string[]): Promise<string[]> {
     return this.userRepository.findEmailsByIds(ids);
+  }
+
+  async changePassword(
+    id: string,
+    passwordDto: ChangePasswordDto,
+  ): Promise<boolean> {
+    const user = await this.userRepository.findById(id);
+
+    if (!user) {
+      throw new RpcNotFoundException('User not found');
+    }
+
+    const isPasswordValid = await this.hashingService.compare(
+      passwordDto.currentPassword,
+      user.password,
+    );
+    if (!isPasswordValid) {
+      throw new RpcUnauthorizedException(
+        'Password is not match our credentials',
+      );
+    }
+
+    const password = await this.hashingService.hash(passwordDto.newPassword);
+    await this.userRepository.update(id, { password });
+
+    return true;
   }
 }

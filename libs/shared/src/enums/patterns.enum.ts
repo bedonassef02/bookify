@@ -20,6 +20,7 @@ export const Patterns = {
     FIND_ONE: 'users.findOne',
     FIND_ALL: 'users.findAll',
     FIND_EMAILS_BY_IDS: 'users.findEmailsByIds',
+    CHANGE_PASSWORD: 'users.changePassword',
   },
   NOTIFICATIONS: {
     SEND_EMAIL: 'notifications.sendEmail',
