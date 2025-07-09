@@ -8,11 +8,11 @@ import {
   UserType,
   RpcConflictException,
   RpcUnauthorizedException,
+  ChangePasswordDto,
 } from '@app/shared';
 import { SignInDto } from '@app/shared/dto/user/sign-in.dto';
 import { TokenService } from '../services/token.service';
 import { PasswordService } from '../services/password.service';
-import { ChangePasswordDto } from '@app/shared/dto/user/change-password.dto';
 
 @Injectable()
 export class AuthenticationService {

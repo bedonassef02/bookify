@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { RpcBadRequestException, RpcUnauthorizedException } from '@app/shared';
+import {
+  RpcBadRequestException,
+  RpcUnauthorizedException,
+  ChangePasswordDto,
+} from '@app/shared';
 import { HashingService } from '../hashing/hashing.service';
-import { ChangePasswordDto } from '@app/shared/dto/user/change-password.dto';
 
 @Injectable()
 export class PasswordService {

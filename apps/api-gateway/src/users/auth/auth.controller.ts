@@ -6,12 +6,12 @@ import {
   SignUpDto,
   USER_SERVICE,
   UserType,
+  ChangePasswordDto,
 } from '@app/shared';
 import { ClientProxy } from '@nestjs/microservices';
 import { Public } from './decorators/public.decorator';
 import { Observable } from 'rxjs';
 import { CurrentUser } from './decorators/current-user.decorator';
-import { ChangePasswordDto } from '@app/shared/dto/user/change-password.dto';
 
 @Controller('auth')
 export class AuthController {
