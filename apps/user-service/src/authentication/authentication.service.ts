@@ -1,12 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { UserService } from '../user.service';
 import { UserDocument } from '../entities/user.entity';
-import { AuthResponse, SignUpDto, UserType } from '@app/shared';
+import {
+  AuthResponse,
+  RpcNotFoundException,
+  SignUpDto,
+  UserType,
+} from '@app/shared';
 import { RpcConflictException, RpcUnauthorizedException } from '@app/shared';
 import { SignInDto } from '@app/shared/dto/user/sign-in.dto';
 import { TokenService } from '../services/token.service';
 import { PasswordService } from '../services/password.service';
-import { plainToInstance } from 'class-transformer';
+import { ChangePasswordDto } from '@app/shared/dto/user/change-password.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -41,13 +46,33 @@ export class AuthenticationService {
     const password = await this.passwordService.hash(signUpDto.password);
     const newUser = await this.usersService.create({ ...signUpDto, password });
 
-    const user = this.sanitizeUser(newUser);
+    const user = this.usersService.sanitize(newUser);
     const tokens = await this.tokenService.generate(user);
 
     return { user, tokens };
   }
 
-  async validateUser(
+  async changePassword(
+    id: string,
+    passwordDto: ChangePasswordDto,
+  ): Promise<boolean> {
+    const user: UserDocument = await this.usersService.findOne(id);
+    if (!user) throw new RpcNotFoundException('User not found');
+
+    await this.passwordService.verify(
+      passwordDto.currentPassword,
+      user.password,
+    );
+
+    this.passwordService.ensureDifferent(passwordDto);
+
+    const password = await this.passwordService.hash(passwordDto.newPassword);
+    await this.usersService.update(id, { password });
+
+    return true;
+  }
+
+  private async validateUser(
     email: string,
     password: string,
   ): Promise<UserType | null> {
@@ -60,10 +85,6 @@ export class AuthenticationService {
     );
     if (!isValidPassword) return null;
 
-    return this.sanitizeUser(user);
-  }
-
-  private sanitizeUser(user: UserDocument): UserType {
-    return plainToInstance(UserType, user, { excludePrefixes: ['password'] });
+    return this.usersService.sanitize(user);
   }
 }
