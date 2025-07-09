@@ -9,12 +9,12 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @MessagePattern(Patterns.USERS.FIND_ALL)
-  findAll(query: QueryDto): Promise<UserDocument[]> {
+  findAll(@Payload() query: QueryDto): Promise<UserDocument[]> {
     return this.userService.findAll(query);
   }
 
   @MessagePattern(Patterns.USERS.FIND_ONE)
-  findOne(id: string): Promise<UserType> {
+  findOne(@Payload('id') id: string): Promise<UserType> {
     return this.userService.findOne(id);
   }
 
