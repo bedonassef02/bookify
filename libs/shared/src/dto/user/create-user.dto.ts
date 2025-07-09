@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   MinLength,
   IsOptional,
+  IsPhoneNumber,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -24,7 +25,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   lastName: string;
 
-  @IsString()
+  @IsPhoneNumber()
   @IsOptional()
   phoneNumber?: string;
 
