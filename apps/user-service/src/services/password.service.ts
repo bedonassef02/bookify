@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RpcBadRequestException, RpcUnauthorizedException } from '@app/shared';
 import { HashingService } from '../hashing/hashing.service';
+import { ChangePasswordDto } from '@app/shared/dto/user/change-password.dto';
 
 @Injectable()
 export class PasswordService {
@@ -21,9 +22,8 @@ export class PasswordService {
     }
   }
 
-  async ensureDifferent(newPass: string, currentPass: string): Promise<void> {
-    const isSame = await this.compare(newPass, currentPass);
-    if (isSame) {
+  ensureDifferent(passwordDto: ChangePasswordDto): void {
+    if (passwordDto.newPassword === passwordDto.currentPassword) {
       throw new RpcBadRequestException('New password must be different');
     }
   }

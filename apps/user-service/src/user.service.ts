@@ -53,10 +53,8 @@ export class UserService {
       passwordDto.currentPassword,
       user.password,
     );
-    await this.passwordService.ensureDifferent(
-      passwordDto.newPassword,
-      user.password,
-    );
+
+    this.passwordService.ensureDifferent(passwordDto);
 
     const password = await this.passwordService.hash(passwordDto.newPassword);
     await this.userRepository.update(id, { password });
