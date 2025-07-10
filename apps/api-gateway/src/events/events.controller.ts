@@ -65,6 +65,15 @@ export class EventsController {
     return this.client.send(Patterns.EVENTS.REMOVE, { id });
   }
 
+  @Patch(':id/publish')
+  @Roles(Role.ADMIN)
+  publish(@Param('id', ParseMongoIdPipe) id: string): Observable<EventType> {
+    return this.client.send(Patterns.EVENTS.UPDATE, {
+      id,
+      eventDto: { isActive: true },
+    });
+  }
+
   @Roles(Role.ADMIN)
   @Get(':id/bookings')
   findBookingsByEvent(@Param('id', ParseMongoIdPipe) id: string) {
