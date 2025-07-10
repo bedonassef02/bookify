@@ -64,4 +64,10 @@ export class EventsController {
   remove(@Param('id', ParseMongoIdPipe) id: string): Observable<void> {
     return this.client.send(Patterns.EVENTS.REMOVE, { id });
   }
+
+  @Roles(Role.ADMIN)
+  @Get(':id/bookings')
+  findBookingsByEvent(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.client.send(Patterns.BOOKING.FIND_ALL_BY_EVENT, { id });
+  }
 }

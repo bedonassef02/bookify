@@ -1,9 +1,7 @@
-import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
 import { CurrentUser } from '../users/auth/decorators/current-user.decorator';
-import { BookDto, BOOKING_SERVICE, Patterns, Role } from '@app/shared';
+import { BookDto, BOOKING_SERVICE, Patterns } from '@app/shared';
 import { ClientProxy } from '@nestjs/microservices';
-import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
-import { Roles } from '../users/auth/decorators/roles.decorator';
 
 @Controller('booking')
 export class BookingController {
@@ -12,12 +10,6 @@ export class BookingController {
   @Get()
   findAll(@CurrentUser('userId') user: string) {
     return this.client.send(Patterns.BOOKING.FIND_ALL_BY_USER, { user });
-  }
-
-  @Roles(Role.ADMIN)
-  @Get(':event')
-  findAllByEvent(@Param('event', ParseMongoIdPipe) event: string) {
-    return this.client.send(Patterns.BOOKING.FIND_ALL_BY_EVENT, { event });
   }
 
   @Post()
