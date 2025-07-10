@@ -9,7 +9,7 @@ import { Cache } from 'cache-manager';
 import { EventRepository } from './repositories/event.repository';
 import { Event } from './entities/event.entity';
 import { QueryDto } from '@app/shared';
-import { BookingService } from './services/booking.service';
+import { BookingService } from './booking/booking.service';
 
 @Injectable()
 export class EventService {

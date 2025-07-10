@@ -10,8 +10,8 @@ import { EventController } from './event.controller';
 import { EventService } from './event.service';
 import { EventRepository } from './repositories/event.repository';
 import { Event, EventSchema } from './entities/event.entity';
-import { BookingService } from './services/booking.service';
-import { BookingController } from './controllers/booking.controller';
+import { BookingService } from './booking/booking.service';
+import { BookingController } from './booking/booking.controller';
 
 @Module({
   imports: [
