@@ -26,7 +26,7 @@ export class Event {
   @Prop({ required: true, default: 0 })
   bookedSeats: number;
 
-  @Prop({ default: true })
+  @Prop({ default: false })
   isActive: boolean;
 }
 
