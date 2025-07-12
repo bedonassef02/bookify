@@ -23,6 +23,9 @@ export class User {
 
   @Prop({ default: Role.USER })
   role: string;
+
+  @Prop({ default: false })
+  verified: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
