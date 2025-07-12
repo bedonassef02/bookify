@@ -3,10 +3,8 @@ import { Document } from 'mongoose';
 import { Role } from '@app/shared';
 import { Credentials, CredentialsSchema } from './credentials.entity';
 
-export type UserDocument = User & Document;
-
 @Schema({ timestamps: true })
-export class User {
+export class User extends Document {
   @Prop({ required: true, unique: true })
   email: string;
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from './repositories/user.repository';
-import { UserDocument } from './entities/user.entity';
+import { User } from './entities/user.entity';
 import { CreateUserDto, QueryDto, UpdateUserDto, UserType } from '@app/shared';
 import { RpcNotFoundException } from '@app/shared';
 import { plainToInstance } from 'class-transformer';
@@ -9,12 +9,12 @@ import { plainToInstance } from 'class-transformer';
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  findAll(query: QueryDto): Promise<UserDocument[]> {
+  findAll(query: QueryDto): Promise<User[]> {
     query.fields = '-password,-role';
     return this.userRepository.findAll(new QueryDto(query));
   }
 
-  async findOne(id: string): Promise<UserDocument> {
+  async findOne(id: string): Promise<User> {
     const user = await this.userRepository.findById(id);
     if (!user) {
       throw new RpcNotFoundException('User not found');
@@ -22,11 +22,11 @@ export class UserService {
     return user;
   }
 
-  findByEmail(email: string): Promise<UserDocument | null> {
+  findByEmail(email: string): Promise<User | null> {
     return this.userRepository.findByEmail(email);
   }
 
-  create(createDto: CreateUserDto): Promise<UserDocument> {
+  create(createDto: CreateUserDto): Promise<User> {
     return this.userRepository.create(createDto);
   }
 
@@ -34,7 +34,7 @@ export class UserService {
     return this.userRepository.findEmailsByIds(ids);
   }
 
-  async update(id: string, userDto: UpdateUserDto): Promise<UserDocument> {
+  async update(id: string, userDto: UpdateUserDto): Promise<User> {
     const user = await this.userRepository.update(id, userDto);
     if (!user) {
       throw new RpcNotFoundException('User not found');
@@ -43,7 +43,7 @@ export class UserService {
     return user;
   }
 
-  sanitize(user: UserDocument, excludePrefixes = ['password']): UserType {
+  sanitize(user: User, excludePrefixes = ['password']): UserType {
     return plainToInstance(UserType, user.toObject(), { excludePrefixes });
   }
 }

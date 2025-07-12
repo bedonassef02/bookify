@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserService } from '../user.service';
-import { UserDocument } from '../entities/user.entity';
+import { User } from '../entities/user.entity';
 import {
   AuthResponse,
   RpcNotFoundException,
@@ -57,7 +57,7 @@ export class AuthenticationService {
     id: string,
     passwordDto: ChangePasswordDto,
   ): Promise<boolean> {
-    const user: UserDocument = await this.usersService.findOne(id);
+    const user: User = await this.usersService.findOne(id);
     if (!user) throw new RpcNotFoundException('User not found');
 
     await this.passwordService.verify(
