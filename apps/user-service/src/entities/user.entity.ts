@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { Role } from '@app/shared';
+import { Credentials, CredentialsSchema } from './credentials.entity';
 
 export type UserDocument = User & Document;
 
@@ -26,6 +27,9 @@ export class User {
 
   @Prop({ default: false })
   verified: boolean;
+
+  @Prop({ type: CredentialsSchema, default: () => ({}) })
+  credentials: Credentials;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
