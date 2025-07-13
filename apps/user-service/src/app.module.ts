@@ -13,6 +13,7 @@ import { TokenService } from './services/token.service';
 import { UserController } from './user.controller';
 import { PasswordService } from './services/password.service';
 import { Credentials, CredentialsSchema } from './entities/credentials.entity';
+import { CredentialsService } from './services/credentials.service';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { Credentials, CredentialsSchema } from './entities/credentials.entity';
     AuthenticationService,
     TokenService,
     PasswordService,
+    CredentialsService,
   ],
   controllers: [UserController, AuthenticationController],
 })

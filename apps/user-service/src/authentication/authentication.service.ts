@@ -13,7 +13,7 @@ import {
 import { SignInDto } from '@app/shared/dto/user/sign-in.dto';
 import { TokenService } from '../services/token.service';
 import { PasswordService } from '../services/password.service';
-import * as dayjs from 'dayjs';
+import { CredentialsService } from '../services/credentials.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -21,6 +21,7 @@ export class AuthenticationService {
     private readonly usersService: UserService,
     private readonly passwordService: PasswordService,
     private readonly tokenService: TokenService,
+    private readonly credentialsService: CredentialsService,
   ) {}
 
   async signIn(signInDto: SignInDto): Promise<AuthResponse> {
@@ -68,14 +69,7 @@ export class AuthenticationService {
 
     this.passwordService.ensureDifferent(passwordDto);
 
-    const now = dayjs().unix();
-    const credentials = {
-      version: (user.credentials?.version || 0) + 1,
-      lastPassword: user.password,
-      passwordUpdatedAt: now,
-      updatedAt: now,
-    };
-
+    const credentials = this.credentialsService.updatePassword(user);
     const password = await this.passwordService.hash(passwordDto.newPassword);
     await this.usersService.update(id, { password, credentials });
 
