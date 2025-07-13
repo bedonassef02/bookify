@@ -1,8 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from './repositories/user.repository';
 import { User } from './entities/user.entity';
-import { CreateUserDto, QueryDto, UpdateUserDto, UserType } from '@app/shared';
-import { RpcNotFoundException } from '@app/shared';
+import {
+  CreateUserDto,
+  QueryDto,
+  UpdateUserDto,
+  UserType,
+  RpcNotFoundException,
+} from '@app/shared';
 import { plainToInstance } from 'class-transformer';
 
 @Injectable()
