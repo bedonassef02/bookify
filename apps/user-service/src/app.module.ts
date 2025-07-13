@@ -12,7 +12,6 @@ import { DatabaseModule, JwtModule, CoreModule } from '@app/shared';
 import { TokenService } from './services/token.service';
 import { UserController } from './user.controller';
 import { PasswordService } from './services/password.service';
-import { Credentials, CredentialsSchema } from './entities/credentials.entity';
 import { CredentialsService } from './services/credentials.service';
 
 @Module({
@@ -21,10 +20,7 @@ import { CredentialsService } from './services/credentials.service';
     JwtModule,
     CacheModule.register(),
     DatabaseModule.register({ dbName: 'userdb' }),
-    MongooseModule.forFeature([
-      { name: User.name, schema: UserSchema },
-      { name: Credentials.name, schema: CredentialsSchema },
-    ]),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   providers: [
     UserService,
