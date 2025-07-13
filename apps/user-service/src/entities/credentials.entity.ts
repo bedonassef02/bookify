@@ -15,19 +15,6 @@ export class Credentials extends Document {
 
   @Prop({ default: () => dayjs().unix() })
   updatedAt: number;
-
-  updatePassword(password: string): void {
-    this.version++;
-    this.lastPassword = password;
-    const now = dayjs().unix();
-    this.passwordUpdatedAt = now;
-    this.updatedAt = now;
-  }
-
-  updateVersion(): void {
-    this.version++;
-    this.updatedAt = dayjs().unix();
-  }
 }
 
 export const CredentialsSchema = SchemaFactory.createForClass(Credentials);

@@ -13,6 +13,7 @@ import {
 import { SignInDto } from '@app/shared/dto/user/sign-in.dto';
 import { TokenService } from '../services/token.service';
 import { PasswordService } from '../services/password.service';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class AuthenticationService {
@@ -67,8 +68,16 @@ export class AuthenticationService {
 
     this.passwordService.ensureDifferent(passwordDto);
 
+    const now = dayjs().unix();
+    const credentials = {
+      version: (user.credentials?.version || 0) + 1,
+      lastPassword: user.password,
+      passwordUpdatedAt: now,
+      updatedAt: now,
+    };
+
     const password = await this.passwordService.hash(passwordDto.newPassword);
-    await this.usersService.update(id, { password });
+    await this.usersService.update(id, { password, credentials });
 
     return true;
   }

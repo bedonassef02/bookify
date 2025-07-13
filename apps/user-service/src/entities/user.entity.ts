@@ -26,7 +26,7 @@ export class User extends Document {
   @Prop({ default: false })
   verified: boolean;
 
-  @Prop({ type: CredentialsSchema, default: () => ({}) })
+  @Prop({ type: CredentialsSchema, default: () => new Credentials() })
   credentials: Credentials;
 }
 
