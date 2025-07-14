@@ -5,7 +5,6 @@ import {
   AuthResponse,
   RpcNotFoundException,
   SignUpDto,
-  UserType,
   RpcConflictException,
   RpcUnauthorizedException,
   ChangePasswordDto,
@@ -25,17 +24,14 @@ export class AuthenticationService {
   ) {}
 
   async signIn(signInDto: SignInDto): Promise<AuthResponse> {
-    const user: UserType | null = await this.validateUser(
+    const user: User = await this.validateUser(
       signInDto.email,
       signInDto.password,
     );
-    if (!user) {
-      throw new RpcUnauthorizedException('Invalid credentials');
-    }
 
     const tokens = await this.tokenService.generate(user);
     return {
-      user,
+      user: this.usersService.sanitize(user),
       tokens,
     };
   }
@@ -47,12 +43,10 @@ export class AuthenticationService {
     }
 
     const password = await this.passwordService.hash(signUpDto.password);
-    const newUser = await this.usersService.create({ ...signUpDto, password });
-
-    const user = this.usersService.sanitize(newUser);
+    const user = await this.usersService.create({ ...signUpDto, password });
     const tokens = await this.tokenService.generate(user);
 
-    return { user, tokens };
+    return { user: this.usersService.sanitize(user), tokens };
   }
 
   async changePassword(
@@ -76,19 +70,20 @@ export class AuthenticationService {
     return true;
   }
 
-  private async validateUser(
-    email: string,
-    password: string,
-  ): Promise<UserType | null> {
+  private async validateUser(email: string, password: string): Promise<User> {
     const user = await this.usersService.findByEmail(email);
-    if (!user) return null;
+    if (!user) {
+      throw new RpcUnauthorizedException('Invalid credentials');
+    }
 
     const isValidPassword = await this.passwordService.compare(
       password,
       user.password,
     );
-    if (!isValidPassword) return null;
+    if (!isValidPassword) {
+      throw new RpcUnauthorizedException('Invalid credentials');
+    }
 
-    return this.usersService.sanitize(user);
+    return user;
   }
 }

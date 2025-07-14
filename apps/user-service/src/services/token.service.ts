@@ -1,31 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { AuthTokens, RpcUnauthorizedException, UserType } from '@app/shared';
+import { AuthTokens } from '@app/shared';
 import { JwtService } from '@nestjs/jwt';
 import * as crypto from 'crypto';
+import { User } from '../entities/user.entity';
 
 @Injectable()
 export class TokenService {
   private refreshTokens = new Map();
   constructor(private readonly jwtService: JwtService) {}
 
-  validate(token: string): Promise<any> {
-    try {
-      return this.jwtService.verifyAsync(token);
-    } catch (error) {
-      throw new RpcUnauthorizedException('Invalid token');
-    }
-  }
-
-  async generate(user: UserType): Promise<AuthTokens> {
+  async generate(user: User): Promise<AuthTokens> {
     const payload = {
-      sub: user.id,
+      sub: user.id as string,
       email: user.email,
       role: user.role,
     };
 
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload),
-      this.generateRefreshToken(user.id),
+      this.generateRefreshToken(user.id as string),
     ]);
 
     return {
