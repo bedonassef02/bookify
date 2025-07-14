@@ -8,11 +8,18 @@ import { HashingService } from './hashing/hashing.service';
 import { BcryptService } from './hashing/bcrypt.service';
 import { AuthenticationService } from './authentication/authentication.service';
 import { AuthenticationController } from './authentication/authentication.controller';
-import { DatabaseModule, JwtModule, CoreModule } from '@app/shared';
+import {
+  DatabaseModule,
+  JwtModule,
+  CoreModule,
+  ClientModule,
+  NOTIFICATION_SERVICE,
+} from '@app/shared';
 import { TokenService } from './services/token.service';
 import { UserController } from './user.controller';
 import { PasswordService } from './services/password.service';
 import { CredentialsService } from './services/credentials.service';
+import { NotificationService } from './mailer/notification.service';
 
 @Module({
   imports: [
@@ -21,6 +28,10 @@ import { CredentialsService } from './services/credentials.service';
     CacheModule.register(),
     DatabaseModule.register({ dbName: 'userdb' }),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    ClientModule.register({
+      name: NOTIFICATION_SERVICE,
+      queue: 'notification_queue',
+    }),
   ],
   providers: [
     UserService,
@@ -33,6 +44,7 @@ import { CredentialsService } from './services/credentials.service';
     TokenService,
     PasswordService,
     CredentialsService,
+    NotificationService,
   ],
   controllers: [UserController, AuthenticationController],
 })

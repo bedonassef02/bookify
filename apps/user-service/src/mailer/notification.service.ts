@@ -1,0 +1,44 @@
+import { Inject, Injectable } from '@nestjs/common';
+import { join } from 'path';
+import {
+  ITemplatedData,
+  MailDto,
+  NOTIFICATION_SERVICE,
+  parseTemplate,
+  Patterns,
+  UserType,
+} from '@app/shared';
+import { ConfigService } from '@nestjs/config';
+import { ClientProxy } from '@nestjs/microservices';
+
+@Injectable()
+export class NotificationService {
+  private readonly domain: string;
+  constructor(
+    @Inject(NOTIFICATION_SERVICE) private notificationService: ClientProxy,
+    configService: ConfigService,
+  ) {
+    this.domain = configService.get<string>('DOMAIN') as string;
+  }
+
+  sendConfirmation(user: UserType, token: string) {
+    const mailDto: MailDto = {
+      to: user.email,
+      subject: 'Confirm your account',
+      html: this.compile('confirmation.hbs', {
+        name: user.firstName,
+        link: `http://${this.domain}/auth/confirm/${token}`,
+      }),
+    };
+
+    this.notificationService.emit(Patterns.NOTIFICATIONS.SEND_EMAIL, mailDto);
+  }
+
+  private compile(templateName: string, data: ITemplatedData): string {
+    const template = parseTemplate(
+      join(__dirname, 'mailer/templates', templateName),
+    );
+
+    return template(data);
+  }
+}
