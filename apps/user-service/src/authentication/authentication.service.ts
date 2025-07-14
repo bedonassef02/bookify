@@ -76,6 +76,7 @@ export class AuthenticationService {
       throw new RpcUnauthorizedException('Invalid credentials');
     }
 
+    await this.passwordService.isLast(user, password);
     const isValidPassword = await this.passwordService.compare(
       password,
       user.password,
