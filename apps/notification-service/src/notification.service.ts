@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 import { MailDto } from '@app/shared';
 
 @Injectable()
 export class NotificationService {
-  private email: string;
+  private readonly logger = new Logger(NotificationService.name);
+  private readonly email: string;
   constructor(
     private readonly mailService: MailerService,
     private readonly configService: ConfigService,
@@ -21,6 +22,9 @@ export class NotificationService {
       }
       return;
     }
-    await this.mailService.sendMail(mailDto);
+    await this.mailService
+      .sendMail(mailDto)
+      .then(() => this.logger.log('A new email was sent.'))
+      .catch((error) => this.logger.error(error));
   }
 }
