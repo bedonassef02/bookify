@@ -1,4 +1,12 @@
-import { Body, Controller, Inject, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Inject,
+  Post,
+  Put,
+} from '@nestjs/common';
 import {
   AuthResponse,
   Patterns,
@@ -19,6 +27,7 @@ export class AuthController {
 
   @Public()
   @Post('sign-in')
+  @HttpCode(HttpStatus.OK)
   signIn(@Body() signInDto: SignInDto): Observable<AuthResponse> {
     return this.client.send(Patterns.AUTH.SIGN_IN, signInDto);
   }
