@@ -15,7 +15,7 @@ import { CoreModule } from '@app/shared';
         transport: {
           service: configService.get<string>('SERVICE_NAME'),
           auth: {
-            user: configService.get<string>('EMAIL_ADDRESS'),
+            user: configService.get<string>('EMAIL_USER'),
             pass: configService.get<string>('EMAIL_PASSWORD'),
           },
           tls: {
