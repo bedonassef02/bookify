@@ -3,11 +3,20 @@ import { NotificationController } from './notification.controller';
 import { NotificationService } from './notification.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { CoreModule } from '@app/shared';
+import { CoreModule, DatabaseModule } from '@app/shared';
+import { MongooseModule } from '@nestjs/mongoose';
+import {
+  UserPreference,
+  UserPreferenceSchema,
+} from './entities/user-preference.entity';
 
 @Module({
   imports: [
     CoreModule.forRoot(),
+    DatabaseModule.register({ dbName: 'notificationdb' }),
+    MongooseModule.forFeature([
+      { name: UserPreference.name, schema: UserPreferenceSchema },
+    ]),
     MailerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
