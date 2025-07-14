@@ -11,3 +11,4 @@ export * from './modules';
 export * from './repositories';
 export * from './types';
 export * from './shared.module';
+export * from './utils';
