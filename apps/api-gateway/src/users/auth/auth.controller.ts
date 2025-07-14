@@ -13,7 +13,6 @@ import {
   SignInDto,
   SignUpDto,
   USER_SERVICE,
-  UserType,
   ChangePasswordDto,
 } from '@app/shared';
 import { ClientProxy } from '@nestjs/microservices';
@@ -42,7 +41,7 @@ export class AuthController {
   changePassword(
     @CurrentUser('userId') id: string,
     @Body() passwordDto: ChangePasswordDto,
-  ): Observable<UserType> {
+  ): Observable<AuthResponse> {
     return this.client.send(Patterns.AUTH.CHANGE_PASSWORD, {
       id,
       passwordDto,

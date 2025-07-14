@@ -29,8 +29,7 @@ export class AuthenticationService {
       signInDto.password,
     );
 
-    const tokens = await this.tokenService.generate(user);
-    return { user: this.usersService.sanitize(user), tokens };
+    return this.generateResponse(user);
   }
 
   async signUp(signUpDto: SignUpDto): Promise<AuthResponse> {
@@ -41,15 +40,14 @@ export class AuthenticationService {
 
     const password = await this.passwordService.hash(signUpDto.password);
     const user = await this.usersService.create({ ...signUpDto, password });
-    const tokens = await this.tokenService.generate(user);
 
-    return { user: this.usersService.sanitize(user), tokens };
+    return this.generateResponse(user);
   }
 
   async changePassword(
     id: string,
     passwordDto: ChangePasswordDto,
-  ): Promise<boolean> {
+  ): Promise<AuthResponse> {
     const user: User = await this.usersService.findOne(id);
     if (!user) throw new RpcNotFoundException('User not found');
 
@@ -64,7 +62,7 @@ export class AuthenticationService {
     const password = await this.passwordService.hash(passwordDto.newPassword);
     await this.usersService.update(id, { password, credentials });
 
-    return true;
+    return this.generateResponse(user);
   }
 
   private async validateUser(email: string, password: string): Promise<User> {
@@ -83,5 +81,11 @@ export class AuthenticationService {
     }
 
     return user;
+  }
+
+  private async generateResponse(user: User): Promise<AuthResponse> {
+    const tokens = await this.tokenService.generate(user);
+
+    return { user: this.usersService.sanitize(user), tokens };
   }
 }

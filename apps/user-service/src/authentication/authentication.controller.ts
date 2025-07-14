@@ -22,7 +22,7 @@ export class AuthenticationController {
   changePassword(
     @Payload('id') id: string,
     @Payload('passwordDto') passwordDto: ChangePasswordDto,
-  ): Promise<boolean> {
+  ): Promise<AuthResponse> {
     return this.authService.changePassword(id, passwordDto);
   }
 }
