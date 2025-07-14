@@ -12,7 +12,7 @@ export class NotificationService {
     const mailDto: MailDto = {
       to: emails,
       subject: 'Booking Cancelled',
-      text: `Your booking for event ${event} has been cancelled.`,
+      html: `Your booking for event ${event} has been cancelled.`,
     };
 
     this.notificationService.emit(Patterns.NOTIFICATIONS.SEND_EMAIL, mailDto);
