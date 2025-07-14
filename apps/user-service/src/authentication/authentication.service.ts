@@ -4,12 +4,12 @@ import { User } from '../entities/user.entity';
 import {
   AuthResponse,
   RpcNotFoundException,
+  SignInDto,
   SignUpDto,
   RpcConflictException,
   RpcUnauthorizedException,
   ChangePasswordDto,
 } from '@app/shared';
-import { SignInDto } from '@app/shared/dto/user/sign-in.dto';
 import { TokenService } from '../services/token.service';
 import { PasswordService } from '../services/password.service';
 import { CredentialsService } from '../services/credentials.service';
@@ -30,10 +30,7 @@ export class AuthenticationService {
     );
 
     const tokens = await this.tokenService.generate(user);
-    return {
-      user: this.usersService.sanitize(user),
-      tokens,
-    };
+    return { user: this.usersService.sanitize(user), tokens };
   }
 
   async signUp(signUpDto: SignUpDto): Promise<AuthResponse> {
