@@ -1,17 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { AuthTokens, RpcUnauthorizedException, UserType } from '@app/shared';
 import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
-import { JWT_ACCESS_TOKEN_TTL } from '../constants/jwt.constans';
 
 @Injectable()
 export class TokenService {
   private refreshTokens = new Map();
-  constructor(
-    private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private readonly jwtService: JwtService) {}
 
   validate(token: string): Promise<any> {
     try {
@@ -29,9 +24,7 @@ export class TokenService {
     };
 
     const [accessToken, refreshToken] = await Promise.all([
-      this.jwtService.signAsync(payload, {
-        expiresIn: this.configService.get<string>(JWT_ACCESS_TOKEN_TTL, '15m'),
-      }),
+      this.jwtService.signAsync(payload),
       this.generateRefreshToken(user.id),
     ]);
 
