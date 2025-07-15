@@ -25,7 +25,7 @@ import { UserPreferenceRepository } from './repositories/user-preference.reposit
         transport: {
           service: configService.get<string>('SERVICE_NAME'),
           auth: {
-            user: configService.get<string>('EMAIL_ADDRESS'),
+            user: configService.get<string>('EMAIL_USER'),
             pass: configService.get<string>('EMAIL_PASSWORD'),
           },
           tls: {
