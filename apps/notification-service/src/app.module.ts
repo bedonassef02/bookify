@@ -9,6 +9,7 @@ import {
   UserPreference,
   UserPreferenceSchema,
 } from './entities/user-preference.entity';
+import { UserPreferenceRepository } from './repositories/user-preference.repository';
 
 @Module({
   imports: [
@@ -35,6 +36,6 @@ import {
     }),
   ],
   controllers: [NotificationController],
-  providers: [NotificationService],
+  providers: [NotificationService, UserPreferenceRepository],
 })
 export class AppModule {}
