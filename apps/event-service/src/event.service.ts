@@ -34,16 +34,16 @@ export class EventService {
     return events;
   }
 
-  async findOne(id: string): Promise<Event> {
-    const cached = await this.cacheManager.get<Event>(`event_${id}`);
+  async findOne(slug: string): Promise<Event> {
+    const cached = await this.cacheManager.get<Event>(`event_${slug}`);
     if (cached) return cached;
 
-    const event = await this.eventRepository.findById(id);
+    const event = await this.eventRepository.findBySlug(slug);
     if (!event) {
-      throw new RpcNotFoundException(`Event with ID ${id} not found`);
+      throw new RpcNotFoundException(`Event not found`);
     }
 
-    await this.cacheManager.set(`event_${id}`, event, 30000);
+    await this.cacheManager.set(`event_${slug}`, event, 30000);
     return event;
   }
 

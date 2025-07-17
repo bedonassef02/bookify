@@ -19,8 +19,8 @@ export class EventController {
   }
 
   @MessagePattern(Patterns.EVENTS.FIND_ONE)
-  async findOne(@Payload('id') id: string): Promise<Event | null> {
-    return this.eventService.findOne(id);
+  async findOne(@Payload('slug') slug: string): Promise<Event | null> {
+    return this.eventService.findOne(slug);
   }
 
   @MessagePattern(Patterns.EVENTS.CREATE)

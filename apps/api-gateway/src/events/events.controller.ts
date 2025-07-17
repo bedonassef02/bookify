@@ -39,9 +39,9 @@ export class EventsController {
   }
 
   @Public()
-  @Get(':id')
-  findOne(@Param('id', ParseMongoIdPipe) id: string): Observable<EventType> {
-    return this.client.send(Patterns.EVENTS.FIND_ONE, { id });
+  @Get(':slug')
+  findOne(@Param('slug') slug: string): Observable<EventType> {
+    return this.client.send(Patterns.EVENTS.FIND_ONE, { slug });
   }
 
   @Post()

@@ -1,10 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-
-export type EventDocument = Event & Document;
+import { Document, Model } from 'mongoose';
+import slugify from 'slugify';
 
 @Schema({ timestamps: true })
-export class Event {
+export class Event extends Document {
   @Prop({ required: true })
   title: string;
 
@@ -28,6 +27,25 @@ export class Event {
 
   @Prop({ default: false })
   isActive: boolean;
+
+  @Prop({ unique: true })
+  slug: string;
 }
 
 export const EventSchema = SchemaFactory.createForClass(Event);
+
+EventSchema.pre<Event>('save', async function (next) {
+  if (!this.isModified('title')) return next();
+
+  const baseSlug = slugify(this.title, { lower: true, strict: true });
+  let slug = baseSlug;
+  let count = 1;
+
+  const Model = this.constructor as Model<Event>;
+  while (await Model.exists({ slug, _id: { $ne: this._id } })) {
+    slug = `${baseSlug}-${count++}`;
+  }
+
+  this.slug = slug;
+  next();
+});
