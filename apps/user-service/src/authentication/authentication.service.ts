@@ -9,7 +9,6 @@ import {
   RpcConflictException,
   RpcUnauthorizedException,
   ChangePasswordDto,
-  RpcBadRequestException,
 } from '@app/shared';
 import { TokenService } from '../services/token.service';
 import { PasswordService } from '../services/password.service';
@@ -73,6 +72,8 @@ export class AuthenticationService {
     const password = await this.passwordService.hash(passwordDto.newPassword);
     await this.usersService.update(id, { password, credentials });
 
+    this.notificationService.sendPasswordChangeSuccess(user);
+
     return this.generateResponse(user);
   }
 
@@ -112,6 +113,27 @@ export class AuthenticationService {
     this.notificationService.sendPasswordReset(user, resetToken);
 
     return { message: 'We have emailed you a password reset link.' };
+  }
+
+  async resetPassword(
+    token: string,
+    newPassword: string,
+  ): Promise<{ message: string }> {
+    const user = await this.usersService.findByResetToken(token);
+
+    const password = await this.passwordService.hash(newPassword);
+    const credentials = this.credentialsService.updatePassword(user);
+
+    await this.usersService.update(user.id as string, {
+      password,
+      credentials,
+      resetPasswordToken: undefined,
+      resetPasswordTokenExpiry: undefined,
+    });
+
+    this.notificationService.sendPasswordChangeSuccess(user);
+
+    return { message: 'Password reset successful.' };
   }
 
   private async validateUser(email: string, password: string): Promise<User> {

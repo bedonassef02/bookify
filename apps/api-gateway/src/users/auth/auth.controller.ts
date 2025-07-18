@@ -70,4 +70,16 @@ export class AuthController {
   ): Observable<{ message: string }> {
     return this.client.send(Patterns.AUTH.FORGOT_PASSWORD, { email });
   }
+
+  @Public()
+  @Post('reset-password/:token')
+  resetPassword(
+    @Param('token') token: string,
+    @Body('newPassword') newPassword: string,
+  ): Observable<{ message: string }> {
+    return this.client.send(Patterns.AUTH.RESET_PASSWORD, {
+      token,
+      newPassword,
+    });
+  }
 }

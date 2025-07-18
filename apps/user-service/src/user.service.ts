@@ -58,6 +58,15 @@ export class UserService {
     return user;
   }
 
+  async findByResetToken(token: string): Promise<User> {
+    const user = await this.userRepository.findByResetToken(token);
+    if (!user) {
+      throw new RpcBadRequestException('Invalid or expired reset token');
+    }
+
+    return user;
+  }
+
   sanitize(
     user: User,
     excludePrefixes = ['password', 'credentials', 'confirmation', 'reset'],

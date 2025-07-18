@@ -44,4 +44,12 @@ export class AuthenticationController {
   ): Promise<{ message: string }> {
     return this.authService.forgotPassword(email);
   }
+
+  @MessagePattern(Patterns.AUTH.RESET_PASSWORD)
+  async resetPassword(
+    @Payload('token') token: string,
+    @Payload('newPassword') newPassword: string,
+  ): Promise<{ message: string }> {
+    return this.authService.resetPassword(token, newPassword);
+  }
 }

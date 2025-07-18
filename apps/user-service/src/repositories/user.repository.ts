@@ -29,4 +29,13 @@ export class UserRepository extends Repository<User> {
       })
       .exec();
   }
+
+  async findByResetToken(token: string): Promise<User | null> {
+    return this.model
+      .findOne({
+        resetPasswordToken: token,
+        resetPasswordTokenExpiry: { $gt: new Date() },
+      })
+      .exec();
+  }
 }

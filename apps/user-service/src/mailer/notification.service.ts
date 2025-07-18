@@ -47,6 +47,18 @@ export class NotificationService {
     this.notificationService.emit(Patterns.NOTIFICATIONS.SEND_EMAIL, mailDto);
   }
 
+  sendPasswordChangeSuccess(user: User) {
+    const mailDto: MailDto = {
+      to: user.email,
+      subject: 'Password change successful',
+      html: this.compile('password-change-success.hbs', {
+        name: user.firstName,
+      }),
+    };
+
+    this.notificationService.emit(Patterns.NOTIFICATIONS.SEND_EMAIL, mailDto);
+  }
+
   private compile(templateName: string, data: ITemplatedData): string {
     const template = parseTemplate(
       join(__dirname, 'mailer/templates', templateName),
