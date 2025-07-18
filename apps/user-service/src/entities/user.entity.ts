@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { Role } from '@app/shared';
-import { Credentials, CredentialsSchema } from './credentials.entity';
+import { Credentials } from './credentials.entity';
 
 @Schema({ timestamps: true })
 export class User extends Document {
@@ -26,8 +26,14 @@ export class User extends Document {
   @Prop({ default: false })
   verified: boolean;
 
-  @Prop({ type: CredentialsSchema, default: () => new Credentials() })
+  @Prop()
   credentials: Credentials;
+
+  @Prop()
+  confirmationToken?: string;
+
+  @Prop()
+  confirmationTokenExpiry?: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

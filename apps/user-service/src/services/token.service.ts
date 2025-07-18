@@ -28,7 +28,7 @@ export class TokenService {
   }
 
   private generateRefreshToken(userId: string): string {
-    const token = crypto.randomBytes(32).toString('hex');
+    const token = this.generateRandomToken();
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 7);
 
@@ -36,6 +36,10 @@ export class TokenService {
     this.cleanupExpired();
 
     return token;
+  }
+
+  generateRandomToken(): string {
+    return crypto.randomBytes(32).toString('hex');
   }
 
   private cleanupExpired() {

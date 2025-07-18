@@ -23,6 +23,7 @@ export const Patterns = {
     SIGN_IN: 'auth.signIn',
     SIGN_UP: 'auth.signUp',
     CHANGE_PASSWORD: 'auth.changePassword',
+    CONFIRM_EMAIL: 'auth.confirmEmail',
   },
   NOTIFICATIONS: {
     SEND_EMAIL: 'notifications.sendEmail',

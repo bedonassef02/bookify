@@ -25,4 +25,9 @@ export class AuthenticationController {
   ): Promise<AuthResponse> {
     return this.authService.changePassword(id, passwordDto);
   }
+
+  @MessagePattern(Patterns.AUTH.CONFIRM_EMAIL)
+  confirmEmail(@Payload('token') token: string): Promise<{ message: string }> {
+    return this.authService.confirmEmail(token);
+  }
 }

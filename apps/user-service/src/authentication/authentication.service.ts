@@ -13,6 +13,7 @@ import {
 import { TokenService } from '../services/token.service';
 import { PasswordService } from '../services/password.service';
 import { CredentialsService } from '../services/credentials.service';
+import { NotificationService } from '../mailer/notification.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -21,6 +22,7 @@ export class AuthenticationService {
     private readonly passwordService: PasswordService,
     private readonly tokenService: TokenService,
     private readonly credentialsService: CredentialsService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async signIn(signInDto: SignInDto): Promise<AuthResponse> {
@@ -40,6 +42,14 @@ export class AuthenticationService {
 
     const password = await this.passwordService.hash(signUpDto.password);
     const user = await this.usersService.create({ ...signUpDto, password });
+
+    const confirmationToken = this.tokenService.generateRandomToken();
+    await this.usersService.update(user.id as string, {
+      confirmationToken,
+      confirmationTokenExpiry: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes
+    });
+
+    this.notificationService.sendConfirmation(user, confirmationToken);
 
     return this.generateResponse(user);
   }
@@ -63,6 +73,18 @@ export class AuthenticationService {
     await this.usersService.update(id, { password, credentials });
 
     return this.generateResponse(user);
+  }
+
+  async confirmEmail(token: string): Promise<{ message: string }> {
+    const user = await this.usersService.findByConfirmationToken(token);
+
+    await this.usersService.update(user.id as string, {
+      verified: true,
+      confirmationToken: undefined,
+      confirmationTokenExpiry: undefined,
+    });
+
+    return { message: 'Email confirmed successfully. You can now sign in.' };
   }
 
   private async validateUser(email: string, password: string): Promise<User> {

@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Inject,
+  Param,
   Post,
   Put,
 } from '@nestjs/common';
@@ -46,5 +48,11 @@ export class AuthController {
       id,
       passwordDto,
     });
+  }
+
+  @Public()
+  @Get('confirm/:token')
+  confirmEmail(@Param('token') token: string): Observable<{ message: string }> {
+    return this.client.send(Patterns.AUTH.CONFIRM_EMAIL, { token });
   }
 }

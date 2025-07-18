@@ -6,10 +6,10 @@ import {
   NOTIFICATION_SERVICE,
   parseTemplate,
   Patterns,
-  UserType,
 } from '@app/shared';
 import { ConfigService } from '@nestjs/config';
 import { ClientProxy } from '@nestjs/microservices';
+import { User } from '../entities/user.entity';
 
 @Injectable()
 export class NotificationService {
@@ -21,7 +21,7 @@ export class NotificationService {
     this.domain = configService.get<string>('DOMAIN') as string;
   }
 
-  sendConfirmation(user: UserType, token: string) {
+  sendConfirmation(user: User, token: string) {
     const mailDto: MailDto = {
       to: user.email,
       subject: 'Confirm your account',

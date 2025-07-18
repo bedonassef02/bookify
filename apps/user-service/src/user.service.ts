@@ -7,6 +7,7 @@ import {
   UpdateUserDto,
   UserType,
   RpcNotFoundException,
+  RpcBadRequestException,
 } from '@app/shared';
 import { plainToInstance } from 'class-transformer';
 
@@ -48,9 +49,18 @@ export class UserService {
     return user;
   }
 
+  async findByConfirmationToken(token: string): Promise<User> {
+    const user = await this.userRepository.findByConfirmationToken(token);
+    if (!user) {
+      throw new RpcBadRequestException('Invalid or expired confirmation token');
+    }
+
+    return user;
+  }
+
   sanitize(
     user: User,
-    excludePrefixes = ['password', 'credentials'],
+    excludePrefixes = ['password', 'credentials', 'confirmation'],
   ): UserType {
     return plainToInstance(UserType, user.toObject(), { excludePrefixes });
   }
