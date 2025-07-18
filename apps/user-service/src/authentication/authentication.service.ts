@@ -87,6 +87,13 @@ export class AuthenticationService {
     return { message: 'Email confirmed successfully. You can now sign in.' };
   }
 
+  async resendConfirmation(id: string): Promise<{ success: boolean }> {
+    const user = await this.usersService.findOne(id);
+    const confirmationToken = this.tokenService.generateRandomToken();
+    this.notificationService.sendConfirmation(user, confirmationToken);
+    return { success: true };
+  }
+
   private async validateUser(email: string, password: string): Promise<User> {
     const user = await this.usersService.findByEmail(email);
     if (!user) {

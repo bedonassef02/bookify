@@ -55,4 +55,11 @@ export class AuthController {
   confirmEmail(@Param('token') token: string): Observable<{ message: string }> {
     return this.client.send(Patterns.AUTH.CONFIRM_EMAIL, { token });
   }
+
+  @Post('resend-confirmation')
+  resendConfirmation(
+    @CurrentUser('userId') id: string,
+  ): Observable<{ success: boolean }> {
+    return this.client.send(Patterns.AUTH.RESEND_CONFIRMATION, { id });
+  }
 }

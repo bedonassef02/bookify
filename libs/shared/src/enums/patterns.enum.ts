@@ -24,6 +24,7 @@ export const Patterns = {
     SIGN_UP: 'auth.signUp',
     CHANGE_PASSWORD: 'auth.changePassword',
     CONFIRM_EMAIL: 'auth.confirmEmail',
+    RESEND_CONFIRMATION: 'auth.resendConfirmation',
   },
   NOTIFICATIONS: {
     SEND_EMAIL: 'notifications.sendEmail',

@@ -30,4 +30,11 @@ export class AuthenticationController {
   confirmEmail(@Payload('token') token: string): Promise<{ message: string }> {
     return this.authService.confirmEmail(token);
   }
+
+  @MessagePattern(Patterns.AUTH.RESEND_CONFIRMATION)
+  async resendConfirmation(
+    @Payload('id') id: string,
+  ): Promise<{ success: boolean }> {
+    return this.authService.resendConfirmation(id);
+  }
 }
