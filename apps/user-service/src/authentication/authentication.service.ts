@@ -82,8 +82,8 @@ export class AuthenticationService {
 
     await this.usersService.update(user.id as string, {
       verified: true,
-      confirmationToken: undefined,
-      confirmationTokenExpiry: undefined,
+      confirmationToken: null,
+      confirmationTokenExpiry: null,
     });
 
     return { message: 'Email confirmed successfully. You can now sign in.' };
@@ -127,8 +127,8 @@ export class AuthenticationService {
     await this.usersService.update(user.id as string, {
       password,
       credentials,
-      resetPasswordToken: undefined,
-      resetPasswordTokenExpiry: undefined,
+      resetPasswordToken: null,
+      resetPasswordTokenExpiry: null,
     });
 
     this.notificationService.sendPasswordChangeSuccess(user);
