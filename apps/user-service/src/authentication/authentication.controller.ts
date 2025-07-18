@@ -9,12 +9,12 @@ export class AuthenticationController {
   constructor(private readonly authService: AuthenticationService) {}
 
   @MessagePattern(Patterns.AUTH.SIGN_UP)
-  async signUp(signUpDto: SignUpDto): Promise<AuthResponse> {
+  signUp(signUpDto: SignUpDto): Promise<AuthResponse> {
     return this.authService.signUp(signUpDto);
   }
 
   @MessagePattern(Patterns.AUTH.SIGN_IN)
-  async signIn(signInDto: SignInDto): Promise<AuthResponse> {
+  signIn(signInDto: SignInDto): Promise<AuthResponse> {
     return this.authService.signIn(signInDto);
   }
 
@@ -32,21 +32,19 @@ export class AuthenticationController {
   }
 
   @MessagePattern(Patterns.AUTH.RESEND_CONFIRMATION)
-  async resendConfirmation(
-    @Payload('id') id: string,
-  ): Promise<{ success: boolean }> {
+  resendConfirmation(@Payload('id') id: string): Promise<{ success: boolean }> {
     return this.authService.resendConfirmation(id);
   }
 
   @MessagePattern(Patterns.AUTH.FORGOT_PASSWORD)
-  async forgotPassword(
+  forgotPassword(
     @Payload('email') email: string,
   ): Promise<{ message: string }> {
     return this.authService.forgotPassword(email);
   }
 
   @MessagePattern(Patterns.AUTH.RESET_PASSWORD)
-  async resetPassword(
+  resetPassword(
     @Payload('token') token: string,
     @Payload('newPassword') newPassword: string,
   ): Promise<{ message: string }> {
