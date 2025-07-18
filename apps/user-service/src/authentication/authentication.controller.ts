@@ -37,4 +37,11 @@ export class AuthenticationController {
   ): Promise<{ success: boolean }> {
     return this.authService.resendConfirmation(id);
   }
+
+  @MessagePattern(Patterns.AUTH.FORGOT_PASSWORD)
+  async forgotPassword(
+    @Payload('email') email: string,
+  ): Promise<{ message: string }> {
+    return this.authService.forgotPassword(email);
+  }
 }

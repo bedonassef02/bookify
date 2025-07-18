@@ -9,6 +9,7 @@ import {
   RpcConflictException,
   RpcUnauthorizedException,
   ChangePasswordDto,
+  RpcBadRequestException,
 } from '@app/shared';
 import { TokenService } from '../services/token.service';
 import { PasswordService } from '../services/password.service';
@@ -92,6 +93,25 @@ export class AuthenticationService {
     const confirmationToken = this.tokenService.generateRandomToken();
     this.notificationService.sendConfirmation(user, confirmationToken);
     return { success: true };
+  }
+
+  async forgotPassword(email: string): Promise<{ message: string }> {
+    const user = await this.usersService.findByEmail(email);
+    if (!user) {
+      throw new RpcNotFoundException('This email is not exist');
+    }
+
+    const resetToken = this.tokenService.generateRandomToken();
+    const resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+    await this.usersService.update(user.id as string, {
+      resetPasswordToken: resetToken,
+      resetPasswordTokenExpiry: resetTokenExpiry,
+    });
+
+    this.notificationService.sendPasswordReset(user, resetToken);
+
+    return { message: 'We have emailed you a password reset link.' };
   }
 
   private async validateUser(email: string, password: string): Promise<User> {

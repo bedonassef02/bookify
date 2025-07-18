@@ -34,6 +34,19 @@ export class NotificationService {
     this.notificationService.emit(Patterns.NOTIFICATIONS.SEND_EMAIL, mailDto);
   }
 
+  sendPasswordReset(user: User, token: string) {
+    const mailDto: MailDto = {
+      to: user.email,
+      subject: 'Reset your password',
+      html: this.compile('reset-password.hbs', {
+        name: user.firstName,
+        link: `http://${this.domain}/auth/reset-password/${token}`,
+      }),
+    };
+
+    this.notificationService.emit(Patterns.NOTIFICATIONS.SEND_EMAIL, mailDto);
+  }
+
   private compile(templateName: string, data: ITemplatedData): string {
     const template = parseTemplate(
       join(__dirname, 'mailer/templates', templateName),

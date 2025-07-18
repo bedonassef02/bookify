@@ -7,4 +7,6 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   verified?: boolean;
   confirmationToken?: string | undefined;
   confirmationTokenExpiry?: Date | undefined;
+  resetPasswordToken?: string | undefined;
+  resetPasswordTokenExpiry?: Date | undefined;
 }

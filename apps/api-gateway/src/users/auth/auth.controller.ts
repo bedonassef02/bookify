@@ -62,4 +62,12 @@ export class AuthController {
   ): Observable<{ success: boolean }> {
     return this.client.send(Patterns.AUTH.RESEND_CONFIRMATION, { id });
   }
+
+  @Public()
+  @Post('forgot-password')
+  forgotPassword(
+    @Body('email') email: string,
+  ): Observable<{ message: string }> {
+    return this.client.send(Patterns.AUTH.FORGOT_PASSWORD, { email });
+  }
 }
