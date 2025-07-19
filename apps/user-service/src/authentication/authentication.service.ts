@@ -73,8 +73,10 @@ export class AuthenticationService {
   async confirmEmail(token: string): Promise<{ message: string }> {
     const tokenDoc = await this.tokenService.findOne(token, TokenType.CONFIRM);
 
-    await this.usersService.update(tokenDoc.userId, { verified: true });
-    await this.tokenService.delete(tokenDoc.userId, TokenType.CONFIRM);
+    await Promise.all([
+      this.usersService.update(tokenDoc.userId, { verified: true }),
+      this.tokenService.delete(tokenDoc.userId, TokenType.CONFIRM),
+    ]);
 
     return { message: 'Email confirmed successfully. You can now sign in.' };
   }
@@ -82,8 +84,10 @@ export class AuthenticationService {
   async resendConfirmation(id: string): Promise<{ success: boolean }> {
     await this.tokenService.delete(id, TokenType.CONFIRM);
 
-    const user = await this.usersService.findOne(id);
-    const token = await this.tokenService.create(id, TokenType.CONFIRM);
+    const [user, token] = await Promise.all([
+      this.usersService.findOne(id),
+      this.tokenService.create(id, TokenType.CONFIRM),
+    ]);
     this.notificationService.sendConfirmation(user, token.token);
 
     return { success: true };
