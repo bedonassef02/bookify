@@ -24,7 +24,7 @@ export class EventController {
   }
 
   @MessagePattern(Patterns.EVENTS.CREATE)
-  async create(eventDto: CreateEventDto): Promise<Event> {
+  async create(@Payload() eventDto: CreateEventDto): Promise<Event> {
     return this.eventService.create(eventDto);
   }
 
