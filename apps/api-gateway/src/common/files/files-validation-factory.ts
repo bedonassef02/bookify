@@ -19,7 +19,7 @@ const createFileValidators = (
   const fileTypeRegex = createFileTypeRegex(fileTypes);
   return [
     new MaxFileSizeValidator({
-      maxSize: bytes(maxSize),
+      maxSize: bytes(maxSize) as number,
       message: (maxSize) =>
         `File is too big. Max file size is ${maxSize} bytes`,
     }),
