@@ -7,12 +7,10 @@ import {
   Param,
   Post,
   Patch,
-  UseInterceptors,
   Query,
 } from '@nestjs/common';
 import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
 import { ClientProxy } from '@nestjs/microservices';
-import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
 import { Observable } from 'rxjs';
 import {
   CreateEventDto,
@@ -27,13 +25,11 @@ import { Public } from '../users/auth/decorators/public.decorator';
 import { Roles } from '../users/auth/decorators/roles.decorator';
 
 @Controller('events')
-@UseInterceptors(CacheInterceptor)
 export class EventsController {
   constructor(@Inject(EVENT_SERVICE) private client: ClientProxy) {}
 
   @Public()
   @Get()
-  @CacheKey('events')
   findAll(@Query() query: QueryDto): Observable<EventType[]> {
     return this.client.send(Patterns.EVENTS.FIND_ALL, query);
   }

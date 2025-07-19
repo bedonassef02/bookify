@@ -1,49 +1,35 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   CreateEventDto,
   RpcNotFoundException,
   UpdateEventDto,
+  QueryDto,
 } from '@app/shared';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';
 import { EventRepository } from './repositories/event.repository';
 import { Event } from './entities/event.entity';
-import { QueryDto } from '@app/shared';
 import { BookingService } from './booking/booking.service';
 
 @Injectable()
 export class EventService {
   constructor(
     private readonly eventRepository: EventRepository,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private bookingService: BookingService,
   ) {}
 
-  async create(eventDto: CreateEventDto): Promise<Event> {
-    const createdEvent = await this.eventRepository.create(eventDto);
-    await this.cacheManager.del('events');
-    return createdEvent;
+  create(eventDto: CreateEventDto): Promise<Event> {
+    return this.eventRepository.create(eventDto);
   }
 
-  async findAll(query: QueryDto): Promise<Event[]> {
-    const cached = await this.cacheManager.get<Event[]>('events'); // @todo: add query params
-    if (cached) return cached;
-
-    const events = await this.eventRepository.findAll(query);
-    await this.cacheManager.set('events', events, 30000);
-    return events;
+  findAll(query: QueryDto): Promise<Event[]> {
+    return this.eventRepository.findAll(query);
   }
 
   async findOne(slug: string): Promise<Event> {
-    const cached = await this.cacheManager.get<Event>(`event_${slug}`);
-    if (cached) return cached;
-
     const event = await this.eventRepository.findBySlug(slug);
     if (!event) {
       throw new RpcNotFoundException(`Event not found`);
     }
 
-    await this.cacheManager.set(`event_${slug}`, event, 30000);
     return event;
   }
 
@@ -53,9 +39,6 @@ export class EventService {
       throw new RpcNotFoundException(`Event with ID ${id} not found`);
     }
 
-    await this.cacheManager.set(`event_${id}`, event, 30000);
-    await this.cacheManager.del('events');
-
     return event;
   }
 
@@ -64,9 +47,6 @@ export class EventService {
     if (!event) {
       throw new RpcNotFoundException(`Event with ID ${id} not found`);
     }
-
-    await this.cacheManager.del(`event_${id}`);
-    await this.cacheManager.del('events');
 
     this.bookingService.cancelManyByEvent(id);
 
