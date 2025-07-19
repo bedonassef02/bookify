@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import {
@@ -20,9 +20,7 @@ export class EventService {
 
   async getBookedSeats(id: string): Promise<number> {
     const event: EventType = await this.findOne(id);
-
     this.check(event);
-
     return event.bookedSeats;
   }
 
@@ -34,18 +32,16 @@ export class EventService {
   }
 
   private check(event: EventType): void {
-    if (event.date >= new Date()) {
-      throw new BadRequestException(
-        "Booking for this Event isn't available now",
-      );
+    if (event.date <= new Date()) {
+      throw new RpcBadRequestException('Cannot book seats for past events');
     }
 
-    if (event.isActive) {
-      throw new BadRequestException(`You Can't Access This Event Now`);
+    if (!event.isActive) {
+      throw new RpcBadRequestException('Event is not available for booking');
     }
 
     if (event.capacity <= event.bookedSeats) {
-      throw new RpcBadRequestException(`Not enough available seats`);
+      throw new RpcBadRequestException('No available seats');
     }
   }
 }
