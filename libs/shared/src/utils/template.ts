@@ -2,7 +2,9 @@ import { ITemplatedData } from '@app/shared';
 import { join } from 'path';
 import { TemplateDelegate } from 'handlebars';
 import { readFileSync } from 'fs';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class Template {
   private path: string;
 
