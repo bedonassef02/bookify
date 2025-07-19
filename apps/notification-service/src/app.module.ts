@@ -10,6 +10,10 @@ import {
 } from './entities/user-preference.entity';
 import { UserPreferenceRepository } from './repositories/user-preference.repository';
 import mailConfig from './config/mail.config';
+import {
+  Notification,
+  NotificationSchema,
+} from './entities/notification.entity';
 
 @Module({
   imports: [
@@ -17,6 +21,7 @@ import mailConfig from './config/mail.config';
     DatabaseModule.register({ dbName: 'notificationdb' }),
     MongooseModule.forFeature([
       { name: UserPreference.name, schema: UserPreferenceSchema },
+      { name: Notification.name, schema: NotificationSchema },
     ]),
     MailerModule.forRootAsync(mailConfig.asProvider()),
   ],
