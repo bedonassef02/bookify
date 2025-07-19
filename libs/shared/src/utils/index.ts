@@ -1,1 +1,2 @@
-export * from './parse-template';
+export * from './redactor';
+export * from './template';

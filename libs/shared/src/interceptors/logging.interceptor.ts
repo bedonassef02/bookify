@@ -8,6 +8,7 @@ import {
 import { Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { RmqContext } from '@nestjs/microservices';
+import { Redactor } from '@app/shared';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
@@ -24,14 +25,16 @@ export class LoggingInterceptor implements NestInterceptor {
       tap((response) => {
         const elapsedTime = Date.now() - now;
         this.logger.debug(`[${pattern}] - (${elapsedTime}ms)`);
-        this.logger.verbose(JSON.stringify(data));
-        this.logger.verbose(JSON.stringify(response));
+        this.logger.verbose(`Data: ${JSON.stringify(Redactor.sanitize(data))}`);
+        this.logger.verbose(
+          `Response: ${JSON.stringify(Redactor.sanitize(response))}`,
+        );
       }),
       catchError((error) => {
         const elapsedTime = Date.now() - now;
         this.logger.error(`[${pattern}] - (${elapsedTime}ms)`);
-        this.logger.error(JSON.stringify(data));
-        this.logger.error(JSON.stringify(error));
+        this.logger.error(`Data: ${JSON.stringify(Redactor.sanitize(data))}`);
+        this.logger.error(`Error: ${JSON.stringify(error.message || error)}`);
         throw error;
       }),
     );

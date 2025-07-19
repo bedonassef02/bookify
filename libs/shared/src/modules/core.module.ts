@@ -2,7 +2,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CacheModule } from '@nestjs/cache-manager';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { LoggingInterceptor, ExceptionFilter } from '@app/shared';
+import { LoggingInterceptor, ExceptionFilter, Template } from '@app/shared';
 
 @Module({})
 export class CoreModule {
@@ -18,6 +18,7 @@ export class CoreModule {
         CacheModule.register(),
       ],
       providers: [
+        Template,
         {
           provide: APP_INTERCEPTOR,
           useClass: LoggingInterceptor,
@@ -27,7 +28,7 @@ export class CoreModule {
           useClass: ExceptionFilter,
         },
       ],
-      exports: [ConfigModule, CacheModule],
+      exports: [ConfigModule, CacheModule, Template],
     };
   }
 }
