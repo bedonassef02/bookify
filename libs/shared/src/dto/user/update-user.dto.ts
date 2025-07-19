@@ -5,8 +5,4 @@ import { ICredentials } from '../../../../../apps/user-service/src/interfaces/cr
 export class UpdateUserDto extends PartialType(CreateUserDto) {
   credentials?: ICredentials;
   verified?: boolean;
-  confirmationToken?: string | null;
-  confirmationTokenExpiry?: Date | null;
-  resetPasswordToken?: string | null;
-  resetPasswordTokenExpiry?: Date | null;
 }

@@ -20,22 +20,4 @@ export class UserRepository extends Repository<User> {
       .exec()
       .then((users) => users.map((user) => user.email));
   }
-
-  async findByConfirmationToken(token: string): Promise<User | null> {
-    return this.model
-      .findOne({
-        confirmationToken: token,
-        confirmationTokenExpiry: { $gt: new Date() },
-      })
-      .exec();
-  }
-
-  async findByResetToken(token: string): Promise<User | null> {
-    return this.model
-      .findOne({
-        resetPasswordToken: token,
-        resetPasswordTokenExpiry: { $gt: new Date() },
-      })
-      .exec();
-  }
 }

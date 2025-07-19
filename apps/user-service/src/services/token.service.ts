@@ -1,13 +1,40 @@
 import { Injectable } from '@nestjs/common';
-import { AuthTokens } from '@app/shared';
+import { AuthTokens, RpcNotFoundException } from '@app/shared';
 import { JwtService } from '@nestjs/jwt';
 import * as crypto from 'crypto';
 import { User } from '../entities/user.entity';
+import { TokenRepository } from '../repositories/token.repository';
+import { Token, TokenType } from '../entities/token.entity';
 
 @Injectable()
 export class TokenService {
   private refreshTokens = new Map();
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly tokenRepository: TokenRepository,
+    private readonly jwtService: JwtService,
+  ) {}
+
+  async findOne(token: string, type: TokenType): Promise<Token> {
+    const tokenDoc = await this.tokenRepository.findOne(token, type);
+    if (!tokenDoc) {
+      throw new RpcNotFoundException('Invalid or expired token');
+    }
+
+    return tokenDoc;
+  }
+
+  delete(userId: string, type: TokenType): Promise<void> {
+    return this.tokenRepository.deleteOne(userId, type);
+  }
+
+  create(userId: string, type: TokenType): Promise<Token> {
+    return this.tokenRepository.create({
+      type,
+      token: this.generateRandomToken(),
+      userId,
+      expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+    });
+  }
 
   async generate(user: User): Promise<AuthTokens> {
     const payload = {
@@ -38,7 +65,7 @@ export class TokenService {
     return token;
   }
 
-  generateRandomToken(): string {
+  private generateRandomToken(): string {
     return crypto.randomBytes(32).toString('hex');
   }
 

@@ -1,5 +1,5 @@
-import { IsNotEmpty, IsString, MinLength } from 'class-validator';
-import { IsDifferentFrom } from '@app/shared';
+import { IsNotEmpty, IsString, Matches, MinLength } from 'class-validator';
+import { IsDifferentFrom, PASSWORD_REGEX } from '@app/shared';
 
 export class ChangePasswordDto {
   @IsString()
@@ -11,5 +11,6 @@ export class ChangePasswordDto {
   @IsNotEmpty()
   @MinLength(6)
   @IsDifferentFrom('currentPassword')
+  @Matches(PASSWORD_REGEX)
   newPassword: string;
 }
