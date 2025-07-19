@@ -3,17 +3,18 @@ import { UserService } from '../user.service';
 import { User } from '../entities/user.entity';
 import {
   AuthResponse,
+  ChangePasswordDto,
+  RpcConflictException,
   RpcNotFoundException,
+  RpcUnauthorizedException,
   SignInDto,
   SignUpDto,
-  RpcConflictException,
-  RpcUnauthorizedException,
-  ChangePasswordDto,
 } from '@app/shared';
 import { TokenService } from '../services/token.service';
 import { PasswordService } from '../services/password.service';
 import { CredentialsService } from '../services/credentials.service';
 import { NotificationService } from '../mailer/notification.service';
+import { TokenType } from '../entities/token.entity';
 
 @Injectable()
 export class AuthenticationService {
@@ -26,10 +27,7 @@ export class AuthenticationService {
   ) {}
 
   async signIn(signInDto: SignInDto): Promise<AuthResponse> {
-    const user: User = await this.validateUser(
-      signInDto.email,
-      signInDto.password,
-    );
+    const user: User = await this.validateUser(signInDto);
 
     return this.generateResponse(user);
   }
@@ -42,14 +40,11 @@ export class AuthenticationService {
 
     const password = await this.passwordService.hash(signUpDto.password);
     const user = await this.usersService.create({ ...signUpDto, password });
-
-    const confirmationToken = this.tokenService.generateRandomToken();
-    await this.usersService.update(user.id as string, {
-      confirmationToken,
-      confirmationTokenExpiry: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes
-    });
-
-    this.notificationService.sendConfirmation(user, confirmationToken);
+    const token = await this.tokenService.create(
+      user.id as string,
+      TokenType.CONFIRM,
+    );
+    this.notificationService.sendConfirmation(user, token.token);
 
     return this.generateResponse(user);
   }
@@ -65,34 +60,32 @@ export class AuthenticationService {
       passwordDto.currentPassword,
       user.password,
     );
-
     this.passwordService.ensureDifferent(passwordDto);
 
     const credentials = this.credentialsService.updatePassword(user);
     const password = await this.passwordService.hash(passwordDto.newPassword);
     await this.usersService.update(id, { password, credentials });
-
     this.notificationService.sendPasswordChangeSuccess(user);
 
     return this.generateResponse(user);
   }
 
   async confirmEmail(token: string): Promise<{ message: string }> {
-    const user = await this.usersService.findByConfirmationToken(token);
+    const tokenDoc = await this.tokenService.findOne(token, TokenType.CONFIRM);
 
-    await this.usersService.update(user.id as string, {
-      verified: true,
-      confirmationToken: null,
-      confirmationTokenExpiry: null,
-    });
+    await this.usersService.update(tokenDoc.userId, { verified: true });
+    await this.tokenService.delete(tokenDoc.userId, TokenType.CONFIRM);
 
     return { message: 'Email confirmed successfully. You can now sign in.' };
   }
 
   async resendConfirmation(id: string): Promise<{ success: boolean }> {
+    await this.tokenService.delete(id, TokenType.CONFIRM);
+
     const user = await this.usersService.findOne(id);
-    const confirmationToken = this.tokenService.generateRandomToken();
-    this.notificationService.sendConfirmation(user, confirmationToken);
+    const token = await this.tokenService.create(id, TokenType.CONFIRM);
+    this.notificationService.sendConfirmation(user, token.token);
+
     return { success: true };
   }
 
@@ -102,15 +95,11 @@ export class AuthenticationService {
       throw new RpcNotFoundException('This email is not exist');
     }
 
-    const resetToken = this.tokenService.generateRandomToken();
-    const resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
-
-    await this.usersService.update(user.id as string, {
-      resetPasswordToken: resetToken,
-      resetPasswordTokenExpiry: resetTokenExpiry,
-    });
-
-    this.notificationService.sendPasswordReset(user, resetToken);
+    const token = await this.tokenService.create(
+      user.id as string,
+      TokenType.RESET,
+    );
+    this.notificationService.sendPasswordReset(user, token.token);
 
     return { message: 'We have emailed you a password reset link.' };
   }
@@ -119,30 +108,36 @@ export class AuthenticationService {
     token: string,
     newPassword: string,
   ): Promise<{ message: string }> {
-    const user = await this.usersService.findByResetToken(token);
+    const tokenDoc = await this.tokenService.findOne(token, TokenType.RESET);
+    const user = await this.usersService.findOne(tokenDoc.userId);
 
     const password = await this.passwordService.hash(newPassword);
     const credentials = this.credentialsService.updatePassword(user);
 
-    await this.usersService.update(user.id as string, {
+    await this.usersService.update(tokenDoc.userId, {
       password,
       credentials,
-      resetPasswordToken: null,
-      resetPasswordTokenExpiry: null,
     });
-
     this.notificationService.sendPasswordChangeSuccess(user);
 
     return { message: 'Password reset successful.' };
   }
 
-  private async validateUser(email: string, password: string): Promise<User> {
-    const user = await this.usersService.findByEmail(email);
-    if (!user) {
+  private async validateUser(signInDto: SignInDto): Promise<User> {
+    const user = await this.usersService.findByEmail(signInDto.email);
+    if (!user || !(await this.isValidPassword(user, signInDto.password))) {
       throw new RpcUnauthorizedException('Invalid credentials');
     }
 
+    return user;
+  }
+
+  private async isValidPassword(
+    user: User,
+    password: string,
+  ): Promise<boolean> {
     await this.passwordService.isLast(user, password);
+
     const isValidPassword = await this.passwordService.compare(
       password,
       user.password,
@@ -151,7 +146,7 @@ export class AuthenticationService {
       throw new RpcUnauthorizedException('Invalid credentials');
     }
 
-    return user;
+    return true;
   }
 
   private async generateResponse(user: User): Promise<AuthResponse> {

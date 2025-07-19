@@ -20,6 +20,8 @@ import { UserController } from './user.controller';
 import { PasswordService } from './services/password.service';
 import { CredentialsService } from './services/credentials.service';
 import { NotificationService } from './mailer/notification.service';
+import { Token, TokenSchema } from './entities/token.entity';
+import { TokenRepository } from './repositories/token.repository';
 
 @Module({
   imports: [
@@ -27,7 +29,10 @@ import { NotificationService } from './mailer/notification.service';
     JwtModule,
     CacheModule.register(),
     DatabaseModule.register({ dbName: 'userdb' }),
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema },
+      { name: Token.name, schema: TokenSchema },
+    ]),
     ClientModule.register({
       name: NOTIFICATION_SERVICE,
       queue: 'notification_queue',
@@ -42,6 +47,7 @@ import { NotificationService } from './mailer/notification.service';
     },
     AuthenticationService,
     TokenService,
+    TokenRepository,
     PasswordService,
     CredentialsService,
     NotificationService,

@@ -7,7 +7,6 @@ import {
   UpdateUserDto,
   UserType,
   RpcNotFoundException,
-  RpcBadRequestException,
 } from '@app/shared';
 import { plainToInstance } from 'class-transformer';
 
@@ -44,24 +43,6 @@ export class UserService {
     const user = await this.userRepository.update(id, userDto);
     if (!user) {
       throw new RpcNotFoundException('User not found');
-    }
-
-    return user;
-  }
-
-  async findByConfirmationToken(token: string): Promise<User> {
-    const user = await this.userRepository.findByConfirmationToken(token);
-    if (!user) {
-      throw new RpcBadRequestException('Invalid or expired confirmation token');
-    }
-
-    return user;
-  }
-
-  async findByResetToken(token: string): Promise<User> {
-    const user = await this.userRepository.findByResetToken(token);
-    if (!user) {
-      throw new RpcBadRequestException('Invalid or expired reset token');
     }
 
     return user;
