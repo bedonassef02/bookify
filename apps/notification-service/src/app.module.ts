@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { NotificationController } from './notification.controller';
 import { NotificationService } from './notification.service';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CoreModule, DatabaseModule } from '@app/shared';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
@@ -10,6 +9,7 @@ import {
   UserPreferenceSchema,
 } from './entities/user-preference.entity';
 import { UserPreferenceRepository } from './repositories/user-preference.repository';
+import mailConfig from './config/mail.config';
 
 @Module({
   imports: [
@@ -18,22 +18,7 @@ import { UserPreferenceRepository } from './repositories/user-preference.reposit
     MongooseModule.forFeature([
       { name: UserPreference.name, schema: UserPreferenceSchema },
     ]),
-    MailerModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        transport: {
-          service: configService.get<string>('SERVICE_NAME'),
-          auth: {
-            user: configService.get<string>('EMAIL_USER'),
-            pass: configService.get<string>('EMAIL_PASSWORD'),
-          },
-          tls: {
-            rejectUnauthorized: false,
-          },
-        },
-      }),
-    }),
+    MailerModule.forRootAsync(mailConfig.asProvider()),
   ],
   controllers: [NotificationController],
   providers: [NotificationService, UserPreferenceRepository],
