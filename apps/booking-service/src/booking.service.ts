@@ -24,19 +24,17 @@ export class BookingService {
   }
 
   async bookSeats(bookDto: BookDto): Promise<BookingDocument> {
-    const seats: number = await this.eventService.getBookedSeats(bookDto.event);
-
-    const booking = await this.bookingRepository.findByUser(
+    const existingBooking = await this.bookingRepository.findByUser(
       bookDto.event,
       bookDto.user,
     );
-
-    if (booking) {
+    if (existingBooking) {
       throw new RpcConflictException(
         'User already has a booking for this event',
       );
     }
 
+    const seats: number = await this.eventService.getBookedSeats(bookDto.event);
     this.eventService.updateBookedSeats(bookDto.event, seats);
 
     return this.bookingRepository.create(bookDto);
