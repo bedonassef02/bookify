@@ -26,9 +26,11 @@ import {
 import { Public } from '../users/auth/decorators/public.decorator';
 import { Roles } from '../users/auth/decorators/roles.decorator';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { createParseFilePipe } from '../common/file-storage/files-validation-factory';
-import { CloudinaryService } from '../common/file-storage/services/cloudinary/cloudinary.service';
-import { MaxFileCount } from '../common/file-storage/constants/file-count.const';
+import {
+  CloudinaryService,
+  MaxFileCount,
+  createParseFilePipe,
+} from '@app/file-storage';
 
 @Controller('events')
 export class EventsController {

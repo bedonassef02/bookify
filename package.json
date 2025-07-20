@@ -109,6 +109,7 @@
       "<rootDir>/libs/"
     ],
     "moduleNameMapper": {
+      "^@app/file-storage(|/.*)$": "<rootDir>/libs/file-storage/src/$1",
       "^@app/shared(|/.*)$": "<rootDir>/libs/shared/src/$1"
     }
   }

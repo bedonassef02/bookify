@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { EventsController } from './events.controller';
 import { ClientModule, EVENT_SERVICE } from '@app/shared';
-import { CloudinaryModule } from '../common/file-storage/services/cloudinary/cloudinary.module';
+import { CloudinaryModule } from '@app/file-storage';
 
 @Module({
   imports: [

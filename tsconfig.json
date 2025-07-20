@@ -18,6 +18,12 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
+      "@app/file-storage": [
+        "libs/file-storage/src"
+      ],
+      "@app/file-storage/*": [
+        "libs/file-storage/src/*"
+      ],
       "@app/shared": [
         "libs/shared/src"
       ],
