@@ -6,9 +6,14 @@ import { User } from '../entities/user.entity';
 import { TokenRepository } from '../repositories/token.repository';
 import { Token, TokenType } from '../entities/token.entity';
 
+interface RefreshToken {
+  userId: string;
+  expiresAt: Date;
+}
+
 @Injectable()
 export class TokenService {
-  private refreshTokens = new Map();
+  private refreshTokens = new Map<string, RefreshToken>();
   constructor(
     private readonly tokenRepository: TokenRepository,
     private readonly jwtService: JwtService,
