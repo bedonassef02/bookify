@@ -26,12 +26,16 @@ import {
 import { Public } from '../users/auth/decorators/public.decorator';
 import { Roles } from '../users/auth/decorators/roles.decorator';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { MaxFileCount } from '../common/files/constants/file-count.const';
-import { createParseFilePipe } from '../common/files/files-validation-factory';
+import { createParseFilePipe } from '../common/file-storage/files-validation-factory';
+import { CloudinaryService } from '../common/file-storage/services/cloudinary/cloudinary.service';
+import { MaxFileCount } from '../common/file-storage/constants/file-count.const';
 
 @Controller('events')
 export class EventsController {
-  constructor(@Inject(EVENT_SERVICE) private client: ClientProxy) {}
+  constructor(
+    private cloudinaryService: CloudinaryService,
+    @Inject(EVENT_SERVICE) private client: ClientProxy,
+  ) {}
 
   @Public()
   @Get()
@@ -71,10 +75,12 @@ export class EventsController {
   @UseInterceptors(FilesInterceptor('files', MaxFileCount.EVENT_IMAGES))
   uploadFile(
     @Param('id', ParseMongoIdPipe) id: string,
-    @UploadedFiles(createParseFilePipe('2MB', ['png', 'jpeg', 'pdf']))
+    @UploadedFiles(createParseFilePipe('2MB', ['png', 'jpeg']))
     files: Express.Multer.File[],
   ) {
-    return files.map((file) => file.originalname);
+    return Promise.all(
+      files.map((file) => this.cloudinaryService.uploadFile(file)),
+    );
   }
 
   @Patch(':id/publish')
