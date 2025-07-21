@@ -22,7 +22,7 @@ import { CredentialsService } from './services/credentials.service';
 import { NotificationService } from './mailer/notification.service';
 import { Token, TokenSchema } from './entities/token.entity';
 import { TokenRepository } from './repositories/token.repository';
-import { UserSeeder } from './seed/seeder';
+import { UserSeeder } from './seed/user.seeder';
 
 @Module({
   imports: [
