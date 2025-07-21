@@ -8,6 +8,11 @@ import { BookingDocument } from './entities/booking.entity';
 export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
 
+  @MessagePattern(Patterns.BOOKING.FIND_ONE)
+  findOne(@Payload('id') id: string): Promise<BookingDocument> {
+    return this.bookingService.findOne(id);
+  }
+
   @MessagePattern(Patterns.BOOKING.FIND_ALL_BY_USER)
   findAllByUser(@Payload('user') user: string): Promise<BookingDocument[]> {
     return this.bookingService.findAllByUser(user);

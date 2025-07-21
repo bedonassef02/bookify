@@ -14,6 +14,7 @@ export const Patterns = {
     REMOVE: 'categories.remove',
   },
   BOOKING: {
+    FIND_ONE: 'booking.findOne',
     BOOK_SEATS: 'booking.bookSeats',
     CANCEL_BOOKING: 'booking.cancelBooking',
     FIND_ALL_BY_USER: 'booking.findAllByUser',

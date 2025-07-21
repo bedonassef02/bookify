@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { BookDto, RpcConflictException } from '@app/shared';
+import {
+  BookDto,
+  RpcConflictException,
+  RpcNotFoundException,
+} from '@app/shared';
 import { BookingRepository } from './repositories/booking.repository';
 import { BookingDocument } from './entities/booking.entity';
 import { NotificationService } from './services/notification.service';
@@ -14,6 +18,14 @@ export class BookingService {
     private userService: UserService,
     private notificationService: NotificationService,
   ) {}
+
+  async findOne(id: string): Promise<BookingDocument> {
+    const booking = await this.bookingRepository.findById(id);
+    if (!booking) {
+      throw new RpcNotFoundException('Booking not found');
+    }
+    return booking;
+  }
 
   findAllByUser(user: string): Promise<BookingDocument[]> {
     return this.bookingRepository.findAllByUser(user);
