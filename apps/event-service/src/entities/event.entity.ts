@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Model, Types } from 'mongoose';
 import slugify from 'slugify';
 import { Category } from './category.entity';
-import { BookingStatus, EventStatus } from '@app/shared';
+import { EventStatus } from '@app/shared';
 
 @Schema({ timestamps: true })
 export class Event extends Document {
