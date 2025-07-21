@@ -19,10 +19,24 @@ services:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
 
-  event-service:
+  api-gateway:
     build:
       context: .
-      dockerfile: apps/event-service/Dockerfile
+      args:
+        SERVICE_NAME: api-gateway
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      - rabbitmq
+
+  booking-service:
+    build:
+      context: .
+      args:
+        SERVICE_NAME: booking-service
     restart: always
     environment:
       MONGODB_URI: mongodb://mongodb:27017
@@ -31,23 +45,35 @@ services:
       - mongodb
       - rabbitmq
 
-  api-gateway:
+  event-service:
     build:
       context: .
-      dockerfile: apps/api-gateway/Dockerfile
+      args:
+        SERVICE_NAME: event-service
     restart: always
-    ports:
-      - "3000:3000"
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      - mongodb
+      - rabbitmq
+
+  notification-service:
+    build:
+      context: .
+      args:
+        SERVICE_NAME: notification-service
+    restart: always
     environment:
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
     depends_on:
       - rabbitmq
-      - event-service
 
   user-service:
     build:
       context: .
-      dockerfile: apps/user-service/Dockerfile
+      args:
+        SERVICE_NAME: user-service
     restart: always
     environment:
       MONGODB_URI: mongodb://mongodb:27017
