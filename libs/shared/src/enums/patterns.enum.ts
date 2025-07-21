@@ -21,6 +21,13 @@ export const Patterns = {
     FIND_ALL_BY_EVENT: 'booking.findAllByEvent',
     CANCEL_MANY_BY_EVENT: 'booking.cancelManyByEvent',
   },
+  TICKET_TIERS: {
+    CREATE: 'ticketTiers.create',
+    FIND_ALL: 'ticketTiers.findAll',
+    FIND_ONE: 'ticketTiers.findOne',
+    UPDATE: 'ticketTiers.update',
+    REMOVE: 'ticketTiers.remove',
+  },
   USERS: {
     FIND_ONE: 'users.findOne',
     FIND_ALL: 'users.findAll',
