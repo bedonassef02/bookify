@@ -6,12 +6,22 @@ import {
   RpcNotFoundException,
 } from '@app/shared';
 import { TicketTier } from '../entities/ticket-tier.entity';
+import { EventRepository } from '../repositories/event.repository';
 
 @Injectable()
 export class TicketTierService {
-  constructor(private readonly ticketTierRepository: TicketTierRepository) {}
+  constructor(
+    private readonly ticketTierRepository: TicketTierRepository,
+    private readonly eventRepository: EventRepository,
+  ) {}
 
-  create(ticketTierDto: CreateTicketTierDto): Promise<TicketTier> {
+  async create(ticketTierDto: CreateTicketTierDto): Promise<TicketTier> {
+    const event = await this.eventRepository.findById(ticketTierDto.event);
+    if (!event) {
+      throw new RpcNotFoundException(
+        `Event with ID ${ticketTierDto.event} not found`,
+      );
+    }
     return this.ticketTierRepository.create(ticketTierDto);
   }
 
