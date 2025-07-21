@@ -30,6 +30,12 @@ export class Event extends Document {
 
   @Prop({ unique: true })
   slug: string;
+
+  @Prop({ type: [String], default: [] })
+  imageIds: string[];
+
+  @Prop()
+  featuredImageId?: string;
 }
 
 export const EventSchema = SchemaFactory.createForClass(Event);
