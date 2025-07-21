@@ -6,6 +6,7 @@ import {
   EventType,
   Patterns,
   RpcBadRequestException,
+  EventStatus,
 } from '@app/shared';
 
 @Injectable()
@@ -36,7 +37,7 @@ export class EventService {
       throw new RpcBadRequestException('Cannot book seats for past events');
     }
 
-    if (!event.isActive) {
+    if (event.status !== EventStatus.PUBLISHED) {
       throw new RpcBadRequestException('Event is not available for booking');
     }
 

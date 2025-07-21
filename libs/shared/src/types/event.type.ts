@@ -1,3 +1,5 @@
+import { EventStatus } from '@app/shared/enums';
+
 export type EventType = {
   id: string;
   title: string;
@@ -7,5 +9,5 @@ export type EventType = {
   location: string;
   capacity: number;
   bookedSeats: number;
-  isActive: boolean;
+  status: EventStatus;
 };
