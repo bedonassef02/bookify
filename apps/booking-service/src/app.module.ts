@@ -15,6 +15,7 @@ import { Booking, BookingSchema } from './entities/booking.entity';
 import { NotificationService } from './services/notification.service';
 import { EventService } from './services/event.service';
 import { UserService } from './services/user.service';
+import { TicketTierService } from './services/ticket-tier.service';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { UserService } from './services/user.service';
     NotificationService,
     EventService,
     UserService,
+    TicketTierService,
   ],
 })
 export class AppModule {}

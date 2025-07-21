@@ -10,6 +10,7 @@ import { BookingDocument } from './entities/booking.entity';
 import { NotificationService } from './services/notification.service';
 import { EventService } from './services/event.service';
 import { UserService } from './services/user.service';
+import { TicketTierService } from './services/ticket-tier.service';
 
 @Injectable()
 export class BookingService {
@@ -18,6 +19,7 @@ export class BookingService {
     private eventService: EventService,
     private userService: UserService,
     private notificationService: NotificationService,
+    private ticketTierService: TicketTierService,
   ) {}
 
   async findOne(id: string, user: string): Promise<BookingDocument> {
@@ -47,9 +49,7 @@ export class BookingService {
       );
     }
 
-    const ticketTier = await this.eventService.getTicketTier(
-      bookDto.ticketTier,
-    );
+    const ticketTier = await this.ticketTierService.findOne(bookDto.ticketTier);
 
     if (ticketTier.capacity <= ticketTier.bookedSeats) {
       throw new RpcBadRequestException(
@@ -57,7 +57,7 @@ export class BookingService {
       );
     }
 
-    this.eventService.updateTicketTierBookedSeats(
+    this.ticketTierService.updateBookedSeats(
       ticketTier._id.toString(),
       ticketTier.bookedSeats,
     );
@@ -79,10 +79,10 @@ export class BookingService {
 
     const cancelledBooking = await this.bookingRepository.cancel(id, userId);
 
-    const ticketTier = await this.eventService.getTicketTier(
+    const ticketTier = await this.ticketTierService.findOne(
       booking.ticketTier.toString(),
     );
-    this.eventService.decrementTicketTierBookedSeats(
+    this.ticketTierService.decrementBookedSeats(
       ticketTier._id.toString(),
       ticketTier.bookedSeats,
     );
