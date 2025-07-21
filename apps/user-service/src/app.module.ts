@@ -22,6 +22,7 @@ import { CredentialsService } from './services/credentials.service';
 import { NotificationService } from './mailer/notification.service';
 import { Token, TokenSchema } from './entities/token.entity';
 import { TokenRepository } from './repositories/token.repository';
+import { UserSeeder } from './seed/seeder';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { TokenRepository } from './repositories/token.repository';
     PasswordService,
     CredentialsService,
     NotificationService,
+    UserSeeder,
   ],
   controllers: [UserController, AuthenticationController],
 })
