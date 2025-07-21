@@ -7,6 +7,6 @@ export class BookingService {
   constructor(@Inject(BOOKING_SERVICE) private bookingService: ClientProxy) {}
 
   cancelMany(event: string): void {
-    this.bookingService.emit(Patterns.BOOKING.CANCEL_MANY_BY_EVENT, { event });
+    this.bookingService.emit(Patterns.BOOKING.CANCEL_MANY, { event });
   }
 }
