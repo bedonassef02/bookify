@@ -17,7 +17,6 @@ export const Patterns = {
     BOOK_SEATS: 'booking.bookSeats',
     CANCEL_BOOKING: 'booking.cancelBooking',
     FIND_ALL_BY_USER: 'booking.findAllByUser',
-    FIND_ALL_BY_EVENT: 'booking.findAllByEvent',
     CANCEL_MANY_BY_EVENT: 'booking.cancelManyByEvent',
   },
   TICKET_TIERS: {

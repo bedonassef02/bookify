@@ -11,7 +11,6 @@ import { EventService } from './event.service';
 import { EventRepository } from './repositories/event.repository';
 import { Event, EventSchema } from './entities/event.entity';
 import { BookingService } from './booking/booking.service';
-import { BookingController } from './booking/booking.controller';
 import { CategoryModule } from './category/category.module';
 import { TicketTierModule } from './ticket-tier/ticket-tier.module';
 
@@ -27,7 +26,7 @@ import { TicketTierModule } from './ticket-tier/ticket-tier.module';
     CategoryModule,
     TicketTierModule,
   ],
-  controllers: [EventController, BookingController],
+  controllers: [EventController],
   providers: [EventService, EventRepository, BookingService],
 })
 export class AppModule {}

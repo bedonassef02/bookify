@@ -50,7 +50,7 @@ export class EventService {
     }
 
     if (eventDto.status === EventStatus.CANCELED) {
-      this.bookingService.cancelManyByEvent(id);
+      this.bookingService.cancelMany(id);
     }
 
     return event;

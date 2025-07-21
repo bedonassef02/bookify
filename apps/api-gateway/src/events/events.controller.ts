@@ -57,10 +57,4 @@ export class EventsController {
   ): Observable<EventType> {
     return this.client.send(Patterns.EVENTS.UPDATE, { id, eventDto });
   }
-
-  @Roles(Role.ADMIN)
-  @Get(':id/bookings')
-  findBookingsByEvent(@Param('id', ParseMongoIdPipe) id: string) {
-    return this.client.send(Patterns.BOOKING.FIND_ALL_BY_EVENT, { id });
-  }
 }

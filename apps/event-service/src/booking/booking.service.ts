@@ -6,13 +6,7 @@ import { BOOKING_SERVICE, Patterns } from '@app/shared';
 export class BookingService {
   constructor(@Inject(BOOKING_SERVICE) private bookingService: ClientProxy) {}
 
-  findBookingsByEvent(event: string) {
-    return this.bookingService.send(Patterns.BOOKING.FIND_ALL_BY_EVENT, {
-      event,
-    });
-  }
-
-  cancelManyByEvent(event: string): void {
+  cancelMany(event: string): void {
     this.bookingService.emit(Patterns.BOOKING.CANCEL_MANY_BY_EVENT, { event });
   }
 }

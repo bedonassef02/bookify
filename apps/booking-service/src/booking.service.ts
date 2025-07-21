@@ -34,10 +34,6 @@ export class BookingService {
     return this.bookingRepository.findAllByUser(user);
   }
 
-  findAllByEvent(event: string): Promise<BookingDocument[]> {
-    return this.bookingRepository.findAllByEvent(event);
-  }
-
   async bookSeats(bookDto: BookDto): Promise<BookingDocument> {
     const existingBooking = await this.bookingRepository.findByUser(
       bookDto.event,

@@ -21,11 +21,6 @@ export class BookingController {
     return this.bookingService.findAllByUser(user);
   }
 
-  @MessagePattern(Patterns.BOOKING.FIND_ALL_BY_EVENT)
-  findAllByEvent(@Payload('event') event: string): Promise<BookingDocument[]> {
-    return this.bookingService.findAllByEvent(event);
-  }
-
   @MessagePattern(Patterns.BOOKING.BOOK_SEATS)
   bookSeats(@Payload() bookDto: BookDto): Promise<BookingDocument> {
     return this.bookingService.bookSeats(bookDto);
