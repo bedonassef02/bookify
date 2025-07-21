@@ -13,7 +13,5 @@ export class CreateTicketTierDto {
   @Min(1)
   capacity: number;
 
-  @IsString()
-  @IsNotEmpty()
   event: string;
 }

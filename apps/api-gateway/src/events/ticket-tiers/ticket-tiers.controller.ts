@@ -10,9 +10,9 @@ import {
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import {
-  CreateTicketTierDto,
-  EVENT_SERVICE,
   Patterns,
+  EVENT_SERVICE,
+  CreateTicketTierDto,
   UpdateTicketTierDto,
 } from '@app/shared';
 import { ParseMongoIdPipe } from '../../common/pipes/parse-mongo-id.pipe';
@@ -23,10 +23,10 @@ export class TicketTiersController {
 
   @Post()
   create(
-    @Param('eventId', ParseMongoIdPipe) eventId: string,
+    @Param('eventId', ParseMongoIdPipe) event: string,
     @Body() createTicketTierDto: CreateTicketTierDto,
   ) {
-    createTicketTierDto.event = eventId;
+    createTicketTierDto.event = event;
     return this.client.send(Patterns.TICKET_TIERS.CREATE, createTicketTierDto);
   }
 
