@@ -14,8 +14,11 @@ export class BookingController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseMongoIdPipe) id: string) {
-    return this.client.send(Patterns.BOOKING.FIND_ONE, { id });
+  findOne(
+    @Param('id', ParseMongoIdPipe) id: string,
+    @CurrentUser('userId') userId: string,
+  ) {
+    return this.client.send(Patterns.BOOKING.FIND_ONE, { id, userId });
   }
 
   @Post()

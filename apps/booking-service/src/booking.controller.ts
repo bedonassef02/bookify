@@ -9,8 +9,11 @@ export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
 
   @MessagePattern(Patterns.BOOKING.FIND_ONE)
-  findOne(@Payload('id') id: string): Promise<BookingDocument> {
-    return this.bookingService.findOne(id);
+  findOne(
+    @Payload('id') id: string,
+    @Payload('userId') userId: string,
+  ): Promise<BookingDocument> {
+    return this.bookingService.findOne(id, userId);
   }
 
   @MessagePattern(Patterns.BOOKING.FIND_ALL_BY_USER)

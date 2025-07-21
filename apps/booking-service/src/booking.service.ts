@@ -19,9 +19,9 @@ export class BookingService {
     private notificationService: NotificationService,
   ) {}
 
-  async findOne(id: string): Promise<BookingDocument> {
+  async findOne(id: string, userId: string): Promise<BookingDocument> {
     const booking = await this.bookingRepository.findById(id);
-    if (!booking) {
+    if (!booking || booking.user.toString() !== userId) {
       throw new RpcNotFoundException('Booking not found');
     }
     return booking;
