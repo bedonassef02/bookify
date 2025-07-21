@@ -34,8 +34,8 @@ export class BookingController {
     return this.bookingService.cancel(id, user);
   }
 
-  @MessagePattern(Patterns.BOOKING.CANCEL_MANY_BY_EVENT)
-  cancelManyByEvent(@Payload('event') event: string): Promise<void> {
-    return this.bookingService.cancelManyByEvent(event);
+  @MessagePattern(Patterns.BOOKING.CANCEL_MANY)
+  cancelMany(@Payload('event') event: string): Promise<void> {
+    return this.bookingService.cancelMany(event);
   }
 }

@@ -86,8 +86,8 @@ export class BookingService {
     return cancelledBooking as BookingDocument;
   }
 
-  async cancelManyByEvent(event: string): Promise<void> {
-    const bookings = await this.bookingRepository.cancelManyByEvent(event);
+  async cancelMany(event: string): Promise<void> {
+    const bookings = await this.bookingRepository.cancelMany(event);
     const ids = bookings.map((booking) => booking.user);
     const emails: string[] = await this.userService.findEmails(ids);
 

@@ -30,7 +30,7 @@ export class BookingRepository extends Repository<BookingDocument> {
     );
   }
 
-  async cancelManyByEvent(event: string): Promise<BookingDocument[]> {
+  async cancelMany(event: string): Promise<BookingDocument[]> {
     const bookings = await this.model.find({ event }).select('user').lean();
 
     await this.model.updateMany({ event }, { status: BookingStatus.CANCELLED });
