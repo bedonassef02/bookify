@@ -53,10 +53,7 @@ export class BookingService {
       );
     }
 
-    this.ticketTierService.updateBookedSeats(
-      ticketTier._id.toString(),
-      ticketTier.bookedSeats,
-    );
+    this.ticketTierService.updateBookedSeats(ticketTier._id.toString(), 1);
 
     return this.bookingRepository.create(bookDto);
   }
@@ -68,7 +65,6 @@ export class BookingService {
     }
 
     const event = await this.eventService.findOne(booking.event.toString());
-
     if (event.date <= new Date()) {
       throw new RpcBadRequestException('Cannot cancel booking for past events');
     }
@@ -78,10 +74,7 @@ export class BookingService {
     const ticketTier = await this.ticketTierService.findOne(
       booking.ticketTier.toString(),
     );
-    this.ticketTierService.decrementBookedSeats(
-      ticketTier._id.toString(),
-      ticketTier.bookedSeats,
-    );
+    this.ticketTierService.updateBookedSeats(ticketTier._id.toString(), -1);
 
     return cancelledBooking as BookingDocument;
   }

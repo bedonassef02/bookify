@@ -48,4 +48,8 @@ export class TicketTierService {
     }
     return ticketTier;
   }
+
+  updateBookedSeats(id: string, increment: number): Promise<TicketTier | null> {
+    return this.ticketTierRepository.updateBookedSeats(id, increment);
+  }
 }

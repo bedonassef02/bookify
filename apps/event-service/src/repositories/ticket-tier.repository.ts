@@ -11,4 +11,17 @@ export class TicketTierRepository extends Repository<TicketTier> {
   ) {
     super(ticketTierModel);
   }
+
+  async updateBookedSeats(
+    id: string,
+    increment: number,
+  ): Promise<TicketTier | null> {
+    return this.model
+      .findByIdAndUpdate(
+        id,
+        { $inc: { bookedSeats: increment } },
+        { new: true },
+      )
+      .exec();
+  }
 }

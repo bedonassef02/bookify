@@ -39,4 +39,12 @@ export class TicketTierController {
   remove(@Payload('id') id: string): Promise<TicketTier> {
     return this.ticketTierService.remove(id);
   }
+
+  @MessagePattern(Patterns.TICKET_TIERS.UPDATE_BOOKED_SEATS)
+  updateBookedSeats(
+    @Payload('id') id: string,
+    @Payload('increment') increment: number,
+  ): Promise<TicketTier | null> {
+    return this.ticketTierService.updateBookedSeats(id, increment);
+  }
 }

@@ -13,17 +13,10 @@ export class TicketTierService {
     );
   }
 
-  updateBookedSeats(id: string, seats: number): void {
-    this.eventService.emit(Patterns.TICKET_TIERS.UPDATE, {
+  updateBookedSeats(id: string, increment: number): void {
+    this.eventService.emit(Patterns.TICKET_TIERS.UPDATE_BOOKED_SEATS, {
       id,
-      updateTicketTierDto: { bookedSeats: seats + 1 },
-    });
-  }
-
-  decrementBookedSeats(id: string, seats: number): void {
-    this.eventService.emit(Patterns.TICKET_TIERS.UPDATE, {
-      id,
-      updateTicketTierDto: { bookedSeats: seats - 1 },
+      increment,
     });
   }
 }

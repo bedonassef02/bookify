@@ -25,6 +25,7 @@ export const Patterns = {
     FIND_ONE: 'ticketTiers.findOne',
     UPDATE: 'ticketTiers.update',
     REMOVE: 'ticketTiers.remove',
+    UPDATE_BOOKED_SEATS: 'ticketTiers.updateBookedSeats',
   },
   USERS: {
     FIND_ONE: 'users.findOne',
