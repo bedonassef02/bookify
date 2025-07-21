@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
   BookDto,
+  RpcBadRequestException,
   RpcConflictException,
   RpcNotFoundException,
 } from '@app/shared';
@@ -53,12 +54,21 @@ export class BookingService {
   }
 
   async cancel(id: string, userId: string): Promise<BookingDocument> {
-    const booking = await this.bookingRepository.cancel(id, userId);
-    if (!booking) {
+    const booking = await this.bookingRepository.findById(id);
+    if (!booking || booking.user.toString() !== userId) {
       throw new RpcNotFoundException('Booking not found or not authorized');
     }
-    // TODO: Notify event service to decrement booked seats
-    return booking;
+
+    const event = await this.eventService.findOne(booking.event.toString());
+
+    if (event.date <= new Date()) {
+      throw new RpcBadRequestException('Cannot cancel booking for past events');
+    }
+
+    const cancelledBooking = await this.bookingRepository.cancel(id, userId);
+    this.eventService.decrementBookedSeats(event.id, event.bookedSeats);
+
+    return cancelledBooking as BookingDocument;
   }
 
   async cancelManyByEvent(event: string): Promise<void> {

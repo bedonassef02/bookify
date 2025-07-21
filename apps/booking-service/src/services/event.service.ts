@@ -32,6 +32,13 @@ export class EventService {
     });
   }
 
+  decrementBookedSeats(id: string, seats: number): void {
+    this.eventService.emit(Patterns.EVENTS.UPDATE, {
+      id,
+      eventDto: { bookedSeats: seats - 1 },
+    });
+  }
+
   private check(event: EventType): void {
     if (event.date <= new Date()) {
       throw new RpcBadRequestException('Cannot book seats for past events');
