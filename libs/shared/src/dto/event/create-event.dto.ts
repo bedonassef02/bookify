@@ -5,6 +5,8 @@ import {
   IsNotEmpty,
   Min,
   Max,
+  IsMongoId,
+  IsOptional,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsFutureDate } from '@app/shared/decorators';
@@ -67,4 +69,12 @@ export class CreateEventDto {
   @Min(1)
   @Max(5000)
   capacity: number;
+
+  @ApiProperty({
+    description: 'The category of the event',
+    example: '60f1b9b3b3b3b3b3b3b3b3b3',
+  })
+  @IsMongoId()
+  @IsOptional()
+  category: string;
 }

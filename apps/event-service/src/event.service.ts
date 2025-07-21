@@ -8,15 +8,20 @@ import {
 import { EventRepository } from './repositories/event.repository';
 import { Event } from './entities/event.entity';
 import { BookingService } from './booking/booking.service';
+import { CategoryRepository } from './repositories/category.repository';
 
 @Injectable()
 export class EventService {
   constructor(
     private readonly eventRepository: EventRepository,
+    private readonly categoryRepository: CategoryRepository,
     private bookingService: BookingService,
   ) {}
 
-  create(eventDto: CreateEventDto): Promise<Event> {
+  async create(eventDto: CreateEventDto): Promise<Event> {
+    if (eventDto.category) {
+      await this.validateCategory(eventDto.category);
+    }
     return this.eventRepository.create(eventDto);
   }
 
@@ -34,6 +39,10 @@ export class EventService {
   }
 
   async update(id: string, eventDto: UpdateEventDto): Promise<Event> {
+    if (eventDto.category) {
+      await this.validateCategory(eventDto.category);
+    }
+
     const event = await this.eventRepository.update(id, eventDto);
     if (!event) {
       throw new RpcNotFoundException(`Event with ID ${id} not found`);
@@ -51,5 +60,12 @@ export class EventService {
     this.bookingService.cancelManyByEvent(id);
 
     return event;
+  }
+
+  private async validateCategory(id: string) {
+    const category = await this.categoryRepository.findById(id);
+    if (!category) {
+      throw new RpcNotFoundException('Category not found');
+    }
   }
 }

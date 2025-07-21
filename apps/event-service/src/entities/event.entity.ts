@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Model } from 'mongoose';
+import { Document, Model, Types } from 'mongoose';
 import slugify from 'slugify';
+import { Category } from './category.entity';
 
 @Schema({ timestamps: true })
 export class Event extends Document {
@@ -36,6 +37,9 @@ export class Event extends Document {
 
   @Prop()
   featuredImageId?: string;
+
+  @Prop({ type: Types.ObjectId, ref: 'Category' })
+  category: Category;
 }
 
 export const EventSchema = SchemaFactory.createForClass(Event);

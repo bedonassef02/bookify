@@ -6,6 +6,13 @@ export const Patterns = {
     UPDATE: 'events.update',
     REMOVE: 'events.remove',
   },
+  CATEGORIES: {
+    FIND_ALL: 'categories.findAll',
+    FIND_ONE: 'categories.findOne',
+    CREATE: 'categories.create',
+    UPDATE: 'categories.update',
+    REMOVE: 'categories.remove',
+  },
   BOOKING: {
     BOOK_SEATS: 'booking.bookSeats',
     CANCEL_BOOKING: 'booking.cancelBooking',
