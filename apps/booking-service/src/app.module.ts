@@ -12,7 +12,7 @@ import {
 import { BookingRepository } from './repositories/booking.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Booking, BookingSchema } from './entities/booking.entity';
-import { NotificationService } from './services/notification.service';
+import { NotificationService } from './mailer/notification.service';
 import { EventService } from './services/event.service';
 import { UserService } from './services/user.service';
 import { TicketTierService } from './services/ticket-tier.service';

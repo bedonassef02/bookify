@@ -8,7 +8,7 @@ import {
 } from '@app/shared';
 import { BookingRepository } from './repositories/booking.repository';
 import { BookingDocument } from './entities/booking.entity';
-import { NotificationService } from './services/notification.service';
+import { NotificationService } from './mailer/notification.service';
 import { EventService } from './services/event.service';
 import { UserService } from './services/user.service';
 import { TicketTierService } from './services/ticket-tier.service';
