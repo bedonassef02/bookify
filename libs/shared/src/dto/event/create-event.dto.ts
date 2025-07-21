@@ -7,9 +7,11 @@ import {
   Max,
   IsMongoId,
   IsOptional,
+  IsEnum,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsFutureDate } from '@app/shared/decorators';
+import { EventStatus } from '@app/shared/enums/events/event-status.enum';
 
 export class CreateEventDto {
   @ApiProperty({
@@ -77,4 +79,13 @@ export class CreateEventDto {
   @IsMongoId()
   @IsOptional()
   category: string;
+
+  @ApiProperty({
+    description: 'The status of the event',
+    enum: EventStatus,
+    example: EventStatus.DRAFT,
+  })
+  @IsEnum(EventStatus)
+  @IsOptional()
+  status: EventStatus;
 }

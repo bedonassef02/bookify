@@ -4,6 +4,7 @@ import {
   RpcNotFoundException,
   UpdateEventDto,
   QueryDto,
+  EventStatus,
 } from '@app/shared';
 import { EventRepository } from './repositories/event.repository';
 import { Event } from './entities/event.entity';
@@ -46,6 +47,10 @@ export class EventService {
     const event = await this.eventRepository.update(id, eventDto);
     if (!event) {
       throw new RpcNotFoundException(`Event with ID ${id} not found`);
+    }
+
+    if (eventDto.status === EventStatus.CANCELED) {
+      this.bookingService.cancelManyByEvent(id);
     }
 
     return event;
