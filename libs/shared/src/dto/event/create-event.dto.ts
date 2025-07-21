@@ -50,7 +50,7 @@ export class CreateEventDto {
   @IsNumber()
   @Min(1)
   @Max(6)
-  duration: Date;
+  duration: number;
 
   @ApiProperty({
     description: 'Event location',
