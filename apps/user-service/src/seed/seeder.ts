@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserService } from '../user.service';
 import { HashingService } from '../hashing/hashing.service';
-import { CreateUserDto } from '@app/shared';
-import { Role } from '@app/shared';
+import { CreateUserDto, Role } from '@app/shared';
 import { faker } from '@faker-js/faker';
 
 @Injectable()
