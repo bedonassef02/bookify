@@ -6,4 +6,7 @@ export class BookDto {
 
   @IsMongoId()
   event: string;
+
+  @IsMongoId()
+  ticketTier: string;
 }

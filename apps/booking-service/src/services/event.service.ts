@@ -5,8 +5,7 @@ import {
   EVENT_SERVICE,
   EventType,
   Patterns,
-  RpcBadRequestException,
-  EventStatus,
+  TicketTierType,
 } from '@app/shared';
 
 @Injectable()
@@ -19,37 +18,23 @@ export class EventService {
     );
   }
 
-  async getBookedSeats(id: string): Promise<number> {
-    const event: EventType = await this.findOne(id);
-    this.check(event);
-    return event.bookedSeats;
+  getTicketTier(id: string): Promise<TicketTierType> {
+    return firstValueFrom(
+      this.eventService.send(Patterns.TICKET_TIERS.FIND_ONE, { id }),
+    );
   }
 
-  updateBookedSeats(id: string, seats: number): void {
-    this.eventService.emit(Patterns.EVENTS.UPDATE, {
+  updateTicketTierBookedSeats(id: string, seats: number): void {
+    this.eventService.emit(Patterns.TICKET_TIERS.UPDATE, {
       id,
-      eventDto: { bookedSeats: seats + 1 },
+      updateTicketTierDto: { bookedSeats: seats + 1 },
     });
   }
 
-  decrementBookedSeats(id: string, seats: number): void {
-    this.eventService.emit(Patterns.EVENTS.UPDATE, {
+  decrementTicketTierBookedSeats(id: string, seats: number): void {
+    this.eventService.emit(Patterns.TICKET_TIERS.UPDATE, {
       id,
-      eventDto: { bookedSeats: seats - 1 },
+      updateTicketTierDto: { bookedSeats: seats - 1 },
     });
-  }
-
-  private check(event: EventType): void {
-    if (event.date <= new Date()) {
-      throw new RpcBadRequestException('Cannot book seats for past events');
-    }
-
-    if (event.status !== EventStatus.PUBLISHED) {
-      throw new RpcBadRequestException('Event is not available for booking');
-    }
-
-    if (event.capacity <= event.bookedSeats) {
-      throw new RpcBadRequestException('No available seats');
-    }
   }
 }

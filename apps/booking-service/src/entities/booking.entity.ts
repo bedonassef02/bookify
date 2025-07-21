@@ -10,6 +10,9 @@ export class Booking {
   event: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, required: true })
+  ticketTier: Types.ObjectId;
+
+  @Prop({ type: Types.ObjectId, required: true })
   user: Types.ObjectId;
 
   @Prop({

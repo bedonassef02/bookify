@@ -47,8 +47,20 @@ export class BookingService {
       );
     }
 
-    const seats: number = await this.eventService.getBookedSeats(bookDto.event);
-    this.eventService.updateBookedSeats(bookDto.event, seats);
+    const ticketTier = await this.eventService.getTicketTier(
+      bookDto.ticketTier,
+    );
+
+    if (ticketTier.capacity <= ticketTier.bookedSeats) {
+      throw new RpcBadRequestException(
+        'No available seats for this ticket tier',
+      );
+    }
+
+    this.eventService.updateTicketTierBookedSeats(
+      ticketTier._id.toString(),
+      ticketTier.bookedSeats,
+    );
 
     return this.bookingRepository.create(bookDto);
   }
@@ -66,7 +78,14 @@ export class BookingService {
     }
 
     const cancelledBooking = await this.bookingRepository.cancel(id, userId);
-    this.eventService.decrementBookedSeats(event.id, event.bookedSeats);
+
+    const ticketTier = await this.eventService.getTicketTier(
+      booking.ticketTier.toString(),
+    );
+    this.eventService.decrementTicketTierBookedSeats(
+      ticketTier._id.toString(),
+      ticketTier.bookedSeats,
+    );
 
     return cancelledBooking as BookingDocument;
   }
