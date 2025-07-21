@@ -7,7 +7,5 @@ export type EventType = {
   date: Date;
   duration: number;
   location: string;
-  capacity: number;
-  bookedSeats: number;
   status: EventStatus;
 };

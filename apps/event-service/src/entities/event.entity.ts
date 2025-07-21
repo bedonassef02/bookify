@@ -21,12 +21,6 @@ export class Event extends Document {
   @Prop({ required: true })
   location: string;
 
-  @Prop({ required: true, min: 1 })
-  capacity: number;
-
-  @Prop({ required: true, default: 0 })
-  bookedSeats: number;
-
   @Prop({
     type: String,
     enum: Object.values(EventStatus),

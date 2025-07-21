@@ -61,18 +61,6 @@ export class CreateEventDto {
   location: string;
 
   @ApiProperty({
-    description: 'Maximum number of attendees',
-    example: 500,
-    minimum: 1,
-    maximum: 5000,
-  })
-  @IsNumber()
-  @IsNotEmpty()
-  @Min(1)
-  @Max(5000)
-  capacity: number;
-
-  @ApiProperty({
     description: 'The category of the event',
     example: '60f1b9b3b3b3b3b3b3b3b3b3',
   })
