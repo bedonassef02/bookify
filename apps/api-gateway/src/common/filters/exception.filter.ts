@@ -4,7 +4,6 @@ import {
   ExceptionFilter as NestExceptionFilter,
   HttpException,
   HttpStatus,
-  Logger,
 } from '@nestjs/common';
 import { Response } from 'express';
 
