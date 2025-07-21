@@ -13,6 +13,7 @@ import { Event, EventSchema } from './entities/event.entity';
 import { BookingService } from './booking/booking.service';
 import { BookingController } from './booking/booking.controller';
 import { CategoryModule } from './category/category.module';
+import { TicketTierModule } from './ticket-tier/ticket-tier.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { CategoryModule } from './category/category.module';
     DatabaseModule.register({ dbName: 'eventdb' }),
     MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }]),
     CategoryModule,
+    TicketTierModule,
   ],
   controllers: [EventController, BookingController],
   providers: [EventService, EventRepository, BookingService],

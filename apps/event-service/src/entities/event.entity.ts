@@ -45,6 +45,9 @@ export class Event extends Document {
 
   @Prop({ type: Types.ObjectId, ref: 'Category' })
   category: Category;
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'TicketTier' }] })
+  ticketTiers: Types.ObjectId[];
 }
 
 export const EventSchema = SchemaFactory.createForClass(Event);

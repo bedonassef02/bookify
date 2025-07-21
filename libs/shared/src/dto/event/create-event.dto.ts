@@ -88,4 +88,13 @@ export class CreateEventDto {
   @IsEnum(EventStatus)
   @IsOptional()
   status: EventStatus;
+
+  @ApiProperty({
+    description: 'Array of ticket tier IDs associated with the event',
+    type: [String],
+    example: ['60f1b9b3b3b3b3b3b3b3b3b3', '60f1b9b3b3b3b3b3b3b3b3b4'],
+  })
+  @IsMongoId({ each: true })
+  @IsOptional()
+  ticketTiers: string[];
 }
