@@ -4,6 +4,7 @@ import {
   RpcBadRequestException,
   RpcConflictException,
   RpcNotFoundException,
+  BookingStatus,
 } from '@app/shared';
 import { BookingRepository } from './repositories/booking.repository';
 import { BookingDocument } from './entities/booking.entity';
@@ -45,7 +46,18 @@ export class BookingService {
       );
     }
 
+    const event = await this.eventService.findOne(bookDto.event);
+    if (event.date <= new Date()) {
+      throw new RpcBadRequestException('Cannot book tickets for past events');
+    }
+
     const ticketTier = await this.ticketTierService.findOne(bookDto.ticketTier);
+
+    if (ticketTier.event.toString() !== bookDto.event) {
+      throw new RpcBadRequestException(
+        'Ticket tier does not belong to this event',
+      );
+    }
 
     if (ticketTier.capacity <= ticketTier.bookedSeats) {
       throw new RpcBadRequestException(
@@ -62,6 +74,10 @@ export class BookingService {
     const booking = await this.bookingRepository.findById(id);
     if (!booking || booking.user.toString() !== userId) {
       throw new RpcNotFoundException('Booking not found or not authorized');
+    }
+
+    if (booking.status === BookingStatus.CANCELLED) {
+      throw new RpcBadRequestException('Booking is already cancelled');
     }
 
     const event = await this.eventService.findOne(booking.event.toString());
@@ -81,9 +97,14 @@ export class BookingService {
 
   async cancelMany(event: string): Promise<void> {
     const bookings = await this.bookingRepository.cancelMany(event);
-    const ids = bookings.map((booking) => booking.user);
-    const emails: string[] = await this.userService.findEmails(ids);
+    if (bookings.length === 0) {
+      return;
+    }
 
-    this.notificationService.cancel(emails, event);
+    const userIds = bookings.map((booking) => booking.user);
+    const emails: string[] = await this.userService.findEmails(userIds);
+
+    const eventDetails = await this.eventService.findOne(event);
+    this.notificationService.cancel(emails, eventDetails.title);
   }
 }

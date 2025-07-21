@@ -1,5 +1,4 @@
 import { Types } from 'mongoose';
-import { EventType } from './event.type';
 
 export interface TicketTierType {
   _id: Types.ObjectId;
@@ -7,5 +6,5 @@ export interface TicketTierType {
   price: number;
   capacity: number;
   bookedSeats: number;
-  event: Types.ObjectId | EventType;
+  event: Types.ObjectId;
 }
