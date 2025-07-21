@@ -11,9 +11,9 @@ export class BookingController {
   @MessagePattern(Patterns.BOOKING.FIND_ONE)
   findOne(
     @Payload('id') id: string,
-    @Payload('userId') userId: string,
+    @Payload('user') user: string,
   ): Promise<BookingDocument> {
-    return this.bookingService.findOne(id, userId);
+    return this.bookingService.findOne(id, user);
   }
 
   @MessagePattern(Patterns.BOOKING.FIND_ALL_BY_USER)
@@ -29,6 +29,14 @@ export class BookingController {
   @MessagePattern(Patterns.BOOKING.BOOK_SEATS)
   bookSeats(@Payload() bookDto: BookDto): Promise<BookingDocument> {
     return this.bookingService.bookSeats(bookDto);
+  }
+
+  @MessagePattern(Patterns.BOOKING.CANCEL_BOOKING)
+  cancelBooking(
+    @Payload('id') id: string,
+    @Payload('user') user: string,
+  ): Promise<BookingDocument> {
+    return this.bookingService.cancel(id, user);
   }
 
   @MessagePattern(Patterns.BOOKING.CANCEL_MANY_BY_EVENT)

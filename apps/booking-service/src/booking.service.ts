@@ -19,9 +19,9 @@ export class BookingService {
     private notificationService: NotificationService,
   ) {}
 
-  async findOne(id: string, userId: string): Promise<BookingDocument> {
+  async findOne(id: string, user: string): Promise<BookingDocument> {
     const booking = await this.bookingRepository.findById(id);
-    if (!booking || booking.user.toString() !== userId) {
+    if (!booking || booking.user.toString() !== user) {
       throw new RpcNotFoundException('Booking not found');
     }
     return booking;
@@ -50,6 +50,15 @@ export class BookingService {
     this.eventService.updateBookedSeats(bookDto.event, seats);
 
     return this.bookingRepository.create(bookDto);
+  }
+
+  async cancel(id: string, userId: string): Promise<BookingDocument> {
+    const booking = await this.bookingRepository.cancel(id, userId);
+    if (!booking) {
+      throw new RpcNotFoundException('Booking not found or not authorized');
+    }
+    // TODO: Notify event service to decrement booked seats
+    return booking;
   }
 
   async cancelManyByEvent(event: string): Promise<void> {

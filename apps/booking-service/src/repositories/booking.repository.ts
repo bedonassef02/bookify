@@ -22,6 +22,14 @@ export class BookingRepository extends Repository<BookingDocument> {
     return this.model.find({ event });
   }
 
+  async cancel(id: string, user: string): Promise<BookingDocument | null> {
+    return this.model.findOneAndUpdate(
+      { id, user },
+      { status: BookingStatus.CANCELLED },
+      { new: true },
+    );
+  }
+
   async cancelManyByEvent(event: string): Promise<BookingDocument[]> {
     const bookings = await this.model.find({ event }).select('user').lean();
 

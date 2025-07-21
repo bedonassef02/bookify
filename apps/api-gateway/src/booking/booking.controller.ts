@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  Post,
+  Delete,
+} from '@nestjs/common';
 import { CurrentUser } from '../users/auth/decorators/current-user.decorator';
 import { BookDto, BOOKING_SERVICE, Patterns } from '@app/shared';
 import { ClientProxy } from '@nestjs/microservices';
@@ -16,14 +24,22 @@ export class BookingController {
   @Get(':id')
   findOne(
     @Param('id', ParseMongoIdPipe) id: string,
-    @CurrentUser('userId') userId: string,
+    @CurrentUser('userId') user: string,
   ) {
-    return this.client.send(Patterns.BOOKING.FIND_ONE, { id, userId });
+    return this.client.send(Patterns.BOOKING.FIND_ONE, { id, user });
   }
 
   @Post()
   book(@CurrentUser('userId') user: string, @Body() bookDto: BookDto) {
     bookDto.user = user;
     return this.client.send(Patterns.BOOKING.BOOK_SEATS, bookDto);
+  }
+
+  @Delete(':id')
+  cancel(
+    @Param('id', ParseMongoIdPipe) id: string,
+    @CurrentUser('userId') user: string,
+  ) {
+    return this.client.send(Patterns.BOOKING.CANCEL_BOOKING, { id, user });
   }
 }
