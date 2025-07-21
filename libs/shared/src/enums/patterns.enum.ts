@@ -4,7 +4,6 @@ export const Patterns = {
     FIND_ONE: 'events.findOne',
     CREATE: 'events.create',
     UPDATE: 'events.update',
-    REMOVE: 'events.remove',
   },
   CATEGORIES: {
     FIND_ALL: 'categories.findAll',

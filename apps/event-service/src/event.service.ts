@@ -56,17 +56,6 @@ export class EventService {
     return event;
   }
 
-  async remove(id: string): Promise<Event> {
-    const event = await this.eventRepository.delete(id);
-    if (!event) {
-      throw new RpcNotFoundException(`Event with ID ${id} not found`);
-    }
-
-    this.bookingService.cancelManyByEvent(id);
-
-    return event;
-  }
-
   private async validateCategory(id: string) {
     const category = await this.categoryRepository.findById(id);
     if (!category) {

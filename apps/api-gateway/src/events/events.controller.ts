@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Inject,
   Param,
@@ -57,12 +56,6 @@ export class EventsController {
     @Body() eventDto: UpdateEventDto,
   ): Observable<EventType> {
     return this.client.send(Patterns.EVENTS.UPDATE, { id, eventDto });
-  }
-
-  @Delete(':id')
-  @Roles(Role.ADMIN)
-  remove(@Param('id', ParseMongoIdPipe) id: string): Observable<void> {
-    return this.client.send(Patterns.EVENTS.REMOVE, { id });
   }
 
   @Roles(Role.ADMIN)

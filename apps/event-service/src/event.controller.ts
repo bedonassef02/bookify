@@ -35,9 +35,4 @@ export class EventController {
   ): Promise<Event> {
     return this.eventService.update(id, eventDto);
   }
-
-  @MessagePattern(Patterns.EVENTS.REMOVE)
-  async remove(@Payload('id') id: string): Promise<Event> {
-    return this.eventService.remove(id);
-  }
 }
