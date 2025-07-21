@@ -8,8 +8,6 @@ import {
   Post,
   Patch,
   Query,
-  UseInterceptors,
-  UploadedFiles,
 } from '@nestjs/common';
 import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
 import { ClientProxy } from '@nestjs/microservices';
@@ -25,12 +23,7 @@ import {
 } from '@app/shared';
 import { Public } from '../users/auth/decorators/public.decorator';
 import { Roles } from '../users/auth/decorators/roles.decorator';
-import { FilesInterceptor } from '@nestjs/platform-express';
-import {
-  CloudinaryService,
-  MaxFileCount,
-  createParseFilePipe,
-} from '@app/file-storage';
+import { CloudinaryService } from '@app/file-storage';
 
 @Controller('events')
 export class EventsController {
@@ -70,19 +63,6 @@ export class EventsController {
   @Roles(Role.ADMIN)
   remove(@Param('id', ParseMongoIdPipe) id: string): Observable<void> {
     return this.client.send(Patterns.EVENTS.REMOVE, { id });
-  }
-
-  @Public()
-  @Post(':id/upload')
-  @UseInterceptors(FilesInterceptor('files', MaxFileCount.EVENT_IMAGES))
-  uploadFile(
-    @Param('id', ParseMongoIdPipe) id: string,
-    @UploadedFiles(createParseFilePipe('2MB', ['png', 'jpeg']))
-    files: Express.Multer.File[],
-  ) {
-    return Promise.all(
-      files.map((file) => this.cloudinaryService.uploadFile(file)),
-    );
   }
 
   @Patch(':id/publish')

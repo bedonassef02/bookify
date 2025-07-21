@@ -18,6 +18,14 @@ export class CloudinaryService {
       );
 
       streamifier.createReadStream(file.buffer).pipe(uploadStream);
-    });
+    }).then((image) => image.public_id);
+  }
+
+  uploadFiles(files: Express.Multer.File[]): Promise<CloudinaryResponse[]> {
+    return Promise.all(files.map((file) => this.uploadFile(file)));
+  }
+
+  getUrl(publicId: string) {
+    return cloudinary.url(publicId);
   }
 }
