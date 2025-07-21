@@ -4,11 +4,13 @@ import { ClientModule, EVENT_SERVICE } from '@app/shared';
 import { CloudinaryModule } from '@app/file-storage';
 import { ImagesController } from './images/images.controller';
 import { CategoriesModule } from './categories/categories.module';
+import { TicketTiersModule } from './ticket-tiers/ticket-tiers.module';
 
 @Module({
   imports: [
     CloudinaryModule,
     CategoriesModule,
+    TicketTiersModule,
     ClientModule.register({ name: EVENT_SERVICE, queue: 'events_queue' }),
   ],
   controllers: [EventsController, ImagesController],

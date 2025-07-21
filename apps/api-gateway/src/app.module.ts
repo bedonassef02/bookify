@@ -11,7 +11,6 @@ import { AuthModule } from './users/auth/auth.module';
 import { JwtAuthGuard } from './users/auth/guards/auth.guard';
 import { RolesGuard } from './users/auth/guards/roles.guard';
 import { BookingModule } from './booking/booking.module';
-import { TicketTiersModule } from './events/ticket-tiers/ticket-tiers.module';
 
 @Module({
   imports: [
@@ -24,7 +23,6 @@ import { TicketTiersModule } from './events/ticket-tiers/ticket-tiers.module';
     UsersModule,
     AuthModule,
     BookingModule,
-    TicketTiersModule,
   ],
   providers: [
     {
