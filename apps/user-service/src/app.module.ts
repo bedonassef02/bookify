@@ -22,6 +22,8 @@ import { CredentialsService } from './services/credentials.service';
 import { NotificationService } from './mailer/notification.service';
 import { Token, TokenSchema } from './entities/token.entity';
 import { TokenRepository } from './repositories/token.repository';
+import { TwoFactorAuthenticationService } from './authentication/2fa/2fa.service';
+import { TwoFactorAuthenticationController } from './authentication/2fa/2fa.controller';
 
 @Module({
   imports: [
@@ -51,7 +53,12 @@ import { TokenRepository } from './repositories/token.repository';
     PasswordService,
     CredentialsService,
     NotificationService,
+    TwoFactorAuthenticationService,
   ],
-  controllers: [UserController, AuthenticationController],
+  controllers: [
+    UserController,
+    AuthenticationController,
+    TwoFactorAuthenticationController,
+  ],
 })
 export class AppModule {}

@@ -16,7 +16,6 @@ import { PasswordService } from '../services/password.service';
 import { CredentialsService } from '../services/credentials.service';
 import { NotificationService } from '../mailer/notification.service';
 import { TokenType } from '../entities/token.entity';
-import * as speakeasy from 'speakeasy';
 
 @Injectable()
 export class AuthenticationService {
@@ -70,89 +69,6 @@ export class AuthenticationService {
 
       user.verified = true;
       await user.save();
-    }
-
-    return this.generateResponse(user);
-  }
-
-  async generateTwoFactorAuthenticationSecret(
-    id: string,
-  ): Promise<{ secret: string; otpauthUrl: string }> {
-    const user = await this.usersService.findOne(id);
-    if (!user) throw new RpcNotFoundException('User not found');
-
-    const secret = speakeasy.generateSecret({
-      name: 'Bookify',
-      issuer: 'Bookify',
-    });
-
-    await this.usersService.update(id, {
-      twoFactorAuthenticationSecret: secret.base32,
-    });
-
-    return {
-      secret: secret.base32,
-      otpauthUrl: secret.otpauth_url,
-    };
-  }
-
-  async enableTwoFactorAuthentication(
-    id: string,
-    code: string,
-  ): Promise<{ success: boolean }> {
-    const user = await this.usersService.findOne(id);
-    if (!user) throw new RpcNotFoundException('User not found');
-
-    const verified = speakeasy.totp.verify({
-      secret: user.twoFactorAuthenticationSecret,
-      encoding: 'base32',
-      token: code,
-    });
-
-    if (!verified) {
-      throw new RpcUnauthorizedException(
-        'Invalid two-factor authentication code',
-      );
-    }
-
-    await this.usersService.update(id, {
-      isTwoFactorAuthenticationEnabled: true,
-    });
-
-    return { success: true };
-  }
-
-  async disableTwoFactorAuthentication(
-    id: string,
-  ): Promise<{ success: boolean }> {
-    const user = await this.usersService.findOne(id);
-    if (!user) throw new RpcNotFoundException('User not found');
-
-    await this.usersService.update(id, {
-      isTwoFactorAuthenticationEnabled: false,
-      twoFactorAuthenticationSecret: null,
-    });
-
-    return { success: true };
-  }
-
-  async verifyTwoFactorAuthenticationCode(
-    id: string,
-    code: string,
-  ): Promise<AuthResponse> {
-    const user = await this.usersService.findOne(id);
-    if (!user) throw new RpcNotFoundException('User not found');
-
-    const verified = speakeasy.totp.verify({
-      secret: user.twoFactorAuthenticationSecret,
-      encoding: 'base32',
-      token: code,
-    });
-
-    if (!verified) {
-      throw new RpcUnauthorizedException(
-        'Invalid two-factor authentication code',
-      );
     }
 
     return this.generateResponse(user);
