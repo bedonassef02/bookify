@@ -1,6 +1,12 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { AuthResponse, Patterns, SignInDto, SignUpDto } from '@app/shared';
+import {
+  AuthResponse,
+  GoogleUserDto,
+  Patterns,
+  SignInDto,
+  SignUpDto,
+} from '@app/shared';
 import { AuthenticationService } from './authentication.service';
 import { ChangePasswordDto } from '@app/shared/dto/user/change-password.dto';
 
@@ -49,5 +55,10 @@ export class AuthenticationController {
     @Payload('newPassword') newPassword: string,
   ): Promise<{ message: string }> {
     return this.authService.resetPassword(token, newPassword);
+  }
+
+  @MessagePattern(Patterns.AUTH.SIGN_IN_GOOGLE)
+  signInGoogle(user: GoogleUserDto): Promise<AuthResponse> {
+    return this.authService.signInGoogle(user);
   }
 }

@@ -4,6 +4,7 @@ import { User } from '../entities/user.entity';
 import {
   AuthResponse,
   ChangePasswordDto,
+  GoogleUserDto,
   RpcConflictException,
   RpcNotFoundException,
   RpcUnauthorizedException,
@@ -45,6 +46,23 @@ export class AuthenticationService {
       TokenType.CONFIRM,
     );
     this.notificationService.sendConfirmation(user, token.token);
+
+    return this.generateResponse(user);
+  }
+
+  async signInGoogle(googleUser: GoogleUserDto): Promise<AuthResponse> {
+    let user = await this.usersService.findByEmail(googleUser.email);
+
+    if (!user) {
+      user = await this.usersService.create({
+        email: googleUser.email,
+        firstName: googleUser.firstName,
+        lastName: googleUser.lastName,
+      });
+
+      user.verified = true;
+      await user.save();
+    }
 
     return this.generateResponse(user);
   }

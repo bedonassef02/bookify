@@ -27,6 +27,7 @@ export const Patterns = {
     RESEND_CONFIRMATION: 'auth.resendConfirmation',
     FORGOT_PASSWORD: 'auth.forgotPassword',
     RESET_PASSWORD: 'auth.resetPassword',
+    SIGN_IN_GOOGLE: 'auth.signInGoogle',
   },
   NOTIFICATIONS: {
     SEND_EMAIL: 'notifications.sendEmail',
