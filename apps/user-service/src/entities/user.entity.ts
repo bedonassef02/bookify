@@ -35,6 +35,9 @@ export class User extends Document {
   @Prop({ default: false })
   isTwoFactorAuthenticationEnabled: boolean;
 
+  @Prop()
+  profilePicture?: string;
+
   @Prop({ default: true })
   isActive: boolean;
 }

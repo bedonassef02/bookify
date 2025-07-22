@@ -12,4 +12,8 @@ export class UpdateProfileDto {
   @IsOptional()
   @IsPhoneNumber()
   phoneNumber?: string;
+
+  @IsOptional()
+  @IsString()
+  profilePicture?: string;
 }
