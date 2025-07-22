@@ -24,7 +24,7 @@ import { Observable } from 'rxjs';
 import { CurrentUser } from './auth/decorators/current-user.decorator';
 import { Roles } from './auth/decorators/roles.decorator';
 
-@Controller('users')
+@Controller({ path: 'users', version: '1' })
 export class UsersController {
   constructor(
     private cloudinaryService: CloudinaryService,

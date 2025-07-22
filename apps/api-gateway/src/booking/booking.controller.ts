@@ -12,7 +12,7 @@ import { BookDto, BOOKING_SERVICE, Patterns } from '@app/shared';
 import { ClientProxy } from '@nestjs/microservices';
 import { ParseMongoIdPipe } from '../common/pipes/parse-mongo-id.pipe';
 
-@Controller('booking')
+@Controller({ path: 'booking', version: '1' })
 export class BookingController {
   constructor(@Inject(BOOKING_SERVICE) private client: ClientProxy) {}
 

@@ -24,7 +24,7 @@ import { Public } from '../users/auth/decorators/public.decorator';
 import { Roles } from '../users/auth/decorators/roles.decorator';
 import { CloudinaryService } from '@app/file-storage';
 
-@Controller('events')
+@Controller({ path: 'events', version: '1' })
 export class EventsController {
   constructor(
     private cloudinaryService: CloudinaryService,

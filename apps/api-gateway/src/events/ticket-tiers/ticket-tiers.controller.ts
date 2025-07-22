@@ -17,7 +17,7 @@ import {
 } from '@app/shared';
 import { ParseMongoIdPipe } from '../../common/pipes/parse-mongo-id.pipe';
 
-@Controller('events/:eventId/ticket-tiers')
+@Controller({ path: 'events/:eventId/ticket-tiers', version: '1' })
 export class TicketTiersController {
   constructor(@Inject(EVENT_SERVICE) private client: ClientProxy) {}
 

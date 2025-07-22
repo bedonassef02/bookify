@@ -21,7 +21,7 @@ import { Public } from '../../users/auth/decorators/public.decorator';
 import { Roles } from '../../users/auth/decorators/roles.decorator';
 import { ParseMongoIdPipe } from '../../common/pipes/parse-mongo-id.pipe';
 
-@Controller('categories')
+@Controller({ path: 'categories', version: '1' })
 export class CategoriesController {
   constructor(@Inject(EVENT_SERVICE) private client: ClientProxy) {}
 
