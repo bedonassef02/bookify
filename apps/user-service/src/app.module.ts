@@ -22,6 +22,11 @@ import { CredentialsService } from './services/credentials.service';
 import { NotificationService } from './mailer/notification.service';
 import { Token, TokenSchema } from './entities/token.entity';
 import { TokenRepository } from './repositories/token.repository';
+import {
+  RefreshToken,
+  RefreshTokenSchema,
+} from './entities/refresh-token.entity';
+import { RefreshTokenRepository } from './repositories/refresh-token.repository';
 import { TwoFactorAuthenticationService } from './authentication/2fa/2fa.service';
 import { TwoFactorAuthenticationController } from './authentication/2fa/2fa.controller';
 
@@ -34,6 +39,7 @@ import { TwoFactorAuthenticationController } from './authentication/2fa/2fa.cont
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
       { name: Token.name, schema: TokenSchema },
+      { name: RefreshToken.name, schema: RefreshTokenSchema },
     ]),
     ClientModule.register({
       name: NOTIFICATION_SERVICE,
@@ -50,6 +56,7 @@ import { TwoFactorAuthenticationController } from './authentication/2fa/2fa.cont
     AuthenticationService,
     TokenService,
     TokenRepository,
+    RefreshTokenRepository,
     PasswordService,
     CredentialsService,
     NotificationService,
