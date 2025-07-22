@@ -16,6 +16,7 @@ import { PasswordService } from '../services/password.service';
 import { CredentialsService } from '../services/credentials.service';
 import { NotificationService } from '../mailer/notification.service';
 import { TokenType } from '../entities/token.entity';
+import { TwoFactorAuthenticationService } from './2fa/2fa.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -25,6 +26,7 @@ export class AuthenticationService {
     private readonly tokenService: TokenService,
     private readonly credentialsService: CredentialsService,
     private readonly notificationService: NotificationService,
+    private readonly twoFactorAuthenticationService: TwoFactorAuthenticationService,
   ) {}
 
   async signIn(signInDto: SignInDto): Promise<AuthResponse> {
@@ -154,6 +156,10 @@ export class AuthenticationService {
     this.notificationService.sendPasswordChangeSuccess(user);
 
     return { message: 'Password reset successful.' };
+  }
+
+  verifySignIn(email: string, code: string): Promise<AuthResponse> {
+    return this.twoFactorAuthenticationService.verifySignIn(email, code);
   }
 
   private async validateUser(signInDto: SignInDto): Promise<User> {

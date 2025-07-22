@@ -9,14 +9,10 @@ import {
 } from '@app/shared';
 import { AuthenticationService } from './authentication.service';
 import { ChangePasswordDto } from '@app/shared/dto/user/change-password.dto';
-import { TwoFactorAuthenticationService } from './2fa/2fa.service';
 
 @Controller('authentication')
 export class AuthenticationController {
-  constructor(
-    private readonly authService: AuthenticationService,
-    private readonly twoFactorAuthenticationService: TwoFactorAuthenticationService,
-  ) {}
+  constructor(private readonly authService: AuthenticationService) {}
 
   @MessagePattern(Patterns.AUTH.SIGN_UP)
   signUp(signUpDto: SignUpDto): Promise<AuthResponse> {
@@ -71,6 +67,6 @@ export class AuthenticationController {
     @Payload('email') email: string,
     @Payload('code') code: string,
   ): Promise<AuthResponse> {
-    return this.twoFactorAuthenticationService.verifySignIn(email, code);
+    return this.authService.verifySignIn(email, code);
   }
 }
