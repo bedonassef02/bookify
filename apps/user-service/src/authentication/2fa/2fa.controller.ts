@@ -1,12 +1,14 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { Patterns } from '@app/shared';
+import { AuthResponse, Patterns, RpcUnauthorizedException } from '@app/shared';
 import { TwoFactorAuthenticationService } from './2fa.service';
+import { AuthenticationService } from '../authentication.service';
 
 @Controller('2fa')
 export class TwoFactorAuthenticationController {
   constructor(
     private readonly twoFactorAuthenticationService: TwoFactorAuthenticationService,
+    private readonly authenticationService: AuthenticationService,
   ) {}
 
   @MessagePattern(Patterns.AUTH.GENERATE_2FA_SECRET)
@@ -30,10 +32,25 @@ export class TwoFactorAuthenticationController {
   }
 
   @MessagePattern(Patterns.AUTH.VERIFY_2FA)
-  verifyCode(
+  async verifyCode(
     @Payload('id') id: string,
     @Payload('code') code: string,
-  ): Promise<boolean> {
-    return this.twoFactorAuthenticationService.verifyCode(id, code);
+  ): Promise<AuthResponse> {
+    const isValid = await this.twoFactorAuthenticationService.verifyCode(
+      id,
+      code,
+    );
+    if (isValid) {
+      return this.authenticationService.generateTokensForUser(id);
+    }
+    throw new RpcUnauthorizedException('Invalid 2FA code');
+  }
+
+  @MessagePattern(Patterns.AUTH.VERIFY_2FA_SIGNIN)
+  verifySignIn(
+    @Payload('email') email: string,
+    @Payload('code') code: string,
+  ): Promise<AuthResponse> {
+    return this.twoFactorAuthenticationService.verifySignIn(email, code);
   }
 }

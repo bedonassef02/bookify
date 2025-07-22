@@ -1,12 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import * as speakeasy from 'speakeasy';
 import * as qrcode from 'qrcode';
-import { RpcNotFoundException, RpcUnauthorizedException } from '@app/shared';
+import {
+  AuthResponse,
+  RpcNotFoundException,
+  RpcUnauthorizedException,
+} from '@app/shared';
 import { UserService } from '../../user.service';
+import { TokenService } from '../../services/token.service';
 
 @Injectable()
 export class TwoFactorAuthenticationService {
-  constructor(private readonly usersService: UserService) {}
+  constructor(
+    private readonly usersService: UserService,
+    private readonly tokenService: TokenService,
+  ) {}
 
   async generateSecret(
     id: string,
@@ -81,10 +89,15 @@ export class TwoFactorAuthenticationService {
       throw new RpcUnauthorizedException('2FA is not set up for this user.');
     }
 
+    if (!user.isTwoFactorAuthenticationEnabled) {
+      throw new RpcUnauthorizedException('2FA is not enabled for this user.');
+    }
+
     const verified = speakeasy.totp.verify({
       secret: user.twoFactorAuthenticationSecret,
       encoding: 'base32',
       token: code,
+      window: 2, // Allow for time drift
     });
 
     if (!verified) {
@@ -94,5 +107,37 @@ export class TwoFactorAuthenticationService {
     }
 
     return true;
+  }
+
+  async verifySignIn(email: string, code: string): Promise<AuthResponse> {
+    const user = await this.usersService.findByEmail(email);
+    if (!user) throw new RpcNotFoundException('User not found');
+
+    if (!user.twoFactorAuthenticationSecret) {
+      throw new RpcUnauthorizedException('2FA is not set up for this user.');
+    }
+
+    if (!user.isTwoFactorAuthenticationEnabled) {
+      throw new RpcUnauthorizedException('2FA is not enabled for this user.');
+    }
+
+    const verified = speakeasy.totp.verify({
+      secret: user.twoFactorAuthenticationSecret,
+      encoding: 'base32',
+      token: code,
+      window: 2, // Allow for time drift
+    });
+
+    if (!verified) {
+      throw new RpcUnauthorizedException(
+        'Invalid two-factor authentication code',
+      );
+    }
+
+    const tokens = await this.tokenService.generate(user); // Generate tokens after successful 2FA verification
+    return {
+      user: this.usersService.sanitize(user),
+      tokens,
+    };
   }
 }
