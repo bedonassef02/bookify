@@ -13,18 +13,18 @@ export class EventSeeder {
     @InjectModel(Category.name) private readonly categoryModel: Model<Category>,
   ) {}
 
-  async seed(count: number) {
+  async seed(count: number): Promise<Event[]> {
     const categories = await this.categoryModel.find();
     if (categories.length === 0) {
       console.log('No categories found. Please seed categories first.');
-      return;
+      return [];
     }
 
     const events: CreateEventDto[] = [];
     for (let i = 0; i < count; i++) {
       events.push(this.createEventDto(categories));
     }
-    return this.eventModel.insertMany(events);
+    return this.eventModel.insertMany(events) as any;
   }
 
   private createEventDto(categories: Category[]): CreateEventDto {
