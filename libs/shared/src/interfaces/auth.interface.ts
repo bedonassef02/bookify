@@ -7,5 +7,6 @@ export interface AuthTokens {
 
 export interface AuthResponse {
   user: Partial<Document>;
-  tokens: AuthTokens;
+  tokens?: AuthTokens;
+  twoFactorAuthenticationRequired?: boolean;
 }

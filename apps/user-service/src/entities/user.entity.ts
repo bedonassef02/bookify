@@ -28,6 +28,12 @@ export class User extends Document {
 
   @Prop()
   credentials: Credentials;
+
+  @Prop({ default: null })
+  twoFactorAuthenticationSecret?: string;
+
+  @Prop({ default: false })
+  isTwoFactorAuthenticationEnabled: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

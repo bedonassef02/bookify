@@ -61,4 +61,34 @@ export class AuthenticationController {
   signInGoogle(user: GoogleUserDto): Promise<AuthResponse> {
     return this.authService.signInGoogle(user);
   }
+
+  @MessagePattern(Patterns.AUTH.GENERATE_2FA_SECRET)
+  generateTwoFactorAuthenticationSecret(
+    @Payload('id') id: string,
+  ): Promise<{ secret: string; otpauthUrl: string }> {
+    return this.authService.generateTwoFactorAuthenticationSecret(id);
+  }
+
+  @MessagePattern(Patterns.AUTH.ENABLE_2FA)
+  enableTwoFactorAuthentication(
+    @Payload('id') id: string,
+    @Payload('code') code: string,
+  ): Promise<{ success: boolean }> {
+    return this.authService.enableTwoFactorAuthentication(id, code);
+  }
+
+  @MessagePattern(Patterns.AUTH.DISABLE_2FA)
+  disableTwoFactorAuthentication(
+    @Payload('id') id: string,
+  ): Promise<{ success: boolean }> {
+    return this.authService.disableTwoFactorAuthentication(id);
+  }
+
+  @MessagePattern(Patterns.AUTH.VERIFY_2FA)
+  verifyTwoFactorAuthenticationCode(
+    @Payload('id') id: string,
+    @Payload('code') code: string,
+  ): Promise<AuthResponse> {
+    return this.authService.verifyTwoFactorAuthenticationCode(id, code);
+  }
 }

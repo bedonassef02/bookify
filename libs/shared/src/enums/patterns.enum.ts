@@ -28,6 +28,10 @@ export const Patterns = {
     FORGOT_PASSWORD: 'auth.forgotPassword',
     RESET_PASSWORD: 'auth.resetPassword',
     SIGN_IN_GOOGLE: 'auth.signInGoogle',
+    GENERATE_2FA_SECRET: 'auth.generate2faSecret',
+    ENABLE_2FA: 'auth.enable2fa',
+    DISABLE_2FA: 'auth.disable2fa',
+    VERIFY_2FA: 'auth.verify2fa',
   },
   NOTIFICATIONS: {
     SEND_EMAIL: 'notifications.sendEmail',
