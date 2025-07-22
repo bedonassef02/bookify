@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Patterns, TwoFactorAuthenticationCodeDto } from '@app/shared';
 import { CurrentUser } from '../decorators/current-user.decorator';
@@ -6,6 +6,7 @@ import { Inject } from '@nestjs/common';
 import { USER_SERVICE } from '@app/shared';
 import { Observable } from 'rxjs';
 import { AuthResponse } from '@app/shared';
+import { Public } from '../decorators/public.decorator';
 
 @Controller('2fa')
 export class TwoFactorAuthenticationController {
@@ -37,5 +38,14 @@ export class TwoFactorAuthenticationController {
     @Body() { code }: TwoFactorAuthenticationCodeDto,
   ): Observable<AuthResponse> {
     return this.client.send(Patterns.AUTH.VERIFY_2FA, { id, code });
+  }
+
+  @Public()
+  @Post('verify-signin')
+  @HttpCode(HttpStatus.OK)
+  verifySignIn(
+    @Body() { email, code }: { email: string; code: string },
+  ): Observable<AuthResponse> {
+    return this.client.send(Patterns.AUTH.VERIFY_2FA_SIGNIN, { email, code });
   }
 }

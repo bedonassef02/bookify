@@ -32,6 +32,7 @@ export const Patterns = {
     ENABLE_2FA: 'auth.enable2fa',
     DISABLE_2FA: 'auth.disable2fa',
     VERIFY_2FA: 'auth.verify2fa',
+    VERIFY_2FA_SIGNIN: 'auth.verify2faSignin',
   },
   NOTIFICATIONS: {
     SEND_EMAIL: 'notifications.sendEmail',
