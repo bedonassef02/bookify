@@ -3,6 +3,7 @@ import * as speakeasy from 'speakeasy';
 import * as qrcode from 'qrcode';
 import {
   AuthResponse,
+  RpcBadRequestException,
   RpcNotFoundException,
   RpcUnauthorizedException,
 } from '@app/shared';
@@ -92,12 +93,16 @@ export class TwoFactorAuthenticationService {
       throw new RpcUnauthorizedException('2FA is not set up for this user.');
     }
 
-    if (!enabled && !user.isTwoFactorAuthenticationEnabled) {
+    if (enabled && !user.isTwoFactorAuthenticationEnabled) {
       throw new RpcUnauthorizedException('2FA is not enabled for this user.');
     }
 
+    if (!enabled && user.isTwoFactorAuthenticationEnabled) {
+      throw new RpcBadRequestException('2FA is already enabled');
+    }
+
     const verified = speakeasy.totp.verify({
-      secret: user.twoFactorAuthenticationSecret as string,
+      secret: user.twoFactorAuthenticationSecret,
       encoding: 'base32',
       token: code,
       window: 2, // Allow for time drift
