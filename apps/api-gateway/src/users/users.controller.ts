@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Inject, Patch, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  Patch,
+  Query,
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import {
   Patterns,
@@ -33,5 +41,22 @@ export class UsersController {
     @Body() userDto: UpdateProfileDto,
   ): Observable<UserType> {
     return this.client.send(Patterns.USERS.UPDATE, { id, userDto });
+  }
+
+  @Patch('deactivate')
+  deactivate(@CurrentUser('userId') id: string): Observable<UserType> {
+    return this.client.send(Patterns.USERS.UPDATE, {
+      id,
+      userDto: { isActive: false },
+    });
+  }
+
+  @Roles(Role.ADMIN)
+  @Patch('reactivate/:id')
+  reactivate(@Param('id') id: string): Observable<UserType> {
+    return this.client.send(Patterns.USERS.UPDATE, {
+      id,
+      userDto: { isActive: true },
+    });
   }
 }

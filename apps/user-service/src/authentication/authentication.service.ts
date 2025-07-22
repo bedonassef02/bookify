@@ -32,6 +32,10 @@ export class AuthenticationService {
   async signIn(signInDto: SignInDto): Promise<AuthResponse> {
     const user: User = await this.validateUser(signInDto);
 
+    if (!user.isActive) {
+      throw new RpcUnauthorizedException('Account is deactivated');
+    }
+
     if (user.isTwoFactorAuthenticationEnabled) {
       return {
         user: this.usersService.sanitize(user),

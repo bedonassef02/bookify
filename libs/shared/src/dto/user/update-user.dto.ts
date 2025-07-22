@@ -7,4 +7,5 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   verified?: boolean;
   twoFactorAuthenticationSecret?: string | null;
   isTwoFactorAuthenticationEnabled?: boolean;
+  isActive?: boolean;
 }
