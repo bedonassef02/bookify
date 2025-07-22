@@ -143,10 +143,14 @@ export class AuthenticationService {
     const password = await this.passwordService.hash(newPassword);
     const credentials = this.credentialsService.updatePassword(user);
 
-    await this.usersService.update(tokenDoc.userId, {
-      password,
-      credentials,
-    });
+    await Promise.all([
+      this.usersService.update(tokenDoc.userId, {
+        password,
+        credentials,
+      }),
+      this.tokenService.delete(tokenDoc.userId, TokenType.RESET), // Clean up token
+    ]);
+
     this.notificationService.sendPasswordChangeSuccess(user);
 
     return { message: 'Password reset successful.' };
@@ -176,6 +180,13 @@ export class AuthenticationService {
     }
 
     return true;
+  }
+
+  async generateTokensForUser(id: string): Promise<AuthResponse> {
+    const user = await this.usersService.findOne(id);
+    if (!user) throw new RpcNotFoundException('User not found');
+
+    return this.generateResponse(user);
   }
 
   private async generateResponse(user: User): Promise<AuthResponse> {
