@@ -8,6 +8,8 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import {
   AuthResponse,
@@ -21,6 +23,8 @@ import { ClientProxy } from '@nestjs/microservices';
 import { Public } from './decorators/public.decorator';
 import { Observable } from 'rxjs';
 import { CurrentUser } from './decorators/current-user.decorator';
+import { GoogleAuthGuard } from './guards/google-auth.guard';
+import { Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -81,5 +85,17 @@ export class AuthController {
       token,
       newPassword,
     });
+  }
+
+  @Public()
+  @Get('google')
+  @UseGuards(GoogleAuthGuard)
+  googleLogin() {}
+
+  @Public()
+  @Get('google/redirect')
+  @UseGuards(GoogleAuthGuard)
+  googleLoginCallback(@Req() req: Request): Observable<AuthResponse> {
+    return this.client.send(Patterns.AUTH.SIGN_IN_GOOGLE, req.user);
   }
 }
