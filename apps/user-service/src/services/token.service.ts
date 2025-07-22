@@ -5,17 +5,13 @@ import * as crypto from 'crypto';
 import { User } from '../entities/user.entity';
 import { TokenRepository } from '../repositories/token.repository';
 import { Token, TokenType } from '../entities/token.entity';
-
-interface RefreshToken {
-  userId: string;
-  expiresAt: Date;
-}
+import { RefreshTokenRepository } from '../repositories/refresh-token.repository';
 
 @Injectable()
 export class TokenService {
-  private refreshTokens = new Map<string, RefreshToken>();
   constructor(
     private readonly tokenRepository: TokenRepository,
+    private readonly refreshTokenRepository: RefreshTokenRepository,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -59,27 +55,29 @@ export class TokenService {
     };
   }
 
-  private generateRefreshToken(userId: string): string {
+  async invalidateRefreshToken(token: string): Promise<void> {
+    await this.refreshTokenRepository.deleteOne(token);
+  }
+
+  async invalidateAllRefreshTokens(userId: string): Promise<void> {
+    await this.refreshTokenRepository.deleteManyByUserId(userId);
+  }
+
+  private async generateRefreshToken(userId: string): Promise<string> {
     const token = this.generateRandomToken();
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 7);
 
-    this.refreshTokens.set(token, { userId, expiresAt });
-    this.cleanupExpired();
+    await this.refreshTokenRepository.create({
+      token,
+      userId,
+      expiresAt,
+    });
 
     return token;
   }
 
   private generateRandomToken(): string {
     return crypto.randomBytes(32).toString('hex');
-  }
-
-  private cleanupExpired() {
-    const now = new Date();
-    for (const [token, data] of this.refreshTokens.entries()) {
-      if (data.expiresAt < now) {
-        this.refreshTokens.delete(token);
-      }
-    }
   }
 }

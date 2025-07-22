@@ -5,6 +5,8 @@ import { JwtAuthGuard } from './guards/auth.guard';
 import { RolesGuard } from './guards/roles.guard';
 import { ClientModule, JwtModule, USER_SERVICE } from '@app/shared';
 import { AuthController } from './auth.controller';
+import { GoogleStrategy } from './strategies/google.strategy';
+import { TwoFactorAuthenticationController } from './2fa/2fa.controller';
 
 @Module({
   imports: [
@@ -12,8 +14,8 @@ import { AuthController } from './auth.controller';
     PassportModule.register({ defaultStrategy: 'jwt' }),
     ClientModule.register({ name: USER_SERVICE, queue: 'users_queue' }),
   ],
-  providers: [JwtStrategy, JwtAuthGuard, RolesGuard],
-  controllers: [AuthController],
+  providers: [JwtStrategy, JwtAuthGuard, RolesGuard, GoogleStrategy],
+  controllers: [AuthController, TwoFactorAuthenticationController],
   exports: [JwtModule, JwtStrategy, JwtAuthGuard, RolesGuard],
 })
 export class AuthModule {}

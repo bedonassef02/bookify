@@ -8,7 +8,7 @@ export class User extends Document {
   @Prop({ required: true, unique: true })
   email: string;
 
-  @Prop({ required: true })
+  @Prop()
   password: string;
 
   @Prop({ required: true })
@@ -28,6 +28,18 @@ export class User extends Document {
 
   @Prop()
   credentials: Credentials;
+
+  @Prop({ default: null })
+  twoFactorAuthenticationSecret?: string;
+
+  @Prop({ default: false })
+  isTwoFactorAuthenticationEnabled: boolean;
+
+  @Prop()
+  profilePicture?: string;
+
+  @Prop({ default: true })
+  isActive: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

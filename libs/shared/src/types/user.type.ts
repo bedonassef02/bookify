@@ -5,4 +5,6 @@ export class UserType {
   lastName: string;
   phoneNumber: string;
   role?: string;
+  isActive?: boolean;
+  profilePicture?: string;
 }

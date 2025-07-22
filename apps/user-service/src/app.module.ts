@@ -22,7 +22,13 @@ import { CredentialsService } from './services/credentials.service';
 import { NotificationService } from './mailer/notification.service';
 import { Token, TokenSchema } from './entities/token.entity';
 import { TokenRepository } from './repositories/token.repository';
-import { UserSeeder } from './seed/user.seeder';
+import {
+  RefreshToken,
+  RefreshTokenSchema,
+} from './entities/refresh-token.entity';
+import { RefreshTokenRepository } from './repositories/refresh-token.repository';
+import { TwoFactorAuthenticationService } from './authentication/2fa/2fa.service';
+import { TwoFactorAuthenticationController } from './authentication/2fa/2fa.controller';
 
 @Module({
   imports: [
@@ -49,10 +55,16 @@ import { UserSeeder } from './seed/user.seeder';
     AuthenticationService,
     TokenService,
     TokenRepository,
+    RefreshTokenRepository,
     PasswordService,
     CredentialsService,
     NotificationService,
+    TwoFactorAuthenticationService,
   ],
-  controllers: [UserController, AuthenticationController],
+  controllers: [
+    UserController,
+    AuthenticationController,
+    TwoFactorAuthenticationController,
+  ],
 })
 export class AppModule {}

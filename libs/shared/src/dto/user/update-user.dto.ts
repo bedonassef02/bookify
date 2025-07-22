@@ -5,4 +5,8 @@ import { ICredentials } from '../../../../../apps/user-service/src/interfaces/cr
 export class UpdateUserDto extends PartialType(CreateUserDto) {
   credentials?: ICredentials;
   verified?: boolean;
+  twoFactorAuthenticationSecret?: string | null;
+  isTwoFactorAuthenticationEnabled?: boolean;
+  isActive?: boolean;
+  profilePicture?: string;
 }

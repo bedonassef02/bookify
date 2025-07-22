@@ -4,6 +4,7 @@ import { User } from '../entities/user.entity';
 import {
   AuthResponse,
   ChangePasswordDto,
+  GoogleUserDto,
   RpcConflictException,
   RpcNotFoundException,
   RpcUnauthorizedException,
@@ -15,6 +16,7 @@ import { PasswordService } from '../services/password.service';
 import { CredentialsService } from '../services/credentials.service';
 import { NotificationService } from '../mailer/notification.service';
 import { TokenType } from '../entities/token.entity';
+import { TwoFactorAuthenticationService } from './2fa/2fa.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -24,10 +26,22 @@ export class AuthenticationService {
     private readonly tokenService: TokenService,
     private readonly credentialsService: CredentialsService,
     private readonly notificationService: NotificationService,
+    private readonly twoFactorAuthenticationService: TwoFactorAuthenticationService,
   ) {}
 
   async signIn(signInDto: SignInDto): Promise<AuthResponse> {
     const user: User = await this.validateUser(signInDto);
+
+    if (!user.isActive) {
+      throw new RpcUnauthorizedException('Account is deactivated');
+    }
+
+    if (user.isTwoFactorAuthenticationEnabled) {
+      return {
+        user: this.usersService.sanitize(user),
+        twoFactorAuthenticationRequired: true,
+      };
+    }
 
     return this.generateResponse(user);
   }
@@ -49,6 +63,23 @@ export class AuthenticationService {
     return this.generateResponse(user);
   }
 
+  async signInGoogle(googleUser: GoogleUserDto): Promise<AuthResponse> {
+    let user = await this.usersService.findByEmail(googleUser.email);
+
+    if (!user) {
+      user = await this.usersService.create({
+        email: googleUser.email,
+        firstName: googleUser.firstName,
+        lastName: googleUser.lastName,
+      });
+
+      user.verified = true;
+      await user.save();
+    }
+
+    return this.generateResponse(user);
+  }
+
   async changePassword(
     id: string,
     passwordDto: ChangePasswordDto,
@@ -65,6 +96,7 @@ export class AuthenticationService {
     const credentials = this.credentialsService.updatePassword(user);
     const password = await this.passwordService.hash(passwordDto.newPassword);
     await this.usersService.update(id, { password, credentials });
+    await this.tokenService.invalidateAllRefreshTokens(id);
     this.notificationService.sendPasswordChangeSuccess(user);
 
     return this.generateResponse(user);
@@ -118,13 +150,21 @@ export class AuthenticationService {
     const password = await this.passwordService.hash(newPassword);
     const credentials = this.credentialsService.updatePassword(user);
 
-    await this.usersService.update(tokenDoc.userId, {
-      password,
-      credentials,
-    });
+    await Promise.all([
+      this.usersService.update(tokenDoc.userId, {
+        password,
+        credentials,
+      }),
+      this.tokenService.delete(tokenDoc.userId, TokenType.RESET), // Clean up token
+    ]);
+
     this.notificationService.sendPasswordChangeSuccess(user);
 
     return { message: 'Password reset successful.' };
+  }
+
+  verifySignIn(email: string, code: string): Promise<AuthResponse> {
+    return this.twoFactorAuthenticationService.verifySignIn(email, code);
   }
 
   private async validateUser(signInDto: SignInDto): Promise<User> {
@@ -151,6 +191,23 @@ export class AuthenticationService {
     }
 
     return true;
+  }
+
+  async generateTokensForUser(id: string): Promise<AuthResponse> {
+    const user = await this.usersService.findOne(id);
+    if (!user) throw new RpcNotFoundException('User not found');
+
+    return this.generateResponse(user);
+  }
+
+  async logout(refreshToken: string): Promise<{ message: string }> {
+    await this.tokenService.invalidateRefreshToken(refreshToken);
+    return { message: 'Logged out successfully.' };
+  }
+
+  async logoutAll(userId: string): Promise<{ message: string }> {
+    await this.tokenService.invalidateAllRefreshTokens(userId);
+    return { message: 'Logged out from all devices successfully.' };
   }
 
   private async generateResponse(user: User): Promise<AuthResponse> {

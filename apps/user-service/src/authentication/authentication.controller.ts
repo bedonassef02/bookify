@@ -1,6 +1,12 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { AuthResponse, Patterns, SignInDto, SignUpDto } from '@app/shared';
+import {
+  AuthResponse,
+  GoogleUserDto,
+  Patterns,
+  SignInDto,
+  SignUpDto,
+} from '@app/shared';
 import { AuthenticationService } from './authentication.service';
 import { ChangePasswordDto } from '@app/shared/dto/user/change-password.dto';
 
@@ -49,5 +55,30 @@ export class AuthenticationController {
     @Payload('newPassword') newPassword: string,
   ): Promise<{ message: string }> {
     return this.authService.resetPassword(token, newPassword);
+  }
+
+  @MessagePattern(Patterns.AUTH.SIGN_IN_GOOGLE)
+  signInGoogle(user: GoogleUserDto): Promise<AuthResponse> {
+    return this.authService.signInGoogle(user);
+  }
+
+  @MessagePattern(Patterns.AUTH.VERIFY_2FA_SIGNIN)
+  verifySignIn(
+    @Payload('email') email: string,
+    @Payload('code') code: string,
+  ): Promise<AuthResponse> {
+    return this.authService.verifySignIn(email, code);
+  }
+
+  @MessagePattern(Patterns.AUTH.LOGOUT)
+  logout(
+    @Payload('refreshToken') refreshToken: string,
+  ): Promise<{ message: string }> {
+    return this.authService.logout(refreshToken);
+  }
+
+  @MessagePattern(Patterns.AUTH.LOGOUT_ALL)
+  logoutAll(@Payload('userId') userId: string): Promise<{ message: string }> {
+    return this.authService.logoutAll(userId);
   }
 }
