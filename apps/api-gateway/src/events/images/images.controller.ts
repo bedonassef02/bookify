@@ -1,6 +1,5 @@
 import {
   Controller,
-  Get,
   Inject,
   Param,
   Post,
@@ -8,7 +7,6 @@ import {
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
-import { Public } from '../../users/auth/decorators/public.decorator';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import {
   CloudinaryService,
