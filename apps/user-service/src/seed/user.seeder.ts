@@ -24,7 +24,7 @@ export class UserSeeder {
       try {
         await this.isExist(userData.email);
 
-        const password = await this.hashingService.hash(userData.password);
+        const password = await this.hashingService.hash(userData.password!);
         await this.userModel.create({ ...userData, password });
         console.log(`User ${userData.email} seeded successfully.`);
       } catch (error) {
