@@ -18,7 +18,6 @@ import {
   SignUpDto,
   USER_SERVICE,
   ChangePasswordDto,
-  TwoFactorAuthenticationCodeDto,
 } from '@app/shared';
 import { ClientProxy } from '@nestjs/microservices';
 import { Public } from './decorators/public.decorator';
@@ -109,35 +108,5 @@ export class AuthController {
   @UseGuards(GoogleAuthGuard)
   googleLoginCallback(@Req() req: Request): Observable<AuthResponse> {
     return this.client.send(Patterns.AUTH.SIGN_IN_GOOGLE, req.user);
-  }
-
-  @Post('2fa/generate')
-  generateTwoFactorAuthenticationSecret(
-    @CurrentUser('userId') id: string,
-  ): Observable<{ secret: string; otpauthUrl: string }> {
-    return this.client.send(Patterns.AUTH.GENERATE_2FA_SECRET, { id });
-  }
-
-  @Post('2fa/enable')
-  enableTwoFactorAuthentication(
-    @CurrentUser('userId') id: string,
-    @Body() { code }: TwoFactorAuthenticationCodeDto,
-  ): Observable<{ success: boolean }> {
-    return this.client.send(Patterns.AUTH.ENABLE_2FA, { id, code });
-  }
-
-  @Post('2fa/disable')
-  disableTwoFactorAuthentication(
-    @CurrentUser('userId') id: string,
-  ): Observable<{ success: boolean }> {
-    return this.client.send(Patterns.AUTH.DISABLE_2FA, { id });
-  }
-
-  @Post('2fa/verify')
-  verifyTwoFactorAuthenticationCode(
-    @CurrentUser('userId') id: string,
-    @Body() { code }: TwoFactorAuthenticationCodeDto,
-  ): Observable<AuthResponse> {
-    return this.client.send(Patterns.AUTH.VERIFY_2FA, { id, code });
   }
 }
