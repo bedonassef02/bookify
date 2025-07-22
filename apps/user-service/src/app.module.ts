@@ -39,6 +39,7 @@ import { TwoFactorAuthenticationController } from './authentication/2fa/2fa.cont
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
       { name: Token.name, schema: TokenSchema },
+      { name: RefreshToken.name, schema: RefreshTokenSchema },
     ]),
     ClientModule.register({
       name: NOTIFICATION_SERVICE,
