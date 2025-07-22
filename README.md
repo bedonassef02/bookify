@@ -1,110 +1,111 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Event Booking API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This project is a microservices-based event booking platform built with NestJS. It allows users to browse events, book tickets, manage user profiles, and receive notifications.
 
-<p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-<p align="center">
-    <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-    <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-    <a href="httpshttps://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-    <a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-    <a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-    <a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-    <a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-    <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-    <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
+## Architecture
 
-## Description
+The application follows a microservices architecture, with each service responsible for a specific domain. Docker Compose is used to orchestrate and manage these services.
 
-This is a monorepo for a "Bookify" application, an event booking system. It's built with [Nest](https://github.com/nestjs/nest), a progressive Node.js framework, and uses TypeScript. The project follows a microservice architecture, with an API gateway and several individual services for handling different business domains.
+### Services:
 
-## Project Structure
+*   **API Gateway (`api-gateway`):** The entry point for all client requests. It routes requests to the appropriate microservices and handles cross-cutting concerns like authentication and global error handling.
+*   **Booking Service (`booking-service`):** Manages all booking-related operations, including creating, retrieving, and canceling bookings.
+*   **Event Service (`event-service`):** Handles event management, including creating events, managing categories, and ticket tiers.
+*   **Notification Service (`notification-service`):** Responsible for sending various notifications, such as booking confirmations and event updates, primarily via email.
+*   **User Service (`user-service`):** Manages user authentication, authorization, and user profile information.
 
-The project is organized as a monorepo with the following structure:
+## Technologies Used
 
--   **`apps`**: Contains the different microservices of the application.
-    -   `api-gateway`: The entry point for all client requests, routing them to the appropriate microservice.
-    -   `booking-service`: Handles booking-related logic.
-    -   `event-service`: Manages events.
-    -   `notification-service`: Responsible for sending notifications.
-    -   `user-service`: Manages user accounts and authentication.
--   **`libs`**: Contains shared libraries used across the microservices.
-    -   `file-storage`: A library for handling file uploads.
-    -   `shared`: A library containing common modules, DTOs, interfaces, and utilities.
+*   **Backend:** NestJS (TypeScript)
+*   **Database:** MongoDB
+*   **Message Broker:** RabbitMQ
+*   **Containerization:** Docker, Docker Compose
+*   **Authentication:** JWT, Passport.js, bcrypt
+*   **Validation:** Class Validator, Class Transformer
+*   **API Documentation:** Swagger (OpenAPI)
+*   **Emailing:** `@nestjs-modules/mailer`, Handlebars
+*   **File Storage:** Cloudinary integration
+*   **Testing:** Jest
 
 ## Getting Started
 
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+
 ### Prerequisites
 
--   [Node.js](https://nodejs.org/en/) (v18 or higher)
--   [npm](https://www.npmjs.com/)
--   [Docker](https://www.docker.com/)
+Make sure you have the following installed:
+
+*   Docker Desktop
+*   Node.js (LTS version recommended)
+*   npm (comes with Node.js)
 
 ### Installation
 
-1.  Clone the repository:
+1.  **Clone the repository:**
 
     ```bash
     git clone https://github.com/bedonassef02/bookify.git
+    cd bookify
     ```
 
-2.  Install the dependencies:
+2.  **Start Docker Compose services:**
+
+    This will build the Docker images for each service and start all the necessary containers (MongoDB, RabbitMQ, and all NestJS microservices).
 
     ```bash
-    npm install
+    docker-compose up --build
     ```
+
+    The services will be accessible at the following ports:
+    *   API Gateway: `http://localhost:3000`
+    *   RabbitMQ Management: `http://localhost:15672` (guest/guest)
 
 ### Running the Application
 
-The application can be run using Docker Compose, which will start all the microservices and the required infrastructure (MongoDB and RabbitMQ).
+Once the Docker containers are up and running, the API Gateway will be accessible at `http://localhost:3000`.
 
-```bash
-docker-compose up -d
-```
+You can interact with the API using tools like Postman, Insomnia, or through the Swagger UI, which will be available at `http://localhost:3000/api` (or similar, depending on the API Gateway's configuration).
 
-To run a specific service in development mode, you can use the following command:
+### Seeding the Database
 
-```bash
-npm run start:dev <service-name>
-```
+To populate the database with initial data (e.g., test users, events), you can run the seeding scripts. These scripts should be executed after the MongoDB and respective service containers are running.
 
-Replace `<service-name>` with the name of the service you want to run (e.g., `api-gateway`, `user-service`).
+*   **Seed User Service:**
 
-## Running Tests
+    ```bash
+    npm run seed:user-service
+    ```
 
-To run the entire test suite, use the following command:
+*   **Seed Event Service:**
 
-```bash
-npm run test
-```
+    ```bash
+    npm run seed:event-service
+    ```
 
-To run tests for a specific service, you can use the following command:
+### Running Tests
 
-```bash
-npm run test:e2e <service-name>
-```
+*   **Run all tests:**
 
-Replace `<service-name>` with the name of the service you want to test (e.g., `api-gateway`, `user-service`).
+    ```bash
+    npm test
+    ```
 
-## API Documentation
+*   **Run end-to-end tests for API Gateway:**
 
-The API documentation is generated using Swagger and can be accessed at `http://localhost:3000/api`.
+    ```bash
+    npm run test:e2e
+    ```
 
-## Support
+### Linting and Formatting
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+*   **Run linting:**
 
-## Stay in touch
+    ```bash
+    npm run lint
+    ```
 
--   Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
--   Website - [https://nestjs.com](https://nestjs.com/)
--   Twitter - [@nestframework](https://twitter.com/nestframework)
+*   **Format code:**
 
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+    ```bash
+    npm run format
+    ```
