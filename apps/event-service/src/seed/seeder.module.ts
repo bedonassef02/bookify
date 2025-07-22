@@ -5,6 +5,8 @@ import { Event, EventSchema } from '../entities/event.entity';
 import { Category, CategorySchema } from '../entities/category.entity';
 import { TicketTier, TicketTierSchema } from '../entities/ticket-tier.entity';
 import { EventSeeder } from './event.seeder';
+import { CategorySeeder } from './category.seeder';
+import { TicketTierSeeder } from './ticket-tier.seeder';
 
 @Module({
   imports: [
@@ -16,6 +18,6 @@ import { EventSeeder } from './event.seeder';
       { name: TicketTier.name, schema: TicketTierSchema },
     ]),
   ],
-  providers: [EventSeeder],
+  providers: [EventSeeder, CategorySeeder, TicketTierSeeder],
 })
 export class SeederModule {}
