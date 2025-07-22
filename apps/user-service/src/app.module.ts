@@ -29,11 +29,13 @@ import {
 import { RefreshTokenRepository } from './repositories/refresh-token.repository';
 import { TwoFactorAuthenticationService } from './authentication/2fa/2fa.service';
 import { TwoFactorAuthenticationController } from './authentication/2fa/2fa.controller';
+import { ScheduledTasksModule } from './scheduled-tasks/scheduled-tasks.module';
 
 @Module({
   imports: [
     CoreModule.forRoot(),
     JwtModule,
+    ScheduledTasksModule,
     CacheModule.register(),
     DatabaseModule.register({ dbName: 'userdb' }),
     MongooseModule.forFeature([
