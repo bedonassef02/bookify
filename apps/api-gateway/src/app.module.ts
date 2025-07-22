@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { EventsModule } from './events/events.module';
+import { ImagesModule } from './common/image/images.module';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { CacheModule } from '@nestjs/cache-manager';
 import { ConfigModule } from '@nestjs/config';
@@ -26,6 +27,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
         limit: 20,
       },
     ]),
+    ImagesModule,
     EventsModule,
     UsersModule,
     AuthModule,

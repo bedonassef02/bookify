@@ -58,10 +58,4 @@ export class ImagesController {
       eventDto: { imageIds },
     });
   }
-
-  @Public()
-  @Get(':id')
-  getUrl(@Param('id') id: string) {
-    return this.cloudinaryService.getUrl(id);
-  }
 }
