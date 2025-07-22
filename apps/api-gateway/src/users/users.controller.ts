@@ -6,8 +6,12 @@ import {
   Param,
   Patch,
   Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CloudinaryService, createParseFilePipe } from '@app/file-storage';
 import {
   Patterns,
   QueryDto,
@@ -22,7 +26,10 @@ import { Roles } from './auth/decorators/roles.decorator';
 
 @Controller('users')
 export class UsersController {
-  constructor(@Inject(USER_SERVICE) private client: ClientProxy) {}
+  constructor(
+    private cloudinaryService: CloudinaryService,
+    @Inject(USER_SERVICE) private client: ClientProxy,
+  ) {}
 
   @Roles(Role.ADMIN)
   @Get()
@@ -57,6 +64,21 @@ export class UsersController {
     return this.client.send(Patterns.USERS.UPDATE, {
       id,
       userDto: { isActive: true },
+    });
+  }
+
+  @Patch('profile-picture')
+  @UseInterceptors(FileInterceptor('image'))
+  async uploadProfilePicture(
+    @CurrentUser('userId') id: string,
+    @UploadedFile(createParseFilePipe('2MB', ['png', 'jpeg']))
+    file: Express.Multer.File,
+  ): Promise<Observable<UserType>> {
+    const profilePicture = await this.cloudinaryService.uploadFile(file);
+
+    return this.client.send(Patterns.USERS.UPDATE, {
+      id,
+      userDto: { profilePicture },
     });
   }
 }
