@@ -109,4 +109,18 @@ export class AuthController {
   googleLoginCallback(@Req() req: Request): Observable<AuthResponse> {
     return this.client.send(Patterns.AUTH.SIGN_IN_GOOGLE, req.user);
   }
+
+  @Post('logout')
+  logout(
+    @Body('refreshToken') refreshToken: string,
+  ): Observable<{ message: string }> {
+    return this.client.send(Patterns.AUTH.LOGOUT, { refreshToken });
+  }
+
+  @Post('logout-all')
+  logoutAll(
+    @CurrentUser('userId') userId: string,
+  ): Observable<{ message: string }> {
+    return this.client.send(Patterns.AUTH.LOGOUT_ALL, { userId });
+  }
 }

@@ -69,4 +69,16 @@ export class AuthenticationController {
   ): Promise<AuthResponse> {
     return this.authService.verifySignIn(email, code);
   }
+
+  @MessagePattern(Patterns.AUTH.LOGOUT)
+  logout(
+    @Payload('refreshToken') refreshToken: string,
+  ): Promise<{ message: string }> {
+    return this.authService.logout(refreshToken);
+  }
+
+  @MessagePattern(Patterns.AUTH.LOGOUT_ALL)
+  logoutAll(@Payload('userId') userId: string): Promise<{ message: string }> {
+    return this.authService.logoutAll(userId);
+  }
 }

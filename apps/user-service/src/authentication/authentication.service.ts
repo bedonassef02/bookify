@@ -96,6 +96,7 @@ export class AuthenticationService {
     const credentials = this.credentialsService.updatePassword(user);
     const password = await this.passwordService.hash(passwordDto.newPassword);
     await this.usersService.update(id, { password, credentials });
+    await this.tokenService.invalidateAllRefreshTokens(id);
     this.notificationService.sendPasswordChangeSuccess(user);
 
     return this.generateResponse(user);
@@ -197,6 +198,16 @@ export class AuthenticationService {
     if (!user) throw new RpcNotFoundException('User not found');
 
     return this.generateResponse(user);
+  }
+
+  async logout(refreshToken: string): Promise<{ message: string }> {
+    await this.tokenService.invalidateRefreshToken(refreshToken);
+    return { message: 'Logged out successfully.' };
+  }
+
+  async logoutAll(userId: string): Promise<{ message: string }> {
+    await this.tokenService.invalidateAllRefreshTokens(userId);
+    return { message: 'Logged out from all devices successfully.' };
   }
 
   private async generateResponse(user: User): Promise<AuthResponse> {
