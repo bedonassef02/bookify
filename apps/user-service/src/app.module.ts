@@ -52,7 +52,6 @@ import { UserSeeder } from './seed/user.seeder';
     PasswordService,
     CredentialsService,
     NotificationService,
-    UserSeeder,
   ],
   controllers: [UserController, AuthenticationController],
 })

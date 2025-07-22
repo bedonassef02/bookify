@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { UserService } from '../user.service';
 import { HashingService } from '../hashing/hashing.service';
 import { CreateUserDto, Role } from '@app/shared';
 import { faker } from '@faker-js/faker';
+import { Model } from 'mongoose';
+import { User } from '../entities/user.entity';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class UserSeeder {
   constructor(
-    private readonly userService: UserService,
     private readonly hashingService: HashingService,
+    @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
   async seed(count: number) {
@@ -23,7 +25,7 @@ export class UserSeeder {
         await this.isExist(userData.email);
 
         const password = await this.hashingService.hash(userData.password);
-        await this.userService.create({ ...userData, password });
+        await this.userModel.create({ ...userData, password });
         console.log(`User ${userData.email} seeded successfully.`);
       } catch (error) {
         console.error(`Error seeding user ${userData.email}:`, error.message);
@@ -43,7 +45,7 @@ export class UserSeeder {
   }
 
   private async isExist(email: string) {
-    const user = await this.userService.findByEmail(email);
+    const user = await this.userModel.findOne({ email });
     if (user) {
       console.log(`User with email ${email} already exists. Skipping.`);
     }
