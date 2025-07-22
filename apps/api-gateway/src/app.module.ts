@@ -11,6 +11,7 @@ import { AuthModule } from './users/auth/auth.module';
 import { JwtAuthGuard } from './users/auth/guards/auth.guard';
 import { RolesGuard } from './users/auth/guards/roles.guard';
 import { BookingModule } from './booking/booking.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -19,6 +20,12 @@ import { BookingModule } from './booking/booking.module';
       isGlobal: true,
       ttl: 60000,
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 20,
+      },
+    ]),
     EventsModule,
     UsersModule,
     AuthModule,
@@ -44,6 +51,10 @@ import { BookingModule } from './booking/booking.module';
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
 })
