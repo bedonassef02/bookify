@@ -8,6 +8,7 @@ import {
 } from '@app/shared';
 import { UserService } from '../../user.service';
 import { TokenService } from '../../services/token.service';
+import { User } from '../../entities/user.entity';
 
 @Injectable()
 export class TwoFactorAuthenticationService {
@@ -46,22 +47,7 @@ export class TwoFactorAuthenticationService {
     const user = await this.usersService.findOne(id);
     if (!user) throw new RpcNotFoundException('User not found');
 
-    if (!user.twoFactorAuthenticationSecret) {
-      throw new RpcUnauthorizedException('2FA is not set up for this user.');
-    }
-
-    const verified = speakeasy.totp.verify({
-      secret: user.twoFactorAuthenticationSecret,
-      encoding: 'base32',
-      token: code,
-    });
-
-    if (!verified) {
-      throw new RpcUnauthorizedException(
-        'Invalid two-factor authentication code',
-      );
-    }
-
+    this.verify(user, code, false);
     await this.usersService.update(id, {
       isTwoFactorAuthenticationEnabled: true,
     });
@@ -85,27 +71,7 @@ export class TwoFactorAuthenticationService {
     const user = await this.usersService.findOne(id);
     if (!user) throw new RpcNotFoundException('User not found');
 
-    if (!user.twoFactorAuthenticationSecret) {
-      throw new RpcUnauthorizedException('2FA is not set up for this user.');
-    }
-
-    if (!user.isTwoFactorAuthenticationEnabled) {
-      throw new RpcUnauthorizedException('2FA is not enabled for this user.');
-    }
-
-    const verified = speakeasy.totp.verify({
-      secret: user.twoFactorAuthenticationSecret,
-      encoding: 'base32',
-      token: code,
-      window: 2, // Allow for time drift
-    });
-
-    if (!verified) {
-      throw new RpcUnauthorizedException(
-        'Invalid two-factor authentication code',
-      );
-    }
-
+    this.verify(user, code);
     return true;
   }
 
@@ -113,16 +79,25 @@ export class TwoFactorAuthenticationService {
     const user = await this.usersService.findByEmail(email);
     if (!user) throw new RpcNotFoundException('User not found');
 
+    this.verify(user, code);
+    const tokens = await this.tokenService.generate(user); // Generate tokens after successful 2FA verification
+    return {
+      user: this.usersService.sanitize(user),
+      tokens,
+    };
+  }
+
+  verify(user: User, code: string, enabled = true): void {
     if (!user.twoFactorAuthenticationSecret) {
       throw new RpcUnauthorizedException('2FA is not set up for this user.');
     }
 
-    if (!user.isTwoFactorAuthenticationEnabled) {
+    if (!enabled && !user.isTwoFactorAuthenticationEnabled) {
       throw new RpcUnauthorizedException('2FA is not enabled for this user.');
     }
 
     const verified = speakeasy.totp.verify({
-      secret: user.twoFactorAuthenticationSecret,
+      secret: user.twoFactorAuthenticationSecret as string,
       encoding: 'base32',
       token: code,
       window: 2, // Allow for time drift
@@ -133,11 +108,5 @@ export class TwoFactorAuthenticationService {
         'Invalid two-factor authentication code',
       );
     }
-
-    const tokens = await this.tokenService.generate(user); // Generate tokens after successful 2FA verification
-    return {
-      user: this.usersService.sanitize(user),
-      tokens,
-    };
   }
 }
