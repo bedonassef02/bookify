@@ -10,43 +10,30 @@ export class TwoFactorAuthenticationController {
   ) {}
 
   @MessagePattern(Patterns.AUTH.GENERATE_2FA_SECRET)
-  generateTwoFactorAuthenticationSecret(
+  generateSecret(
     @Payload('id') id: string,
   ): Promise<{ secret: string; otpauthUrl: string }> {
-    return this.twoFactorAuthenticationService.generateTwoFactorAuthenticationSecret(
-      id,
-    );
+    return this.twoFactorAuthenticationService.generateSecret(id);
   }
 
   @MessagePattern(Patterns.AUTH.ENABLE_2FA)
-  enableTwoFactorAuthentication(
+  enable(
     @Payload('id') id: string,
     @Payload('code') code: string,
   ): Promise<{ success: boolean }> {
-    return this.twoFactorAuthenticationService.enableTwoFactorAuthentication(
-      id,
-      code,
-    );
+    return this.twoFactorAuthenticationService.enable(id, code);
   }
 
   @MessagePattern(Patterns.AUTH.DISABLE_2FA)
-  disableTwoFactorAuthentication(
-    @Payload('id') id: string,
-  ): Promise<{ success: boolean }> {
-    return this.twoFactorAuthenticationService.disableTwoFactorAuthentication(
-      id,
-    );
+  disable(@Payload('id') id: string): Promise<{ success: boolean }> {
+    return this.twoFactorAuthenticationService.disable(id);
   }
 
   @MessagePattern(Patterns.AUTH.VERIFY_2FA)
-  verifyTwoFactorAuthenticationCode(
+  verifyCode(
     @Payload('id') id: string,
     @Payload('code') code: string,
   ): Promise<boolean> {
-    // Changed return type to boolean as per 2fa.service.ts
-    return this.twoFactorAuthenticationService.verifyTwoFactorAuthenticationCode(
-      id,
-      code,
-    );
+    return this.twoFactorAuthenticationService.verifyCode(id, code);
   }
 }

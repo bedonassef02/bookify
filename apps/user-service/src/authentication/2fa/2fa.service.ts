@@ -8,7 +8,7 @@ import { UserService } from '../../user.service';
 export class TwoFactorAuthenticationService {
   constructor(private readonly usersService: UserService) {}
 
-  async generateTwoFactorAuthenticationSecret(
+  async generateSecret(
     id: string,
   ): Promise<{ secret: string; otpauthUrl: string }> {
     const user = await this.usersService.findOne(id);
@@ -34,10 +34,7 @@ export class TwoFactorAuthenticationService {
     };
   }
 
-  async enableTwoFactorAuthentication(
-    id: string,
-    code: string,
-  ): Promise<{ success: boolean }> {
+  async enable(id: string, code: string): Promise<{ success: boolean }> {
     const user = await this.usersService.findOne(id);
     if (!user) throw new RpcNotFoundException('User not found');
 
@@ -64,9 +61,7 @@ export class TwoFactorAuthenticationService {
     return { success: true };
   }
 
-  async disableTwoFactorAuthentication(
-    id: string,
-  ): Promise<{ success: boolean }> {
+  async disable(id: string): Promise<{ success: boolean }> {
     const user = await this.usersService.findOne(id);
     if (!user) throw new RpcNotFoundException('User not found');
 
@@ -78,10 +73,7 @@ export class TwoFactorAuthenticationService {
     return { success: true };
   }
 
-  async verifyTwoFactorAuthenticationCode(
-    id: string,
-    code: string,
-  ): Promise<boolean> {
+  async verifyCode(id: string, code: string): Promise<boolean> {
     const user = await this.usersService.findOne(id);
     if (!user) throw new RpcNotFoundException('User not found');
 
