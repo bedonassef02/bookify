@@ -1,14 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 import { MailDto } from '@app/shared';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+import { MAIL_QUEUE } from './mail-queue/mail.constants';
 
 @Injectable()
 export class NotificationService {
   private readonly logger = new Logger(NotificationService.name);
   private readonly email: string;
   constructor(
-    private readonly mailService: MailerService,
+    @InjectQueue(MAIL_QUEUE) private readonly mailQueue: Queue<MailDto>,
     private readonly configService: ConfigService,
   ) {
     this.email = this.configService.get<string>('EMAIL_USER', '');
@@ -16,15 +18,7 @@ export class NotificationService {
 
   async sendMail(mailDto: MailDto) {
     mailDto.from = this.email;
-    if (Array.isArray(mailDto.to)) {
-      for (let i = 0; i < mailDto.to.length; i++) {
-        await this.mailService.sendMail({ ...mailDto, to: mailDto.to[i] });
-      }
-      return;
-    }
-    await this.mailService
-      .sendMail(mailDto)
-      .then(() => this.logger.log('A new email was sent.'))
-      .catch((error) => this.logger.error(error));
+    await this.mailQueue.add('send-email', mailDto);
+    this.logger.log(`Email job added to queue for ${mailDto.to}`);
   }
 }

@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { NotificationController } from './notification.controller';
 import { NotificationService } from './notification.service';
-import { MailerModule } from '@nestjs-modules/mailer';
 import { CoreModule, DatabaseModule } from '@app/shared';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
@@ -9,11 +8,11 @@ import {
   UserPreferenceSchema,
 } from './entities/user-preference.entity';
 import { UserPreferenceRepository } from './repositories/user-preference.repository';
-import mailConfig from './config/mail.config';
 import {
   Notification,
   NotificationSchema,
 } from './entities/notification.entity';
+import { MailQueueModule } from './mail-queue/mail-queue.module';
 
 @Module({
   imports: [
@@ -23,7 +22,7 @@ import {
       { name: UserPreference.name, schema: UserPreferenceSchema },
       { name: Notification.name, schema: NotificationSchema },
     ]),
-    MailerModule.forRootAsync(mailConfig.asProvider()),
+    MailQueueModule,
   ],
   controllers: [NotificationController],
   providers: [NotificationService, UserPreferenceRepository],
