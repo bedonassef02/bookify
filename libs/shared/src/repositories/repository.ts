@@ -32,6 +32,13 @@ export abstract class Repository<T extends Document> implements IRepository<T> {
     return this.model.findByIdAndUpdate(id, updateDto, { new: true }).exec();
   }
 
+  findOneAndUpdate(
+    filter: RootFilterQuery<T>,
+    updateDto: RootFilterQuery<T>,
+  ): Promise<T | null> {
+    return this.model.findOneAndUpdate(filter, updateDto, { new: true }).exec();
+  }
+
   delete(id: string): Promise<T | null> {
     return this.model.findByIdAndDelete(id).exec();
   }
