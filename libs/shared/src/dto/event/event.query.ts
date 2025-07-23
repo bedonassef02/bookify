@@ -1,6 +1,7 @@
 import { QueryDto } from '../query.dto';
 import { IsEnum, IsMongoId, IsOptional, IsString } from 'class-validator';
 import { EventStatus } from '@app/shared/enums';
+import { RootFilterQuery } from 'mongoose';
 
 export class EventQuery extends QueryDto {
   @IsOptional()
@@ -15,21 +16,26 @@ export class EventQuery extends QueryDto {
   @IsString()
   keyword?: string;
 
-  get filter(): any {
-    return {
-      category: this.category,
-      status: this.status,
-    };
-  }
+  get filter(): RootFilterQuery<any> {
+    const filter: RootFilterQuery<any> = {};
 
-  get search(): any {
-    return {
-      $or: [
+    if (this.category) {
+      filter.category = this.category;
+    }
+
+    if (this.status) {
+      filter.status = this.status;
+    }
+
+    if (this.keyword) {
+      filter.$or = [
         { title: { $regex: this.keyword, $options: 'i' } },
         { description: { $regex: this.keyword, $options: 'i' } },
         { location: { $regex: this.keyword, $options: 'i' } },
-      ],
-    };
+      ];
+    }
+
+    return filter;
   }
 
   constructor(query?: Partial<EventQuery>) {

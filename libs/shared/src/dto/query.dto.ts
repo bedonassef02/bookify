@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsInt, IsOptional, IsString, Min } from 'class-validator';
+import { RootFilterQuery } from 'mongoose';
 
 export abstract class QueryDto {
   @Type(() => Number)
@@ -32,12 +33,11 @@ export abstract class QueryDto {
     return this.sort.replace(',', ' ');
   }
 
-  constructor(query?: Partial<QueryDto>) {
+  protected constructor(query?: Partial<QueryDto>) {
     if (!query) return;
 
     Object.assign(this, query);
   }
 
-  abstract get filter(): any;
-  abstract get search(): any;
+  abstract get filter(): RootFilterQuery<any>;
 }

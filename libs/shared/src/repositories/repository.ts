@@ -13,7 +13,7 @@ export abstract class Repository<T extends Document> implements IRepository<T> {
     if (!query) return this.model.find();
 
     return this.model
-      .find() // @todo: add filter
+      .find(query.filter)
       .limit(query.limit)
       .skip(query.skip)
       .select(query.select)
