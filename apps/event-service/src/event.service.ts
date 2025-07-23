@@ -32,10 +32,9 @@ export class EventService {
   }
 
   async findOne(id: string): Promise<Event> {
-    let event = await this.eventRepository.findBySlug(id);
-    if (!event && isMongoId(id)) {
-      event = await this.eventRepository.findById(id);
-    }
+    const event = isMongoId(id)
+      ? await this.eventRepository.findById(id)
+      : await this.eventRepository.findBySlug(id);
 
     if (!event) {
       throw new RpcNotFoundException(`Event not found`);
