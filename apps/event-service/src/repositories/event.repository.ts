@@ -11,6 +11,6 @@ export class EventRepository extends Repository<Event> {
   }
 
   findBySlug(slug: string): Promise<Event | null> {
-    return this.model.findOne({ slug }).populate('category').exec();
+    return this.model.findOne({ slug }).exec();
   }
 }
