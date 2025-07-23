@@ -5,6 +5,5 @@ import { CloudinaryModule } from '@app/file-storage';
 @Module({
   imports: [CloudinaryModule],
   controllers: [ImagesController],
-  exports: [ImagesController],
 })
 export class ImagesModule {}
