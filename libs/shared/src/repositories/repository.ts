@@ -9,8 +9,11 @@ export abstract class Repository<T extends Document> implements IRepository<T> {
     return this.model.create(createDto);
   }
 
-  async findAll(query?: QueryDto): Promise<T[]> {
+  async findAll(query?: QueryDto | RootFilterQuery<T>): Promise<T[]> {
     if (!query) return this.model.find();
+    if (!(query instanceof QueryDto)) {
+      return this.model.find(query).exec();
+    }
 
     return this.model
       .find(query.filter)
@@ -35,5 +38,9 @@ export abstract class Repository<T extends Document> implements IRepository<T> {
 
   deleteMany(filter?: RootFilterQuery<T>): Promise<any> {
     return this.model.deleteMany(filter).exec();
+  }
+
+  findOneAndDelete(filter: RootFilterQuery<T>): Promise<T | null> {
+    return this.model.findOneAndDelete(filter).exec();
   }
 }
