@@ -33,7 +33,7 @@ export class CategoriesController {
 
   @Public()
   @Get(':id')
-  findOne(@Param('id', ParseMongoIdPipe) id: string): Observable<any> {
+  findOne(@Param('id') id: string): Observable<any> {
     return this.client.send(Patterns.CATEGORIES.FIND_ONE, { id });
   }
 

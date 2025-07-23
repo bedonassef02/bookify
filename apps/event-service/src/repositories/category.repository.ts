@@ -9,4 +9,8 @@ export class CategoryRepository extends Repository<Category> {
   constructor(@InjectModel(Category.name) categoryModel: Model<Category>) {
     super(categoryModel);
   }
+
+  findBySlug(slug: string): Promise<Category | null> {
+    return this.model.findOne({ slug });
+  }
 }

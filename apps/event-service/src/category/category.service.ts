@@ -6,6 +6,7 @@ import {
 } from '@app/shared';
 import { CategoryRepository } from '../repositories/category.repository';
 import { Category } from '../entities/category.entity';
+import { isMongoId } from 'class-validator';
 
 @Injectable()
 export class CategoryService {
@@ -20,7 +21,9 @@ export class CategoryService {
   }
 
   async findOne(id: string): Promise<Category> {
-    const category = await this.categoryRepository.findById(id);
+    const category = isMongoId(id)
+      ? await this.categoryRepository.findById(id)
+      : await this.categoryRepository.findBySlug(id);
     if (!category) {
       throw new RpcNotFoundException(`Category With ${id} not found`);
     }
