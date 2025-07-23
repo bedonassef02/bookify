@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsInt, IsOptional, IsString, Min } from 'class-validator';
 
-export class QueryDto {
+export abstract class QueryDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)
@@ -37,4 +37,7 @@ export class QueryDto {
 
     Object.assign(this, query);
   }
+
+  abstract get filter(): any;
+  abstract get search(): any;
 }

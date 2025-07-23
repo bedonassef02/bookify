@@ -5,7 +5,7 @@ import {
   CreateEventDto,
   UpdateEventDto,
   Patterns,
-  QueryDto,
+  EventQuery,
 } from '@app/shared';
 import { Event } from './entities/event.entity';
 
@@ -14,8 +14,8 @@ export class EventController {
   constructor(private readonly eventService: EventService) {}
 
   @MessagePattern(Patterns.EVENTS.FIND_ALL)
-  async findAll(@Payload() query: QueryDto): Promise<Event[]> {
-    return this.eventService.findAll(new QueryDto(query));
+  async findAll(@Payload() query: EventQuery): Promise<Event[]> {
+    return this.eventService.findAll(new EventQuery(query));
   }
 
   @MessagePattern(Patterns.EVENTS.FIND_ONE)

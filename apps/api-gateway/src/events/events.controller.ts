@@ -17,23 +17,19 @@ import {
   Patterns,
   UpdateEventDto,
   EventType,
-  QueryDto,
   Role,
+  EventQuery,
 } from '@app/shared';
 import { Public } from '../users/auth/decorators/public.decorator';
 import { Roles } from '../users/auth/decorators/roles.decorator';
-import { CloudinaryService } from '@app/file-storage';
 
 @Controller({ path: 'events', version: '1' })
 export class EventsController {
-  constructor(
-    private cloudinaryService: CloudinaryService,
-    @Inject(EVENT_SERVICE) private client: ClientProxy,
-  ) {}
+  constructor(@Inject(EVENT_SERVICE) private client: ClientProxy) {}
 
   @Public()
   @Get()
-  findAll(@Query() query: QueryDto): Observable<EventType[]> {
+  findAll(@Query() query: EventQuery): Observable<EventType[]> {
     return this.client.send(Patterns.EVENTS.FIND_ALL, query);
   }
 
