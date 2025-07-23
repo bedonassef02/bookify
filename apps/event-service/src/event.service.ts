@@ -10,6 +10,7 @@ import { EventRepository } from './repositories/event.repository';
 import { Event } from './entities/event.entity';
 import { BookingService } from './booking/booking.service';
 import { CategoryRepository } from './repositories/category.repository';
+import { isMongoId } from 'class-validator';
 
 @Injectable()
 export class EventService {
@@ -30,8 +31,12 @@ export class EventService {
     return this.eventRepository.findAll(query);
   }
 
-  async findOne(slug: string): Promise<Event> {
-    const event = await this.eventRepository.findBySlug(slug);
+  async findOne(id: string): Promise<Event> {
+    let event = await this.eventRepository.findBySlug(id);
+    if (!event && isMongoId(id)) {
+      event = await this.eventRepository.findById(id);
+    }
+
     if (!event) {
       throw new RpcNotFoundException(`Event not found`);
     }
