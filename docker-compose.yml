@@ -85,6 +85,19 @@ services:
       - mongodb
       - rabbitmq
 
+  payment-service:
+    build:
+      context: .
+      args:
+        SERVICE_NAME: payment-service
+    restart: always
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      STRIPE_SECRET_KEY: your_stripe_secret_key
+      STRIPE_WEBHOOK_SECRET: your_stripe_webhook_secret
+    depends_on:
+      - rabbitmq
+
   redis:
     image: redis:6.2-alpine
     restart: always
