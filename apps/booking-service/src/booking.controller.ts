@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { BookDto, Patterns } from '@app/shared';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { BookingDocument } from './entities/booking.entity';
 
 @Controller()
@@ -37,5 +37,10 @@ export class BookingController {
   @MessagePattern(Patterns.BOOKING.CANCEL_MANY)
   cancelMany(@Payload('event') event: string): Promise<void> {
     return this.bookingService.cancelMany(event);
+  }
+
+  @EventPattern(Patterns.PAYMENTS.CONFIRM_INTENT)
+  async handlePaymentSucceeded(@Payload('id') id: string) {
+    return this.bookingService.confirm(id);
   }
 }

@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import {
   BookDto,
   RpcBadRequestException,
   RpcConflictException,
   RpcNotFoundException,
   BookingStatus,
+  PAYMENT_SERVICE,
+  Patterns,
 } from '@app/shared';
 import { BookingRepository } from './repositories/booking.repository';
 import { BookingDocument } from './entities/booking.entity';
@@ -12,6 +14,8 @@ import { NotificationService } from './mailer/notification.service';
 import { EventService } from './services/event.service';
 import { UserService } from './services/user.service';
 import { TicketTierService } from './services/ticket-tier.service';
+import { ClientProxy } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class BookingService {
@@ -21,6 +25,7 @@ export class BookingService {
     private userService: UserService,
     private notificationService: NotificationService,
     private ticketTierService: TicketTierService,
+    @Inject(PAYMENT_SERVICE) private paymentClient: ClientProxy,
   ) {}
 
   async findOne(id: string, user: string): Promise<BookingDocument> {
@@ -35,7 +40,7 @@ export class BookingService {
     return this.bookingRepository.findAllByUser(user);
   }
 
-  async bookSeats(bookDto: BookDto): Promise<BookingDocument> {
+  async bookSeats(bookDto: BookDto): Promise<any> {
     const existingBooking = await this.bookingRepository.findByUser(
       bookDto.event,
       bookDto.user,
@@ -67,7 +72,22 @@ export class BookingService {
 
     this.ticketTierService.updateBookedSeats(ticketTier._id.toString(), 1);
 
-    return this.bookingRepository.create(bookDto);
+    const totalPrice = ticketTier.price;
+
+    const booking = await this.bookingRepository.create({
+      ...bookDto,
+      totalPrice,
+    });
+
+    const paymentIntent = await firstValueFrom(
+      this.paymentClient.send(Patterns.PAYMENTS.CREATE_INTENT, {
+        amount: totalPrice,
+        currency: 'usd',
+        bookingId: booking._id,
+      }),
+    );
+
+    return { ...booking.toObject(), ...paymentIntent };
   }
 
   async cancel(id: string, userId: string): Promise<BookingDocument> {
@@ -106,5 +126,16 @@ export class BookingService {
 
     const eventDetails = await this.eventService.findOne(event);
     this.notificationService.cancel(emails, eventDetails.title);
+  }
+
+  async confirm(id: string): Promise<BookingDocument> {
+    const booking = await this.bookingRepository.update(id, {
+      status: BookingStatus.CONFIRMED,
+    });
+    if (!booking) {
+      throw new RpcNotFoundException('Booking not found');
+    }
+
+    return booking;
   }
 }
