@@ -30,7 +30,10 @@ export class TicketTierService {
   }
 
   async findOne(id: string, event: string): Promise<TicketTier> {
-    const ticketTier = await this.ticketTierRepository.findOne({ id, event });
+    const ticketTier = await this.ticketTierRepository.findOne({
+      _id: id,
+      event,
+    });
     if (!ticketTier) {
       throw new RpcNotFoundException('Ticket tier not found');
     }
