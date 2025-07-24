@@ -15,6 +15,9 @@ export class Booking {
   @Prop({ type: Types.ObjectId, required: true })
   user: Types.ObjectId;
 
+  @Prop({ required: true })
+  totalPrice: number;
+
   @Prop({
     type: String,
     enum: Object.values(BookingStatus),
