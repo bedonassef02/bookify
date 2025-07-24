@@ -1,9 +1,9 @@
-import { Controller, Post, Body, Headers } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { PaymentService } from './payment.service';
 import { Patterns, CreatePaymentIntentDto } from '@app/shared';
 
-@Controller('payment')
+@Controller()
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
@@ -12,11 +12,8 @@ export class PaymentController {
     return this.paymentService.createPaymentIntent(paymentIntentDto);
   }
 
-  @Post('webhook')
-  handleStripeWebhook(
-    @Body() event: any,
-    @Headers('stripe-signature') signature: string,
-  ) {
-    return this.paymentService.handleWebhook(event, signature);
+  @MessagePattern(Patterns.PAYMENTS.WEBHOOK)
+  handleStripeWebhook(@Payload() payload: { event: any; signature: string }) {
+    return this.paymentService.handleWebhook(payload.event, payload.signature);
   }
 }

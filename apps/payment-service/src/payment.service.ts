@@ -30,10 +30,10 @@ export class PaymentService {
     return { clientSecret: paymentIntent.client_secret };
   }
 
-  async handleWebhook(event: any, signature: string) {
+  handleWebhook(event: any, signature: string) {
     const webhookSecret = this.configService.get<string>(
       'STRIPE_WEBHOOK_SECRET',
-    );
+    ) as string;
 
     try {
       const stripeEvent = this.stripe.webhooks.constructEvent(

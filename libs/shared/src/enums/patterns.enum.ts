@@ -56,5 +56,6 @@ export const Patterns = {
   PAYMENTS: {
     CREATE_INTENT: 'payments.createIntent',
     CONFIRM_INTENT: 'payments.confirmIntent',
+    WEBHOOK: 'payments.webhook',
   },
 };
