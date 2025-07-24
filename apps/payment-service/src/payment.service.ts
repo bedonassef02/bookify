@@ -22,7 +22,7 @@ export class PaymentService {
 
   async createPaymentIntent(paymentIntentDto: CreatePaymentIntentDto) {
     const paymentIntent = await this.stripe.paymentIntents.create({
-      amount: paymentIntentDto.amount,
+      amount: paymentIntentDto.amount * 100,
       currency: paymentIntentDto.currency,
       metadata: { bookingId: paymentIntentDto.bookingId },
     });
