@@ -107,6 +107,7 @@ export class BookingService {
 
     const ticketTier = await this.ticketTierService.findOne(
       booking.ticketTier.toString(),
+      booking.event.toString(),
     );
     this.ticketTierService.updateBookedSeats(ticketTier._id.toString(), -1);
 
