@@ -18,7 +18,7 @@ import { EVENT_SERVICE, Patterns, Role } from '@app/shared';
 import { ClientProxy } from '@nestjs/microservices';
 import { Roles } from '../../users/auth/decorators/roles.decorator';
 
-@Controller('events/:id/images')
+@Controller({ path: 'events/:id/images', version: '1' })
 export class ImagesController {
   constructor(
     private cloudinaryService: CloudinaryService,

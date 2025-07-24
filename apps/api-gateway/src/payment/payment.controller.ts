@@ -2,7 +2,7 @@ import { Controller, Post, Body, Inject, Headers } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { CreatePaymentIntentDto, Patterns, PAYMENT_SERVICE } from '@app/shared';
 
-@Controller('payment')
+@Controller({ path: 'payment', version: '1' })
 export class PaymentController {
   constructor(@Inject(PAYMENT_SERVICE) private readonly client: ClientProxy) {}
 

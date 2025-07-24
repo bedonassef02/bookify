@@ -27,7 +27,7 @@ import { GoogleAuthGuard } from './guards/google-auth.guard';
 import { Request } from 'express';
 import { map } from 'rxjs/operators';
 
-@Controller('auth')
+@Controller({ path: 'auth', version: '1' })
 export class AuthController {
   constructor(@Inject(USER_SERVICE) private client: ClientProxy) {}
 
