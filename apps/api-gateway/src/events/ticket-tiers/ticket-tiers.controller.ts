@@ -16,6 +16,7 @@ import {
   UpdateTicketTierDto,
 } from '@app/shared';
 import { ParseMongoIdPipe } from '../../common/pipes/parse-mongo-id.pipe';
+import { Public } from '../../users/auth/decorators/public.decorator';
 
 @Controller({ path: 'events/:eventId/ticket-tiers', version: '1' })
 export class TicketTiersController {
@@ -30,6 +31,7 @@ export class TicketTiersController {
     return this.client.send(Patterns.TICKET_TIERS.CREATE, createTicketTierDto);
   }
 
+  @Public()
   @Get()
   findAll(@Param('eventId', ParseMongoIdPipe) event: string) {
     return this.client.send(Patterns.TICKET_TIERS.FIND_ALL, { event });
