@@ -1,7 +1,12 @@
 import { Module } from '@nestjs/common';
 import { PaymentController } from './payment.controller';
 import { PaymentService } from './payment.service';
-import { BOOKING_SERVICE, ClientModule, CoreModule, DatabaseModule } from '@app/shared';
+import {
+  BOOKING_SERVICE,
+  ClientModule,
+  CoreModule,
+  DatabaseModule,
+} from '@app/shared';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Payment, PaymentSchema } from './entities/payment.entity';
 import { PaymentRepository } from './repositories/payment.repository';
