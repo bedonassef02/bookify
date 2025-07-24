@@ -7,7 +7,7 @@ import { TicketTiersController } from './ticket-tiers.controller';
   imports: [
     ClientModule.register({
       name: EVENT_SERVICE,
-      queue: 'event_queue',
+      queue: 'events_queue',
     }),
   ],
   controllers: [TicketTiersController],
