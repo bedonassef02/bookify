@@ -6,9 +6,7 @@ import { Repository } from '@app/shared';
 
 @Injectable()
 export class PaymentRepository extends Repository<PaymentDocument> {
-  constructor(
-    @InjectModel(Payment.name) private readonly paymentModel: Model<PaymentDocument>,
-  ) {
+  constructor(@InjectModel(Payment.name) paymentModel: Model<PaymentDocument>) {
     super(paymentModel);
   }
 }
