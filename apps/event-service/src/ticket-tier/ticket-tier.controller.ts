@@ -18,13 +18,16 @@ export class TicketTierController {
   }
 
   @MessagePattern(Patterns.TICKET_TIERS.FIND_ALL)
-  findAll(): Promise<TicketTier[]> {
-    return this.ticketTierService.findAll();
+  findAll(@Payload('event') event: string): Promise<TicketTier[]> {
+    return this.ticketTierService.findAll(event);
   }
 
   @MessagePattern(Patterns.TICKET_TIERS.FIND_ONE)
-  findOne(@Payload('id') id: string): Promise<TicketTier> {
-    return this.ticketTierService.findOne(id);
+  findOne(
+    @Payload('id') id: string,
+    @Payload('event') event: string,
+  ): Promise<TicketTier> {
+    return this.ticketTierService.findOne(id, event);
   }
 
   @MessagePattern(Patterns.TICKET_TIERS.UPDATE)

@@ -25,12 +25,12 @@ export class TicketTierService {
     return this.ticketTierRepository.create(ticketTierDto);
   }
 
-  findAll(): Promise<TicketTier[]> {
-    return this.ticketTierRepository.findAll();
+  findAll(event: string): Promise<TicketTier[]> {
+    return this.ticketTierRepository.findAll({ event });
   }
 
-  async findOne(id: string): Promise<TicketTier> {
-    const ticketTier = await this.ticketTierRepository.findById(id);
+  async findOne(id: string, event: string): Promise<TicketTier> {
+    const ticketTier = await this.ticketTierRepository.findOne({ id, event });
     if (!ticketTier) {
       throw new RpcNotFoundException('Ticket tier not found');
     }
