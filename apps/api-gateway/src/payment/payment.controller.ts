@@ -1,6 +1,7 @@
 import { Controller, Post, Body, Inject, Headers } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { CreatePaymentIntentDto, Patterns, PAYMENT_SERVICE } from '@app/shared';
+import { Public } from '../users/auth/decorators/public.decorator';
 
 @Controller({ path: 'payment', version: '1' })
 export class PaymentController {
@@ -11,6 +12,7 @@ export class PaymentController {
     return this.client.send(Patterns.PAYMENTS.CREATE_INTENT, paymentIntentDto);
   }
 
+  @Public()
   @Post('webhook')
   handleStripeWebhook(
     @Body() event: any,
