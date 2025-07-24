@@ -18,7 +18,7 @@ export class Booking {
   @Prop({ required: true })
   quantity: number;
 
-  @Prop({ required: true, enum: BookingStatus, default: BookingStatus.PENDING })
+  @Prop({ enum: BookingStatus, default: BookingStatus.PENDING, type: String })
   status: BookingStatus;
 
   @Prop({ unique: true, sparse: true })
