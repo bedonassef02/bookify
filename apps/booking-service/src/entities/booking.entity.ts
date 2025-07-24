@@ -21,6 +21,9 @@ export class Booking {
     default: BookingStatus.PENDING,
   })
   status: BookingStatus;
+
+  @Prop({ type: String, nullable: true })
+  paymentIntentId: string;
 }
 
 export const BookingSchema = SchemaFactory.createForClass(Booking);
