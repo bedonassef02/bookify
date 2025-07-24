@@ -163,15 +163,12 @@ export class BookingService {
 
     // Optional: Check if this paymentIntentId is already associated with another booking
     // This prevents a single payment intent from confirming multiple bookings
-    const existingBookingWithIntent = await this.bookingRepository.findOne({
+    const existingBooking = await this.bookingRepository.findOne({
       paymentIntentId,
     });
-    if (
-      existingBookingWithIntent &&
-      existingBookingWithIntent._id.toString() !== bookingId
-    ) {
+    if (existingBooking && existingBooking.id !== bookingId) {
       console.warn(
-        `Payment Intent ${paymentIntentId} already used for booking ${existingBookingWithIntent._id}. Skipping processing for booking ${bookingId}.`,
+        `Payment Intent ${paymentIntentId} already used for booking ${existingBooking.id}. Skipping processing for booking ${bookingId}.`,
       );
       return;
     }
