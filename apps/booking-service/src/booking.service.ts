@@ -7,6 +7,7 @@ import {
   BookingStatus,
   PAYMENT_SERVICE,
   Patterns,
+  EventType,
 } from '@app/shared';
 import { BookingRepository } from './repositories/booking.repository';
 import { BookingDocument } from './entities/booking.entity';
@@ -51,18 +52,15 @@ export class BookingService {
       );
     }
 
-    const event = await this.eventService.findOne(bookDto.event);
+    const event: EventType = await this.eventService.findOne(bookDto.event);
     if (event.date <= new Date()) {
       throw new RpcBadRequestException('Cannot book tickets for past events');
     }
 
-    const ticketTier = await this.ticketTierService.findOne(bookDto.ticketTier);
-
-    if (ticketTier.event.toString() !== bookDto.event) {
-      throw new RpcBadRequestException(
-        'Ticket tier does not belong to this event',
-      );
-    }
+    const ticketTier = await this.ticketTierService.findOne(
+      bookDto.ticketTier,
+      bookDto.event,
+    );
 
     if (ticketTier.capacity <= ticketTier.bookedSeats) {
       throw new RpcBadRequestException(
