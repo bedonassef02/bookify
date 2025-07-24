@@ -5,6 +5,7 @@ import {
   DatabaseModule,
   CoreModule,
   BOOKING_SERVICE,
+  BOOKING_QUEUE,
 } from '@app/shared';
 import { EventController } from './event.controller';
 import { EventService } from './event.service';
@@ -17,10 +18,7 @@ import { TicketTierModule } from './ticket-tier/ticket-tier.module';
 @Module({
   imports: [
     CoreModule.forRoot(),
-    ClientModule.register({
-      name: BOOKING_SERVICE,
-      queue: 'booking_queue',
-    }),
+    ClientModule.register({ name: BOOKING_SERVICE, queue: BOOKING_QUEUE }),
     DatabaseModule.register({ dbName: 'eventdb' }),
     MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }]),
     CategoryModule,

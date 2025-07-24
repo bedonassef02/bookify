@@ -1,8 +1,8 @@
 import { AppModule } from './app.module';
-import { RmqMicroserviceBootstrap } from '@app/shared';
+import { RmqMicroserviceBootstrap, PAYMENT_QUEUE } from '@app/shared';
 
 async function bootstrap() {
-  const app = await RmqMicroserviceBootstrap(AppModule, 'payment_queue');
+  const app = await RmqMicroserviceBootstrap(AppModule, PAYMENT_QUEUE);
 
   await app.listen();
 }

@@ -1,4 +1,5 @@
 export * from './regex.const';
+export * from './queue.constants';
 
 export const USER_SERVICE = Symbol('USER_SERVICE');
 export const EVENT_SERVICE = Symbol('EVENT_SERVICE');
