@@ -8,6 +8,7 @@ import {
   PAYMENT_SERVICE,
   Patterns,
   EventType,
+  NOTIFICATION_SERVICE,
 } from '@app/shared';
 import { BookingRepository } from './repositories/booking.repository';
 import { BookingDocument } from './entities/booking.entity';
@@ -27,6 +28,8 @@ export class BookingService {
     private notificationService: NotificationService,
     private ticketTierService: TicketTierService,
     @Inject(PAYMENT_SERVICE) private paymentClient: ClientProxy,
+    @Inject(NOTIFICATION_SERVICE)
+    private readonly notificationClient: ClientProxy,
   ) {}
 
   async findOne(id: string, user: string): Promise<BookingDocument> {
@@ -136,5 +139,50 @@ export class BookingService {
     }
 
     return booking;
+  }
+
+  async handlePaymentSucceeded(bookingId: string, paymentIntentId: string) {
+    const booking = await this.bookingRepository.findById(bookingId);
+
+    if (!booking) {
+      console.warn(`Booking with ID ${bookingId} not found.`);
+      return;
+    }
+
+    // Idempotency check: If paymentIntentId is already set and status is CONFIRMED,
+    // or if another booking already has this paymentIntentId, do nothing.
+    if (
+      booking.paymentIntentId === paymentIntentId &&
+      booking.status === BookingStatus.CONFIRMED
+    ) {
+      console.log(
+        `Payment for booking ${bookingId} (intent ${paymentIntentId}) already processed.`,
+      );
+      return;
+    }
+
+    // Optional: Check if this paymentIntentId is already associated with another booking
+    // This prevents a single payment intent from confirming multiple bookings
+    const existingBookingWithIntent = await this.bookingRepository.findOne({
+      paymentIntentId,
+    });
+    if (
+      existingBookingWithIntent &&
+      existingBookingWithIntent._id.toString() !== bookingId
+    ) {
+      console.warn(
+        `Payment Intent ${paymentIntentId} already used for booking ${existingBookingWithIntent._id}. Skipping processing for booking ${bookingId}.`,
+      );
+      return;
+    }
+
+    booking.status = BookingStatus.CONFIRMED;
+    booking.paymentIntentId = paymentIntentId; // Store the payment intent ID
+    await booking.save();
+
+    // Emit notification for confirmed booking
+    this.notificationClient.emit('booking.confirmed', {
+      bookingId: booking._id,
+    });
   }
 }

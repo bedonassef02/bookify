@@ -39,8 +39,14 @@ export class BookingController {
     return this.bookingService.cancelMany(event);
   }
 
-  @EventPattern(Patterns.PAYMENTS.CONFIRM_INTENT)
-  async handlePaymentSucceeded(@Payload('id') id: string) {
-    return this.bookingService.confirm(id);
+  @EventPattern(Patterns.PAYMENTS.SUCCEEDED)
+  async handlePaymentSucceeded(
+    @Payload('bookingId') bookingId: string,
+    @Payload('paymentIntentId') paymentIntentId: string,
+  ) {
+    return this.bookingService.handlePaymentSucceeded(
+      bookingId,
+      paymentIntentId,
+    );
   }
 }
