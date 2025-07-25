@@ -140,6 +140,26 @@ services:
       - ./logs:/app/logs
     command: npm run start:dev payment-service
 
+  review-service:
+    build:
+      context: .
+      args:
+        SERVICE_NAME: review-service
+    restart: always
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      - mongodb
+      - rabbitmq
+    volumes:
+      - ./apps/review-service:/app/apps/review-service
+      - ./libs/shared:/app/libs/shared
+      - ./libs/file-storage:/app/libs/file-storage
+      - /app/node_modules
+      - ./logs:/app/logs
+    command: npm run start:dev review-service
+
   redis:
     image: redis:6.2-alpine
     restart: always
