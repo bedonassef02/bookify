@@ -5,8 +5,6 @@ import {
   RpcConflictException,
   RpcNotFoundException,
   BookingStatus,
-  PAYMENT_SERVICE,
-  Patterns,
   EventType,
   NOTIFICATION_SERVICE,
 } from '@app/shared';
@@ -17,7 +15,6 @@ import { EventService } from './services/event.service';
 import { UserService } from './services/user.service';
 import { TicketTierService } from './services/ticket-tier.service';
 import { ClientProxy } from '@nestjs/microservices';
-import { firstValueFrom } from 'rxjs';
 import { PaymentService } from './services/payment.service';
 
 @Injectable()
