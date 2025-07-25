@@ -18,6 +18,7 @@ import { UserService } from './services/user.service';
 import { TicketTierService } from './services/ticket-tier.service';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
+import { PaymentService } from './services/payment.service';
 
 @Injectable()
 export class BookingService {
@@ -27,9 +28,9 @@ export class BookingService {
     private userService: UserService,
     private notificationService: NotificationService,
     private ticketTierService: TicketTierService,
-    @Inject(PAYMENT_SERVICE) private paymentClient: ClientProxy,
+    private paymentService: PaymentService,
     @Inject(NOTIFICATION_SERVICE)
-    private readonly notificationClient: ClientProxy,
+    private notificationClient: ClientProxy,
   ) {}
 
   async findOne(id: string, user: string): Promise<BookingDocument> {
@@ -80,12 +81,9 @@ export class BookingService {
       totalPrice,
     });
 
-    const paymentIntent = await firstValueFrom(
-      this.paymentClient.send(Patterns.PAYMENTS.CREATE_INTENT, {
-        amount: totalPrice,
-        currency: 'usd',
-        bookingId: booking._id,
-      }),
+    const paymentIntent = await this.paymentService.createIntent(
+      booking.id,
+      totalPrice,
     );
 
     return { ...booking.toObject(), ...paymentIntent };

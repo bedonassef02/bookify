@@ -17,6 +17,7 @@ import { NotificationService } from './mailer/notification.service';
 import { EventService } from './services/event.service';
 import { UserService } from './services/user.service';
 import { TicketTierService } from './services/ticket-tier.service';
+import { PaymentService } from './services/payment.service';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { TicketTierService } from './services/ticket-tier.service';
     EventService,
     UserService,
     TicketTierService,
+    PaymentService,
   ],
 })
 export class AppModule {}
