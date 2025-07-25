@@ -19,7 +19,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./apps/api-gateway/test/jest-e2e.json",
     "seed:user-service": "ts-node -r tsconfig-paths/register apps/user-service/src/seed/main.ts",
-    "seed:event-service": "ts-node -r tsconfig-paths/register apps/event-service/src/seed/main.ts"
+    "seed:event-service": "ts-node -r tsconfig-paths/register apps/event-service/src/seed/main.ts",
+    "seed:review-service": "ts-node -r tsconfig-paths/register apps/review-service/src/seed/main.ts"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^2.0.2",
