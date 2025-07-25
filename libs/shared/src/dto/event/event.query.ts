@@ -1,5 +1,11 @@
 import { QueryDto } from '../query.dto';
-import { IsEnum, IsMongoId, IsOptional, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsMongoId,
+  IsOptional,
+  IsString,
+  IsDateString,
+} from 'class-validator';
 import { EventStatus } from '@app/shared/enums';
 import { RootFilterQuery } from 'mongoose';
 
@@ -15,6 +21,14 @@ export class EventQuery extends QueryDto {
   @IsOptional()
   @IsString()
   keyword?: string;
+
+  @IsOptional()
+  @IsDateString()
+  startDate?: string;
+
+  @IsOptional()
+  @IsDateString()
+  endDate?: string;
 
   get filter(): RootFilterQuery<any> {
     const filter: RootFilterQuery<any> = {};
@@ -33,6 +47,17 @@ export class EventQuery extends QueryDto {
         { description: { $regex: this.keyword, $options: 'i' } },
         { location: { $regex: this.keyword, $options: 'i' } },
       ];
+    }
+
+    if (this.startDate || this.endDate) {
+      const dateFilter: { $gte?: Date; $lte?: Date } = {};
+      if (this.startDate) {
+        dateFilter.$gte = new Date(this.startDate);
+      }
+      if (this.endDate) {
+        dateFilter.$lte = new Date(this.endDate);
+      }
+      filter.date = dateFilter;
     }
 
     return filter;
