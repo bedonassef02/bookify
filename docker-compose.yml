@@ -32,7 +32,12 @@ services:
     depends_on:
       - rabbitmq
     volumes:
+      - ./apps/api-gateway:/app/apps/api-gateway
+      - ./libs/shared:/app/libs/shared
+      - ./libs/file-storage:/app/libs/file-storage
+      - /app/node_modules
       - ./logs:/app/logs
+    command: npm run start:dev api-gateway
 
   booking-service:
     build:
@@ -47,7 +52,12 @@ services:
       - mongodb
       - rabbitmq
     volumes:
+      - ./apps/booking-service:/app/apps/booking-service
+      - ./libs/shared:/app/libs/shared
+      - ./libs/file-storage:/app/libs/file-storage
+      - /app/node_modules
       - ./logs:/app/logs
+    command: npm run start:dev booking-service
 
   event-service:
     build:
@@ -62,7 +72,12 @@ services:
       - mongodb
       - rabbitmq
     volumes:
+      - ./apps/event-service:/app/apps/event-service
+      - ./libs/shared:/app/libs/shared
+      - ./libs/file-storage:/app/libs/file-storage
+      - /app/node_modules
       - ./logs:/app/logs
+    command: npm run start:dev event-service
 
   notification-service:
     build:
@@ -78,7 +93,12 @@ services:
       - rabbitmq
       - redis
     volumes:
+      - ./apps/notification-service:/app/apps/notification-service
+      - ./libs/shared:/app/libs/shared
+      - ./libs/file-storage:/app/libs/file-storage
+      - /app/node_modules
       - ./logs:/app/logs
+    command: npm run start:dev notification-service
 
   user-service:
     build:
@@ -93,7 +113,12 @@ services:
       - mongodb
       - rabbitmq
     volumes:
+      - ./apps/user-service:/app/apps/user-service
+      - ./libs/shared:/app/libs/shared
+      - ./libs/file-storage:/app/libs/file-storage
+      - /app/node_modules
       - ./logs:/app/logs
+    command: npm run start:dev user-service
 
   payment-service:
     build:
@@ -108,7 +133,12 @@ services:
     depends_on:
       - rabbitmq
     volumes:
+      - ./apps/payment-service:/app/apps/payment-service
+      - ./libs/shared:/app/libs/shared
+      - ./libs/file-storage:/app/libs/file-storage
+      - /app/node_modules
       - ./logs:/app/logs
+    command: npm run start:dev payment-service
 
   redis:
     image: redis:6.2-alpine
