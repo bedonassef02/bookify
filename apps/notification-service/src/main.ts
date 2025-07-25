@@ -1,8 +1,8 @@
 import { AppModule } from './app.module';
-import { RmqMicroserviceBootstrap } from '@app/shared';
+import { RmqMicroserviceBootstrap, NOTIFICATION_QUEUE } from '@app/shared';
 
 async function bootstrap() {
-  const app = await RmqMicroserviceBootstrap(AppModule, 'notification_queue');
+  const app = await RmqMicroserviceBootstrap(AppModule, NOTIFICATION_QUEUE);
 
   await app.listen();
 }

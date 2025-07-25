@@ -10,10 +10,6 @@ export class RefreshTokenRepository extends Repository<RefreshToken> {
     super(model);
   }
 
-  findOne(token: string): Promise<RefreshToken | null> {
-    return this.model.findOne({ token }).exec();
-  }
-
   deleteOne(token: string): Promise<any> {
     return this.model.deleteOne({ token }).exec();
   }

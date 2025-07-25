@@ -12,9 +12,9 @@ import {
 export class TicketTierService {
   constructor(@Inject(EVENT_SERVICE) private eventService: ClientProxy) {}
 
-  async findOne(id: string): Promise<TicketTierType> {
+  async findOne(id: string, event: string): Promise<TicketTierType> {
     const ticketTier: TicketTierType | null = await firstValueFrom(
-      this.eventService.send(Patterns.TICKET_TIERS.FIND_ONE, { id }),
+      this.eventService.send(Patterns.TICKET_TIERS.FIND_ONE, { id, event }),
     );
     if (!ticketTier) {
       throw new RpcNotFoundException('Ticket tier not found');

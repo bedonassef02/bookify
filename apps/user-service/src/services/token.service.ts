@@ -16,7 +16,7 @@ export class TokenService {
   ) {}
 
   async findOne(token: string, type: TokenType): Promise<Token> {
-    const tokenDoc = await this.tokenRepository.findOne(token, type);
+    const tokenDoc = await this.tokenRepository.findOne({ token, type });
     if (!tokenDoc) {
       throw new RpcNotFoundException('Invalid or expired token');
     }

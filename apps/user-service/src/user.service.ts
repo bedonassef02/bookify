@@ -16,7 +16,7 @@ export class UserService {
 
   findAll(query: QueryDto): Promise<User[]> {
     query.fields = '-password,-role';
-    return this.userRepository.findAll(new QueryDto(query));
+    return this.userRepository.findAll(query);
   }
 
   async findOne(id: string): Promise<User> {

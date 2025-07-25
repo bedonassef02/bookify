@@ -10,12 +10,6 @@ export class TokenRepository extends Repository<Token> {
     super(tokenModel);
   }
 
-  findOne(token: string, type: TokenType): Promise<Token | null> {
-    return this.model
-      .findOne({ token, type, expiresAt: { $gt: new Date() } })
-      .exec();
-  }
-
   async deleteOne(userId: string, type: TokenType): Promise<void> {
     await this.model.deleteOne({ userId, type }).exec();
   }

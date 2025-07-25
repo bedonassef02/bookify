@@ -1,8 +1,9 @@
-import { NestFactory } from '@nestjs/core';
-import { PaymentServiceModule } from './payment-service.module';
+import { AppModule } from './app.module';
+import { RmqMicroserviceBootstrap, PAYMENT_QUEUE } from '@app/shared';
 
 async function bootstrap() {
-  const app = await NestFactory.create(PaymentServiceModule);
-  await app.listen(process.env.port ?? 3000);
+  const app = await RmqMicroserviceBootstrap(AppModule, PAYMENT_QUEUE);
+
+  await app.listen();
 }
 bootstrap();

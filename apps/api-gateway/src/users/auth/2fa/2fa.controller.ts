@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { AuthResponse } from '@app/shared';
 import { Public } from '../decorators/public.decorator';
 
-@Controller('2fa')
+@Controller({ path: '2fa', version: '1' })
 export class TwoFactorAuthenticationController {
   constructor(@Inject(USER_SERVICE) private client: ClientProxy) {}
 

@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { CategoriesController } from './categories.controller';
-import { ClientModule, EVENT_SERVICE } from '@app/shared';
+import { ClientModule, EVENT_SERVICE, EVENTS_QUEUE } from '@app/shared';
 
 @Module({
   imports: [
-    ClientModule.register({ name: EVENT_SERVICE, queue: 'events_queue' }),
+    ClientModule.register({ name: EVENT_SERVICE, queue: EVENTS_QUEUE }),
   ],
   controllers: [CategoriesController],
 })

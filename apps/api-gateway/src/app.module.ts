@@ -13,6 +13,7 @@ import { JwtAuthGuard } from './users/auth/guards/auth.guard';
 import { RolesGuard } from './users/auth/guards/roles.guard';
 import { BookingModule } from './booking/booking.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
     UsersModule,
     AuthModule,
     BookingModule,
+    PaymentModule,
   ],
   providers: [
     {

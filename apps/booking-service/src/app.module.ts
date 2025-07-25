@@ -8,6 +8,7 @@ import {
   USER_SERVICE,
   NOTIFICATION_SERVICE,
   EVENT_SERVICE,
+  PAYMENT_SERVICE,
 } from '@app/shared';
 import { BookingRepository } from './repositories/booking.repository';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -24,6 +25,7 @@ import { TicketTierService } from './services/ticket-tier.service';
       { name: USER_SERVICE, queue: 'users_queue' },
       { name: NOTIFICATION_SERVICE, queue: 'notification_queue' },
       { name: EVENT_SERVICE, queue: 'events_queue' },
+      { name: PAYMENT_SERVICE, queue: 'payment_queue' },
     ]),
     DatabaseModule.register({ dbName: 'bookingdb' }),
     MongooseModule.forFeature([{ name: Booking.name, schema: BookingSchema }]),

@@ -53,4 +53,10 @@ export const Patterns = {
   NOTIFICATIONS: {
     SEND_EMAIL: 'notifications.sendEmail',
   },
+  PAYMENTS: {
+    CREATE_INTENT: 'payments.createIntent',
+    CONFIRM_INTENT: 'payments.confirmIntent',
+    SUCCEEDED: 'payments.succeeded',
+    WEBHOOK: 'payments.webhook',
+  },
 };
