@@ -14,6 +14,7 @@ import { RolesGuard } from './users/auth/guards/roles.guard';
 import { BookingModule } from './booking/booking.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { PaymentModule } from './payment/payment.module';
+import { LoggerModule, MetricsModule } from '@app/shared';
 
 @Module({
   imports: [
@@ -34,6 +35,8 @@ import { PaymentModule } from './payment/payment.module';
     AuthModule,
     BookingModule,
     PaymentModule,
+    LoggerModule,
+    MetricsModule,
   ],
   providers: [
     {

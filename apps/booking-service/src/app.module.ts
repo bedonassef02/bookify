@@ -9,6 +9,8 @@ import {
   NOTIFICATION_SERVICE,
   EVENT_SERVICE,
   PAYMENT_SERVICE,
+  LoggerModule,
+  MetricsModule,
 } from '@app/shared';
 import { BookingRepository } from './repositories/booking.repository';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -30,6 +32,8 @@ import { PaymentService } from './services/payment.service';
     ]),
     DatabaseModule.register({ dbName: 'bookingdb' }),
     MongooseModule.forFeature([{ name: Booking.name, schema: BookingSchema }]),
+    LoggerModule,
+    MetricsModule,
   ],
   controllers: [BookingController],
   providers: [
