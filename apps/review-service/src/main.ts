@@ -1,8 +1,13 @@
-import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import {
+  RmqMicroserviceBootstrap,
+  REVIEW_QUEUE,
+  LoggerService,
+} from '@app/shared';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.port ?? 3000);
+  const app = await RmqMicroserviceBootstrap(AppModule, REVIEW_QUEUE);
+  app.useLogger(app.get(LoggerService));
+  await app.listen();
 }
 bootstrap();

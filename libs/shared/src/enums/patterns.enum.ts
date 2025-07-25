@@ -59,4 +59,11 @@ export const Patterns = {
     SUCCEEDED: 'payments.succeeded',
     WEBHOOK: 'payments.webhook',
   },
+  REVIEWS: {
+    FIND_ALL: 'reviews.findAll',
+    FIND_ONE: 'reviews.findOne',
+    CREATE: 'reviews.create',
+    UPDATE: 'reviews.update',
+    REMOVE: 'reviews.remove',
+  },
 };
