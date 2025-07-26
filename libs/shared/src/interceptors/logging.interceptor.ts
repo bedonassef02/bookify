@@ -2,16 +2,17 @@ import {
   CallHandler,
   ExecutionContext,
   Injectable,
+  Logger,
   NestInterceptor,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { RmqContext } from '@nestjs/microservices';
-import { Redactor, LoggerService } from '@app/shared';
+import { Redactor } from '@app/shared';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
-  private readonly logger: LoggerService = new LoggerService();
+  private readonly logger = new Logger(LoggingInterceptor.name);
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const rpcContext = context.switchToRpc();

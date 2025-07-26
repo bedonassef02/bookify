@@ -14,8 +14,6 @@ import {
   CoreModule,
   ClientModule,
   NOTIFICATION_SERVICE,
-  LoggerModule,
-  MetricsModule,
 } from '@app/shared';
 import { TokenService } from './services/token.service';
 import { UserController } from './user.controller';
@@ -49,8 +47,6 @@ import { ScheduledTasksModule } from './scheduled-tasks/scheduled-tasks.module';
       name: NOTIFICATION_SERVICE,
       queue: 'notification_queue',
     }),
-    LoggerModule,
-    MetricsModule,
   ],
   providers: [
     UserService,

@@ -6,8 +6,6 @@ import {
   ClientModule,
   CoreModule,
   DatabaseModule,
-  LoggerModule,
-  MetricsModule,
 } from '@app/shared';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Payment, PaymentSchema } from './entities/payment.entity';
@@ -19,8 +17,6 @@ import { PaymentRepository } from './repositories/payment.repository';
     ClientModule.register({ name: BOOKING_SERVICE, queue: 'booking_queue' }),
     DatabaseModule.register({ dbName: 'paymentdb' }),
     MongooseModule.forFeature([{ name: Payment.name, schema: PaymentSchema }]),
-    LoggerModule,
-    MetricsModule,
   ],
   controllers: [PaymentController],
   providers: [PaymentService, PaymentRepository],

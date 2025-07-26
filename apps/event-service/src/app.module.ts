@@ -6,8 +6,6 @@ import {
   CoreModule,
   BOOKING_SERVICE,
   BOOKING_QUEUE,
-  LoggerModule,
-  MetricsModule,
 } from '@app/shared';
 import { EventController } from './event.controller';
 import { EventService } from './event.service';
@@ -25,8 +23,6 @@ import { TicketTierModule } from './ticket-tier/ticket-tier.module';
     MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }]),
     CategoryModule,
     TicketTierModule,
-    LoggerModule,
-    MetricsModule,
   ],
   controllers: [EventController],
   providers: [EventService, EventRepository, BookingService],

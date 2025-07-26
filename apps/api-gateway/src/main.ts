@@ -3,11 +3,9 @@ import { AppModule } from './app.module';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
-import { LoggerService } from '@app/shared';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useLogger(app.get(LoggerService));
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors();
   app.use(helmet());

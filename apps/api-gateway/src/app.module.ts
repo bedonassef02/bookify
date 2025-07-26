@@ -12,10 +12,9 @@ import { AuthModule } from './users/auth/auth.module';
 import { JwtAuthGuard } from './users/auth/guards/auth.guard';
 import { RolesGuard } from './users/auth/guards/roles.guard';
 import { BookingModule } from './booking/booking.module';
+import { ReviewModule } from './review/review.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { PaymentModule } from './payment/payment.module';
-import { ReviewModule } from './review/review.module';
-import { LoggerModule, MetricsModule, InterceptorsModule } from '@app/shared';
 
 @Module({
   imports: [
@@ -37,9 +36,6 @@ import { LoggerModule, MetricsModule, InterceptorsModule } from '@app/shared';
     BookingModule,
     PaymentModule,
     ReviewModule,
-    LoggerModule,
-    MetricsModule,
-    InterceptorsModule,
   ],
   providers: [
     {

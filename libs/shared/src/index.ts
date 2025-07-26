@@ -7,8 +7,6 @@ export * from './filters';
 export * from './exceptions';
 export * from './interceptors';
 export * from './interfaces';
-export * from './logger';
-export * from './metrics';
 export * from './modules';
 export * from './repositories';
 export * from './types';

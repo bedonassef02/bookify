@@ -1,12 +1,7 @@
 import { Module } from '@nestjs/common';
 import { NotificationController } from './notification.controller';
 import { NotificationService } from './notification.service';
-import {
-  CoreModule,
-  DatabaseModule,
-  LoggerModule,
-  MetricsModule,
-} from '@app/shared';
+import { CoreModule, DatabaseModule } from '@app/shared';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
   UserPreference,
@@ -29,8 +24,6 @@ import { MailQueueModule } from './mail-queue/mail-queue.module';
       { name: UserPreference.name, schema: UserPreferenceSchema },
     ]),
     MailQueueModule,
-    LoggerModule,
-    MetricsModule,
   ],
   controllers: [NotificationController],
   providers: [
