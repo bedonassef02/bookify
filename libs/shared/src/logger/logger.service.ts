@@ -1,5 +1,6 @@
 import { Injectable, ConsoleLogger } from '@nestjs/common';
 import * as winston from 'winston';
+import { asyncStorage } from './async-storage';
 
 @Injectable()
 export class LoggerService extends ConsoleLogger {
@@ -26,12 +27,24 @@ export class LoggerService extends ConsoleLogger {
     });
   }
 
-  log(message: string) {
-    this.logger.info(message);
+  private getContextAndMeta(context?: string, meta?: any) {
+    const correlationId = asyncStorage.getStore()?.get('correlationId');
+    const logMeta = {
+      context: context || this.context,
+      correlationId,
+      ...meta,
+    };
+    return logMeta;
   }
 
-  error(message: string) {
-    this.logger.error(message);
+  log(message: any, context?: string) {
+    const meta = this.getContextAndMeta(context);
+    this.logger.info(message, meta);
+  }
+
+  error(message: any, trace?: string, context?: string) {
+    const meta = this.getContextAndMeta(context, { trace });
+    this.logger.error(message, meta);
   }
 
   warn(message: string) {
