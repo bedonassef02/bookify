@@ -30,8 +30,8 @@ export class LoggerService extends ConsoleLogger {
     this.logger.info(message);
   }
 
-  error(message: string, trace: string) {
-    this.logger.error(message, { trace });
+  error(message: string) {
+    this.logger.error(message);
   }
 
   warn(message: string) {
