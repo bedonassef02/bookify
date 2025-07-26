@@ -28,8 +28,13 @@ export class LoggingInterceptor implements NestInterceptor {
         const { method, url } = request;
         const { statusCode } = response;
 
-        const message = `[${method}] ${url} - ${statusCode} - ${elapsedTime}ms`;
-        this.logger.log(message);
+        this.logger.log({
+          message: 'Request handled',
+          method,
+          url,
+          statusCode,
+          elapsedTime,
+        });
 
         this.metricsService.httpRequestDuration.observe(
           {
@@ -45,9 +50,14 @@ export class LoggingInterceptor implements NestInterceptor {
         const { method, url } = request;
         const { statusCode } = response;
 
-        const message = `[${method}] ${url} - ${statusCode} - ${elapsedTime}ms`;
-        this.logger.error(message);
-        this.logger.error(JSON.stringify(error));
+        this.logger.error({
+          message: 'Request failed',
+          method,
+          url,
+          statusCode,
+          elapsedTime,
+          error: error.message || error,
+        });
 
         this.metricsService.httpRequestDuration.observe(
           {
