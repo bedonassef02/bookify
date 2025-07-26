@@ -5,12 +5,12 @@ export class CreateReviewDto {
   @ApiProperty({ description: 'The ID of the user making the review' })
   @IsString()
   @IsNotEmpty()
-  userId: string;
+  user: string;
 
   @ApiProperty({ description: 'The ID of the event being reviewed' })
   @IsString()
   @IsNotEmpty()
-  eventId: string;
+  event: string;
 
   @ApiProperty({
     description: 'The rating given to the event (1-5)',
