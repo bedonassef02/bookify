@@ -1,6 +1,6 @@
 import { Model, Document, RootFilterQuery } from 'mongoose';
 import { IRepository } from '../interfaces';
-import { QueryDto } from '@app/shared';
+import { QueryDto, RpcNotFoundException } from '@app/shared';
 
 export abstract class Repository<T extends Document> implements IRepository<T> {
   protected constructor(protected readonly model: Model<T>) {}
@@ -28,8 +28,24 @@ export abstract class Repository<T extends Document> implements IRepository<T> {
     return this.model.findById(id).exec();
   }
 
+  async findByIdOrFail(id: string) {
+    const entity = await this.findById(id);
+    if (!entity) {
+      throw new RpcNotFoundException(`${this.model.name} not found`);
+    }
+    return entity;
+  }
+
   findOne(filter: RootFilterQuery<T>): Promise<T | null> {
     return this.model.findOne(filter).exec();
+  }
+
+  async findOneOrFail(filter: RootFilterQuery<T>) {
+    const entity = await this.findOne(filter);
+    if (!entity) {
+      throw new RpcNotFoundException(`${this.model.name} not found`);
+    }
+    return entity;
   }
 
   update(id: string, updateDto: RootFilterQuery<T>): Promise<T | null> {
