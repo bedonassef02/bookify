@@ -10,12 +10,6 @@ export class LoggerService extends ConsoleLogger {
     super();
     this.logger = winston.createLogger({
       transports: [
-        new winston.transports.Console({
-          format: winston.format.combine(
-            winston.format.timestamp(),
-            winston.format.json(),
-          ),
-        }),
         new winston.transports.File({
           filename: 'logs/app.log',
           format: winston.format.combine(
@@ -38,24 +32,29 @@ export class LoggerService extends ConsoleLogger {
   }
 
   log(message: any, context?: string) {
+    super.log(message);
     const meta = this.getContextAndMeta(context);
     this.logger.info(message, meta);
   }
 
   error(message: any, trace?: string, context?: string) {
+    super.log(message);
     const meta = this.getContextAndMeta(context, { trace });
     this.logger.error(message, meta);
   }
 
   warn(message: string) {
+    super.log(message);
     this.logger.warn(message);
   }
 
   debug(message: string) {
+    super.log(message);
     this.logger.debug(message);
   }
 
   verbose(message: string) {
+    super.log(message);
     this.logger.verbose(message);
   }
 }
