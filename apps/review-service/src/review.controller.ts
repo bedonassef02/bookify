@@ -1,41 +1,38 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { CreateReviewDto, Patterns, UpdateReviewDto } from '@app/shared';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { CreateReviewCommand } from './commands/create-review.command';
-import { FindAllReviewsQuery } from './queries/find-all-reviews.query';
-import { UpdateReviewCommand } from './commands/update-review.command';
-import { DeleteReviewCommand } from './commands/delete-review.command';
+import { ReviewService } from './review.service';
 
 @Controller()
 export class ReviewController {
-  constructor(
-    private readonly commandBus: CommandBus,
-    private readonly queryBus: QueryBus,
-  ) {}
+  constructor(private readonly reviewService: ReviewService) {}
 
   @MessagePattern(Patterns.REVIEWS.CREATE)
   create(@Payload() createReviewDto: CreateReviewDto) {
-    return this.commandBus.execute(new CreateReviewCommand(createReviewDto));
+    return this.reviewService.create(createReviewDto);
   }
 
   @MessagePattern(Patterns.REVIEWS.FIND_ALL)
-  findAll() {
-    return this.queryBus.execute(new FindAllReviewsQuery());
+  findAll(@Payload('event') event: string) {
+    return this.reviewService.findAll(event);
   }
 
   @MessagePattern(Patterns.REVIEWS.UPDATE)
   update(
     @Payload('id') id: string,
+    @Payload('user') user: string,
+    @Payload('event') event: string,
     @Payload('reviewDto') updateReviewDto: UpdateReviewDto,
   ) {
-    return this.commandBus.execute(
-      new UpdateReviewCommand(id, updateReviewDto),
-    );
+    return this.reviewService.update(id, user, event, updateReviewDto);
   }
 
   @MessagePattern(Patterns.REVIEWS.REMOVE)
-  remove(@Payload('id') id: string) {
-    return this.commandBus.execute(new DeleteReviewCommand(id));
+  remove(
+    @Payload('id') id: string,
+    @Payload('user') user: string,
+    @Payload('event') event: string,
+  ) {
+    return this.reviewService.remove(id, user, event);
   }
 }
