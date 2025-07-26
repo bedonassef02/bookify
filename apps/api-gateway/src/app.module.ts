@@ -15,7 +15,7 @@ import { BookingModule } from './booking/booking.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { PaymentModule } from './payment/payment.module';
 import { ReviewModule } from './review/review.module';
-import { LoggerModule, MetricsModule } from '@app/shared';
+import { LoggerModule, MetricsModule, InterceptorsModule } from '@app/shared';
 
 @Module({
   imports: [
@@ -39,6 +39,7 @@ import { LoggerModule, MetricsModule } from '@app/shared';
     ReviewModule,
     LoggerModule,
     MetricsModule,
+    InterceptorsModule,
   ],
   providers: [
     {
