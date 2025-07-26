@@ -12,11 +12,12 @@ import {
   UserPreference,
   UserPreferenceSchema,
 } from './entities/user-preference.entity';
-import { UserPreferenceRepository } from './repositories/user-preference.repository';
 import {
   Notification,
   NotificationSchema,
 } from './entities/notification.entity';
+import { NotificationRepository } from './repositories/notification.repository';
+import { UserPreferenceRepository } from './repositories/user-preference.repository';
 import { MailQueueModule } from './mail-queue/mail-queue.module';
 
 @Module({
@@ -24,14 +25,18 @@ import { MailQueueModule } from './mail-queue/mail-queue.module';
     CoreModule.forRoot(),
     DatabaseModule.register({ dbName: 'notificationdb' }),
     MongooseModule.forFeature([
-      { name: UserPreference.name, schema: UserPreferenceSchema },
       { name: Notification.name, schema: NotificationSchema },
+      { name: UserPreference.name, schema: UserPreferenceSchema },
     ]),
     MailQueueModule,
     LoggerModule,
     MetricsModule,
   ],
   controllers: [NotificationController],
-  providers: [NotificationService, UserPreferenceRepository],
+  providers: [
+    NotificationService,
+    NotificationRepository,
+    UserPreferenceRepository,
+  ],
 })
 export class AppModule {}
