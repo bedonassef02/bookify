@@ -7,12 +7,16 @@ import {
   UpdateUserDto,
   UserType,
   RpcNotFoundException,
+  MetricsService,
 } from '@app/shared';
 import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly metricsService: MetricsService,
+  ) {}
 
   findAll(query: QueryDto): Promise<User[]> {
     query.fields = '-password,-role';
@@ -32,6 +36,7 @@ export class UserService {
   }
 
   create(createDto: CreateUserDto): Promise<User> {
+    this.metricsService.usersCreated.inc({ provider: 'local' });
     return this.userRepository.create(createDto);
   }
 
