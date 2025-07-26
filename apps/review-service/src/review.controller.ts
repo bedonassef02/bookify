@@ -4,7 +4,6 @@ import { CreateReviewDto, Patterns, UpdateReviewDto } from '@app/shared';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateReviewCommand } from './commands/create-review.command';
 import { FindAllReviewsQuery } from './queries/find-all-reviews.query';
-import { FindOneReviewQuery } from './queries/find-one-review.query';
 import { UpdateReviewCommand } from './commands/update-review.command';
 import { DeleteReviewCommand } from './commands/delete-review.command';
 
@@ -23,11 +22,6 @@ export class ReviewController {
   @MessagePattern(Patterns.REVIEWS.FIND_ALL)
   findAll() {
     return this.queryBus.execute(new FindAllReviewsQuery());
-  }
-
-  @MessagePattern(Patterns.REVIEWS.FIND_ONE)
-  findOne(@Payload('id') id: string) {
-    return this.queryBus.execute(new FindOneReviewQuery(id));
   }
 
   @MessagePattern(Patterns.REVIEWS.UPDATE)

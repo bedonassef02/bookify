@@ -15,7 +15,6 @@ import { CreateReviewHandler } from './commands/create-review.handler';
 import { UpdateReviewHandler } from './commands/update-review.handler';
 import { DeleteReviewHandler } from './commands/delete-review.handler';
 import { FindAllReviewsHandler } from './queries/find-all-reviews.handler';
-import { FindOneReviewHandler } from './queries/find-one-review.handler';
 import { EventService } from './services/event.service';
 
 const commandHandlers = [
@@ -23,7 +22,7 @@ const commandHandlers = [
   UpdateReviewHandler,
   DeleteReviewHandler,
 ];
-const queryHandlers = [FindAllReviewsHandler, FindOneReviewHandler];
+const queryHandlers = [FindAllReviewsHandler];
 
 @Module({
   imports: [
