@@ -49,14 +49,24 @@ export class EventQuery extends QueryDto {
       ];
     }
 
-    if (this.startDate) {
-      filter.date = { ...filter.date, $gte: new Date(this.startDate) };
-    }
-
-    if (this.endDate) {
-      filter.date = { ...filter.date, $lte: new Date(this.endDate) };
+    if (this.startDate || this.endDate) {
+      const dateFilter: { $gte?: Date; $lte?: Date } = {};
+      if (this.startDate) {
+        dateFilter.$gte = new Date(this.startDate);
+      }
+      if (this.endDate) {
+        dateFilter.$lte = new Date(this.endDate);
+      }
+      filter.date = dateFilter;
     }
 
     return filter;
+  }
+
+  constructor(query?: Partial<EventQuery>) {
+    super(query);
+    if (!query) return;
+
+    Object.assign(this, query);
   }
 }
