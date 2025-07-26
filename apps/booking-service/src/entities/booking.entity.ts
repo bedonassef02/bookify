@@ -22,7 +22,7 @@ export class Booking {
   status: BookingStatus;
 
   @Prop({ unique: true, sparse: true })
-  paymentIntentId?: string;
+  paymentIntent?: string;
 }
 
 export const BookingSchema = SchemaFactory.createForClass(Booking);

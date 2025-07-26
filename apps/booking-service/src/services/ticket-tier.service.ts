@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import {
   EVENT_SERVICE,
   Patterns,
+  RpcBadRequestException,
   RpcNotFoundException,
   TicketTierType,
 } from '@app/shared';
@@ -21,6 +22,14 @@ export class TicketTierService {
     }
 
     return ticketTier;
+  }
+
+  hasAvailableSeats(ticketTier: TicketTierType): void {
+    if (ticketTier.capacity <= ticketTier.bookedSeats) {
+      throw new RpcBadRequestException(
+        'No available seats for this ticket tier',
+      );
+    }
   }
 
   updateBookedSeats(id: string, increment: number): void {

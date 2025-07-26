@@ -26,32 +26,19 @@ export class BookingService {
     private notificationService: NotificationService,
     private ticketTierService: TicketTierService,
     private paymentService: PaymentService,
-    @Inject(NOTIFICATION_SERVICE)
-    private notificationClient: ClientProxy,
+    @Inject(NOTIFICATION_SERVICE) private notificationClient: ClientProxy,
   ) {}
 
-  async findOne(id: string, user: string): Promise<BookingDocument> {
-    const booking = await this.bookingRepository.findById(id);
-    if (!booking || booking.user.toString() !== user) {
-      throw new RpcNotFoundException('Booking not found');
-    }
-    return booking;
+  findOne(id: string, user: string): Promise<BookingDocument> {
+    return this.bookingRepository.findOneOrFail({ _id: id, user });
   }
 
   findAllByUser(user: string): Promise<BookingDocument[]> {
-    return this.bookingRepository.findAllByUser(user);
+    return this.bookingRepository.findAll({ user });
   }
 
   async bookSeats(bookDto: BookDto): Promise<any> {
-    const existingBooking = await this.bookingRepository.findByUser(
-      bookDto.event,
-      bookDto.user,
-    );
-    if (existingBooking) {
-      throw new RpcConflictException(
-        'User already has a booking for this event',
-      );
-    }
+    await this.isExist(bookDto.event, bookDto.user);
 
     const event: EventType = await this.eventService.findOne(bookDto.event);
     if (event.date <= new Date()) {
@@ -62,54 +49,39 @@ export class BookingService {
       bookDto.ticketTier,
       bookDto.event,
     );
-
-    if (ticketTier.capacity <= ticketTier.bookedSeats) {
-      throw new RpcBadRequestException(
-        'No available seats for this ticket tier',
-      );
-    }
-
-    this.ticketTierService.updateBookedSeats(ticketTier._id.toString(), 1);
+    this.ticketTierService.hasAvailableSeats(ticketTier);
+    this.ticketTierService.updateBookedSeats(ticketTier.id, 1);
 
     const totalPrice = ticketTier.price;
-
     const booking = await this.bookingRepository.create({
       ...bookDto,
       totalPrice,
     });
 
-    const paymentIntent = await this.paymentService.createIntent(
-      booking.id,
-      totalPrice,
-    );
+    const paymentIntent: { clientSecret: string | null } =
+      await this.paymentService.createIntent(booking.id, totalPrice);
 
     return { ...booking.toObject(), ...paymentIntent };
   }
 
-  async cancel(id: string, userId: string): Promise<BookingDocument> {
-    const booking = await this.bookingRepository.findById(id);
-    if (!booking || booking.user.toString() !== userId) {
-      throw new RpcNotFoundException('Booking not found or not authorized');
-    }
-
+  async cancel(id: string, userId: string): Promise<void> {
+    const booking = await this.bookingRepository.findByIdOrFail(id);
     if (booking.status === BookingStatus.CANCELLED) {
       throw new RpcBadRequestException('Booking is already cancelled');
     }
 
-    const event = await this.eventService.findOne(booking.event.toString());
+    const event = await this.eventService.findOne(booking.event);
     if (event.date <= new Date()) {
       throw new RpcBadRequestException('Cannot cancel booking for past events');
     }
 
-    const cancelledBooking = await this.bookingRepository.cancel(id, userId);
+    await this.bookingRepository.cancel(id, userId);
 
     const ticketTier = await this.ticketTierService.findOne(
-      booking.ticketTier.toString(),
-      booking.event.toString(),
+      booking.ticketTier,
+      booking.event,
     );
-    this.ticketTierService.updateBookedSeats(ticketTier._id.toString(), -1);
-
-    return cancelledBooking as BookingDocument;
+    this.ticketTierService.updateBookedSeats(ticketTier.id, -1);
   }
 
   async cancelMany(event: string): Promise<void> {
@@ -118,63 +90,50 @@ export class BookingService {
       return;
     }
 
-    const userIds = bookings.map((booking) => booking.user);
-    const emails: string[] = await this.userService.findEmails(userIds);
-
+    const emails: string[] = await this.findEmails(bookings);
     const eventDetails = await this.eventService.findOne(event);
     this.notificationService.cancel(emails, eventDetails.title);
   }
 
-  async confirm(id: string): Promise<BookingDocument> {
-    const booking = await this.bookingRepository.update(id, {
-      status: BookingStatus.CONFIRMED,
-    });
-    if (!booking) {
-      throw new RpcNotFoundException('Booking not found');
-    }
+  async handlePaymentSucceeded(bookingId: string, paymentIntent: string) {
+    const booking = await this.bookingRepository.findByIdOrFail(bookingId);
 
-    return booking;
-  }
-
-  async handlePaymentSucceeded(bookingId: string, paymentIntentId: string) {
-    const booking = await this.bookingRepository.findById(bookingId);
-
-    if (!booking) {
-      console.warn(`Booking with ID ${bookingId} not found.`);
-      return;
-    }
-
-    // Idempotency check: If paymentIntentId is already set and status is CONFIRMED,
-    // or if another booking already has this paymentIntentId, do nothing.
     if (
-      booking.paymentIntentId === paymentIntentId &&
+      booking.paymentIntent === paymentIntent &&
       booking.status === BookingStatus.CONFIRMED
     ) {
-      console.log(
-        `Payment for booking ${bookingId} (intent ${paymentIntentId}) already processed.`,
+      throw new RpcBadRequestException(
+        'Payment already confirmed for this booking',
       );
-      return;
     }
 
-    // Optional: Check if this paymentIntentId is already associated with another booking
-    // This prevents a single payment intent from confirming multiple bookings
     const existingBooking = await this.bookingRepository.findOne({
-      paymentIntentId,
+      paymentIntent,
     });
     if (existingBooking && existingBooking.id !== bookingId) {
-      console.warn(
-        `Payment Intent ${paymentIntentId} already used for booking ${existingBooking.id}. Skipping processing for booking ${bookingId}.`,
+      throw new RpcBadRequestException(
+        'Payment already used for another booking',
       );
-      return;
     }
 
     booking.status = BookingStatus.CONFIRMED;
-    booking.paymentIntentId = paymentIntentId; // Store the payment intent ID
+    booking.paymentIntent = paymentIntent; // Store the payment intent ID
     await booking.save();
 
-    // Emit notification for confirmed booking
-    this.notificationClient.emit('booking.confirmed', {
-      bookingId: booking._id,
-    });
+    // @todo: Emit notification for confirmed booking
+  }
+
+  private async isExist(user: string, event: string): Promise<void> {
+    const booking = await this.bookingRepository.findOne({ event, user });
+    if (booking) {
+      throw new RpcConflictException(
+        'User already has a booking for this event',
+      );
+    }
+  }
+
+  private findEmails(bookings: BookingDocument[]): Promise<string[]> {
+    const userIds = bookings.map((booking) => booking.user);
+    return this.userService.findEmails(userIds);
   }
 }
