@@ -63,6 +63,10 @@ export abstract class Repository<T extends Document> implements IRepository<T> {
     return this.model.findByIdAndDelete(id).exec();
   }
 
+  deleteOne(filter: RootFilterQuery<T>): Promise<T | null> {
+    return this.model.findOneAndDelete(filter).exec();
+  }
+
   deleteMany(filter?: RootFilterQuery<T>): Promise<any> {
     return this.model.deleteMany(filter).exec();
   }
