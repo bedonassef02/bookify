@@ -11,7 +11,7 @@ import { Redactor, LoggerService } from '@app/shared';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
-  constructor(private readonly logger: LoggerService) {}
+  private readonly logger: LoggerService = new LoggerService();
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const rpcContext = context.switchToRpc();
@@ -23,23 +23,17 @@ export class LoggingInterceptor implements NestInterceptor {
     return next.handle().pipe(
       tap((response) => {
         const elapsedTime = Date.now() - now;
-        this.logger.log({
-          message: 'Microservice call finished',
-          pattern,
-          elapsedTime,
-          data: Redactor.sanitize(data),
-          response: Redactor.sanitize(response),
-        });
+        this.logger.debug(`[${pattern}] - (${elapsedTime}ms)`);
+        this.logger.verbose(`Data: ${JSON.stringify(Redactor.sanitize(data))}`);
+        this.logger.verbose(
+          `Response: ${JSON.stringify(Redactor.sanitize(response))}`,
+        );
       }),
       catchError((error) => {
         const elapsedTime = Date.now() - now;
-        this.logger.error({
-          message: 'Microservice call failed',
-          pattern,
-          elapsedTime,
-          data: Redactor.sanitize(data),
-          error: error.message || error,
-        });
+        this.logger.error(`[${pattern}] - (${elapsedTime}ms)`);
+        this.logger.error(`Data: ${JSON.stringify(Redactor.sanitize(data))}`);
+        this.logger.error(`Error: ${JSON.stringify(error.message || error)}`);
         throw error;
       }),
     );
