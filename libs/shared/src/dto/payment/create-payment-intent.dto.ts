@@ -17,5 +17,5 @@ export class CreatePaymentIntentDto {
 
   @IsMongoId()
   @IsNotEmpty()
-  bookingId: string;
+  booking: string;
 }

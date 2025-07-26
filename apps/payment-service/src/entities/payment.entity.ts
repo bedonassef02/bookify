@@ -12,7 +12,7 @@ export enum PaymentStatus {
 @Schema({ timestamps: true })
 export class Payment {
   @Prop({ required: true, unique: true })
-  paymentIntentId: string;
+  paymentIntent: string;
 
   @Prop({ required: true })
   amount: number;
@@ -21,7 +21,7 @@ export class Payment {
   currency: string;
 
   @Prop({ required: true })
-  bookingId: string;
+  booking: string;
 
   @Prop({ required: true, enum: PaymentStatus, default: PaymentStatus.PENDING })
   status: PaymentStatus;
