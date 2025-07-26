@@ -30,7 +30,7 @@ export class BookingController {
   cancelBooking(
     @Payload('id') id: string,
     @Payload('user') user: string,
-  ): Promise<BookingDocument> {
+  ): Promise<void> {
     return this.bookingService.cancel(id, user);
   }
 

@@ -1,10 +1,8 @@
-import { Types } from 'mongoose';
-
 export interface TicketTierType {
-  _id: Types.ObjectId;
+  id: string;
   name: string;
   price: number;
   capacity: number;
   bookedSeats: number;
-  event: Types.ObjectId;
+  event: string;
 }

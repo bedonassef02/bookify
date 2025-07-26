@@ -7,7 +7,10 @@ import { ClientProxy } from '@nestjs/microservices';
 export class PaymentService {
   constructor(@Inject(PAYMENT_SERVICE) private client: ClientProxy) {}
 
-  createIntent(bookingId: string, amount: number) {
+  createIntent(
+    bookingId: string,
+    amount: number,
+  ): Promise<{ clientSecret: string | null }> {
     return firstValueFrom(
       this.client.send(Patterns.PAYMENTS.CREATE_INTENT, {
         amount,

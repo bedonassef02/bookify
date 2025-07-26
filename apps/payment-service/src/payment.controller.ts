@@ -8,12 +8,17 @@ export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @MessagePattern(Patterns.PAYMENTS.CREATE_INTENT)
-  createPaymentIntent(@Payload() paymentIntentDto: CreatePaymentIntentDto) {
+  createPaymentIntent(
+    @Payload() paymentIntentDto: CreatePaymentIntentDto,
+  ): Promise<{ clientSecret: string | null }> {
     return this.paymentService.createPaymentIntent(paymentIntentDto);
   }
 
   @MessagePattern(Patterns.PAYMENTS.WEBHOOK)
-  handleStripeWebhook(@Payload() payload: { event: any; signature: string }) {
-    return this.paymentService.handleWebhook(payload.event, payload.signature);
+  handleStripeWebhook(
+    @Payload('event') event: string | Buffer,
+    @Payload('signature') signature: string,
+  ) {
+    return this.paymentService.handleWebhook(event, signature);
   }
 }
