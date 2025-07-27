@@ -1,8 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Model, Types } from 'mongoose';
-import slugify from 'slugify';
 import { Category } from './category.entity';
-import { EventStatus } from '@app/shared';
+import { EventStatus, generateUniqueSlug } from '@app/shared';
 
 @Schema({ timestamps: true })
 export class Event extends Document {
@@ -44,17 +43,12 @@ export class Event extends Document {
 export const EventSchema = SchemaFactory.createForClass(Event);
 
 EventSchema.pre<Event>('save', async function (next) {
-  if (!this.isModified('title')) return next();
-
-  const baseSlug = slugify(this.title, { lower: true, strict: true });
-  let slug = baseSlug;
-  let count = 1;
-
-  const Model = this.constructor as Model<Event>;
-  while (await Model.exists({ slug, _id: { $ne: this._id } })) {
-    slug = `${baseSlug}-${count++}`;
+  if (this.isModified('title')) {
+    this.slug = await generateUniqueSlug(
+      this,
+      this.constructor as Model<Event>,
+      this.title,
+    );
   }
-
-  this.slug = slug;
   next();
 });
