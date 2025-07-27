@@ -22,6 +22,7 @@ import { EventService } from './services/event.service';
 import { UserService } from './services/user.service';
 import { TicketTierService } from './services/ticket-tier.service';
 import { PaymentService } from './services/payment.service';
+import { CouponService } from './services/coupon.service';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { PaymentService } from './services/payment.service';
     UserService,
     TicketTierService,
     PaymentService,
+    CouponService,
   ],
 })
 export class AppModule {}
