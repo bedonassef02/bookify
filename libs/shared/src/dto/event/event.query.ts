@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsString,
   IsDateString,
+  IsNotIn,
 } from 'class-validator';
 import { EventStatus } from '@app/shared/enums';
 import { RootFilterQuery } from 'mongoose';
@@ -12,6 +13,7 @@ import { RootFilterQuery } from 'mongoose';
 export class EventQuery extends QueryDto {
   @IsOptional()
   @IsEnum(EventStatus)
+  @IsNotIn([EventStatus.DRAFT])
   status?: EventStatus;
 
   @IsOptional()
