@@ -20,11 +20,14 @@ export class EventSeeder {
       return [];
     }
 
-    const events: CreateEventDto[] = [];
+    const events: Event[] = [];
     for (let i = 0; i < count; i++) {
-      events.push(this.createEventDto(categories));
+      events.push(
+        await this.eventModel.create(this.createEventDto(categories)),
+      );
     }
-    return this.eventModel.insertMany(events) as any;
+
+    return events;
   }
 
   private createEventDto(categories: Category[]): CreateEventDto {

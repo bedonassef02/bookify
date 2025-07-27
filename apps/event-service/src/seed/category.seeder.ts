@@ -22,7 +22,6 @@ export class CategorySeeder {
   private createCategory(): CreateCategoryDto {
     return {
       name: faker.commerce.department(),
-      slug: faker.lorem.slug(),
       description: faker.lorem.sentence(),
     };
   }
