@@ -1,7 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { EVENT_SERVICE, EventType, Patterns } from '@app/shared';
+import {
+  EVENT_SERVICE,
+  EventStatus,
+  EventType,
+  Patterns,
+  RpcBadRequestException,
+} from '@app/shared';
 
 @Injectable()
 export class EventService {
@@ -11,5 +17,17 @@ export class EventService {
     return firstValueFrom(
       this.eventService.send(Patterns.EVENTS.FIND_ONE, { id }),
     );
+  }
+
+  validate(event: EventType): void {
+    if (event.date <= new Date()) {
+      throw new RpcBadRequestException('Cannot book tickets for past events');
+    }
+
+    if (event.status !== EventStatus.PUBLISHED) {
+      throw new RpcBadRequestException(
+        'Cannot book tickets for an event that is not published.',
+      );
+    }
   }
 }

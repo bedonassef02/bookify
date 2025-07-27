@@ -3,10 +3,10 @@ import {
   BookDto,
   RpcBadRequestException,
   RpcConflictException,
-  RpcNotFoundException,
   BookingStatus,
   EventType,
   NOTIFICATION_SERVICE,
+  EventStatus,
 } from '@app/shared';
 import { BookingRepository } from './repositories/booking.repository';
 import { BookingDocument } from './entities/booking.entity';
@@ -41,9 +41,7 @@ export class BookingService {
     await this.isExist(bookDto.event, bookDto.user);
 
     const event: EventType = await this.eventService.findOne(bookDto.event);
-    if (event.date <= new Date()) {
-      throw new RpcBadRequestException('Cannot book tickets for past events');
-    }
+    this.eventService.validate(event);
 
     const ticketTier = await this.ticketTierService.findOne(
       bookDto.ticketTier,
