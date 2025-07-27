@@ -63,6 +63,15 @@ export abstract class Repository<T extends Document> implements IRepository<T> {
     return this.model.findByIdAndDelete(id).exec();
   }
 
+  async deleteOrFail(id: string): Promise<T> {
+    const entity = await this.findByIdAndDelete(id);
+    if (!entity) {
+      throw new RpcNotFoundException(`${this.model.name} not found`);
+    }
+
+    return entity;
+  }
+
   deleteOne(filter: RootFilterQuery<T>): Promise<T | null> {
     return this.model.findOneAndDelete(filter).exec();
   }
@@ -71,7 +80,29 @@ export abstract class Repository<T extends Document> implements IRepository<T> {
     return this.model.deleteMany(filter).exec();
   }
 
+  findByIdAndDelete(id: string): Promise<T | null> {
+    return this.model.findByIdAndDelete(id).exec();
+  }
+
   findOneAndDelete(filter: RootFilterQuery<T>): Promise<T | null> {
     return this.model.findOneAndDelete(filter).exec();
+  }
+
+  async findOneAndDeleteOrFail(filter: RootFilterQuery<T>): Promise<T> {
+    const entity = await this.findOneAndDelete(filter);
+    if (!entity) {
+      throw new RpcNotFoundException(`${this.model.name} not found`);
+    }
+
+    return entity;
+  }
+
+  count(filter: RootFilterQuery<T>): Promise<number> {
+    return this.model.countDocuments(filter).exec();
+  }
+
+  async exists(filter: RootFilterQuery<T>): Promise<boolean> {
+    const count = await this.count(filter);
+    return count > 0;
   }
 }
