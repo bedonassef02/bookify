@@ -65,4 +65,14 @@ export const Patterns = {
     UPDATE: 'reviews.update',
     REMOVE: 'reviews.remove',
   },
+  COUPONS: {
+    CREATE: 'coupons.create',
+    FIND_ALL: 'coupons.findAll',
+    FIND_ONE: 'coupons.findOne',
+    FIND_BY_CODE: 'coupons.findByCode',
+    UPDATE: 'coupons.update',
+    DELETE: 'coupons.delete',
+    INCREMENT_USAGE: 'coupons.incrementUsage',
+    DECREMENT_USAGE: 'coupons.decrementUsage',
+  },
 };
