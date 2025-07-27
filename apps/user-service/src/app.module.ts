@@ -14,6 +14,7 @@ import {
   CoreModule,
   ClientModule,
   NOTIFICATION_SERVICE,
+  NOTIFICATION_QUEUE,
 } from '@app/shared';
 import { TokenService } from './services/token.service';
 import { UserController } from './user.controller';
@@ -45,7 +46,7 @@ import { ScheduledTasksModule } from './scheduled-tasks/scheduled-tasks.module';
     ]),
     ClientModule.register({
       name: NOTIFICATION_SERVICE,
-      queue: 'notification_queue',
+      queue: NOTIFICATION_QUEUE,
     }),
   ],
   providers: [

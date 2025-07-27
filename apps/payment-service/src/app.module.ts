@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { PaymentController } from './payment.controller';
 import { PaymentService } from './payment.service';
 import {
+  BOOKING_QUEUE,
   BOOKING_SERVICE,
   ClientModule,
   CoreModule,
@@ -14,7 +15,7 @@ import { PaymentRepository } from './repositories/payment.repository';
 @Module({
   imports: [
     CoreModule.forRoot(),
-    ClientModule.register({ name: BOOKING_SERVICE, queue: 'booking_queue' }),
+    ClientModule.register({ name: BOOKING_SERVICE, queue: BOOKING_QUEUE }),
     DatabaseModule.register({ dbName: 'paymentdb' }),
     MongooseModule.forFeature([{ name: Payment.name, schema: PaymentSchema }]),
   ],
