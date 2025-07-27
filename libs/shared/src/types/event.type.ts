@@ -8,4 +8,5 @@ export type EventType = {
   duration: number;
   location: string;
   status: EventStatus;
+  category: string;
 };
