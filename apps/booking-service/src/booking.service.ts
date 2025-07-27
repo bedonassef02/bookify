@@ -1,11 +1,11 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   BookDto,
   RpcBadRequestException,
   RpcConflictException,
   BookingStatus,
   EventType,
-  CouponType,
+  TicketTierType,
 } from '@app/shared';
 import { BookingRepository } from './repositories/booking.repository';
 import { BookingDocument } from './entities/booking.entity';
@@ -38,31 +38,24 @@ export class BookingService {
 
   async bookSeats(bookDto: BookDto): Promise<any> {
     await this.isExist(bookDto.event, bookDto.user);
-
-    const event: EventType = await this.eventService.findOne(bookDto.event);
-    this.eventService.validate(event);
-
-    const ticketTier = await this.ticketTierService.findOne(
+    const event: EventType = await this._processEvent(bookDto.event);
+    const ticketTier = await this._processTicketTier(
       bookDto.ticketTier,
       bookDto.event,
     );
-    this.ticketTierService.hasAvailableSeats(ticketTier);
-    this.ticketTierService.updateBookedSeats(ticketTier.id, 1);
 
     let totalPrice = ticketTier.price;
     let discountAmount = 0;
     let couponCode: string | null = null;
-
     if (bookDto.couponCode) {
-      const couponResult: {
-        discountAmount: number;
-        couponCode: string;
-      } | null = await this._processCoupon(bookDto, totalPrice, event);
-      if (couponResult) {
-        discountAmount = couponResult.discountAmount;
-        couponCode = couponResult.couponCode;
-        totalPrice -= discountAmount;
-      }
+      const couponResult = await this.couponService.applyCoupon(
+        bookDto,
+        totalPrice,
+        event,
+      );
+      discountAmount = couponResult.discountAmount;
+      couponCode = couponResult.couponCode;
+      totalPrice -= discountAmount;
     }
 
     const booking = await this.bookingRepository.create({
@@ -71,9 +64,7 @@ export class BookingService {
       couponCode,
       discountAmount,
     });
-
-    const paymentIntent: { clientSecret: string | null } =
-      await this.paymentService.createIntent(booking.id, totalPrice);
+    const paymentIntent = await this._processPayment(booking.id, totalPrice);
 
     return { ...booking.toObject(), ...paymentIntent };
   }
@@ -155,27 +146,26 @@ export class BookingService {
     return this.userService.findEmails(userIds);
   }
 
-  private async _processCoupon(
-    bookDto: BookDto,
-    totalPrice: number,
-    event: EventType,
-  ): Promise<{ discountAmount: number; couponCode: string } | null> {
-    if (!bookDto.couponCode) {
-      return null;
-    }
+  private async _processEvent(id: string): Promise<EventType> {
+    const event: EventType = await this.eventService.findOne(id);
+    this.eventService.validate(event);
+    return event;
+  }
 
-    const {
-      discountAmount,
-      couponCode,
-      coupon,
-    }: { discountAmount: number; couponCode: string; coupon: CouponType } =
-      await this.couponService.applyCoupon(bookDto, totalPrice, event);
+  private async _processTicketTier(
+    id: string,
+    event: string,
+  ): Promise<TicketTierType> {
+    const ticketTier: TicketTierType = await this.ticketTierService.findOne(
+      id,
+      event,
+    );
+    this.ticketTierService.hasAvailableSeats(ticketTier);
+    this.ticketTierService.updateBookedSeats(ticketTier.id, 1);
+    return ticketTier;
+  }
 
-    await this.couponService.incrementCouponUsage(coupon.id);
-
-    return {
-      discountAmount,
-      couponCode,
-    };
+  private async _processPayment(bookingId: string, totalPrice: number) {
+    return this.paymentService.createIntent(bookingId, totalPrice);
   }
 }

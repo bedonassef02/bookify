@@ -22,52 +22,23 @@ export class CouponService {
     );
   }
 
-  validateCoupon(coupon: CouponType): void {
-    if (coupon.expiryDate && new Date(coupon.expiryDate) < new Date()) {
-      throw new RpcBadRequestException('Coupon has expired');
-    }
-
-    if (coupon.usedCount >= coupon.usageLimit) {
-      throw new RpcBadRequestException('Coupon usage limit reached');
-    }
-  }
-
   async applyCoupon(
     bookDto: BookDto,
     totalPrice: number,
     event: EventType,
   ): Promise<ProcessCoupon> {
-    let discountAmount = 0;
-    let couponCode: string | null = null;
-
     const coupon: CouponType = await this.findCoupon(
       bookDto.couponCode as string,
     );
-    if (!coupon) {
-      throw new RpcBadRequestException('Invalid coupon code');
-    }
-    this.validateCoupon(coupon);
 
-    if (coupon.minPurchaseAmount > totalPrice) {
-      throw new RpcBadRequestException(
-        `Minimum purchase amount of ${coupon.minPurchaseAmount} not met for this coupon`,
-      );
-    }
-
+    this.validate(coupon, totalPrice);
     this.isApplicable(bookDto, event, coupon);
+    await this.incrementCouponUsage(coupon.id);
 
-    if (coupon.discountType === DiscountType.FIXED) {
-      discountAmount = coupon.value;
-    } else {
-      discountAmount = (totalPrice * coupon.value) / 100;
-    }
-
-    if (totalPrice - discountAmount < 0) {
-      discountAmount = totalPrice;
-    }
-    couponCode = coupon.code;
-
-    return { discountAmount, couponCode, coupon };
+    return {
+      couponCode: coupon.code,
+      discountAmount: this.getDiscountAmount(coupon, totalPrice),
+    };
   }
 
   async incrementCouponUsage(couponId: string): Promise<void> {
@@ -86,6 +57,21 @@ export class CouponService {
     );
   }
 
+  private getDiscountAmount(coupon: CouponType, totalPrice: number) {
+    let discountAmount = 0;
+    if (coupon.discountType === DiscountType.FIXED) {
+      discountAmount = coupon.value;
+    } else {
+      discountAmount = (totalPrice * coupon.value) / 100;
+    }
+
+    if (totalPrice - discountAmount < 0) {
+      discountAmount = totalPrice;
+    }
+
+    return discountAmount;
+  }
+
   private isApplicable(
     bookDto: BookDto,
     event: EventType,
@@ -99,6 +85,22 @@ export class CouponService {
     if (!isApplicableToEvent && !isApplicableToCategory) {
       throw new RpcBadRequestException(
         'Coupon is not applicable to this event or category',
+      );
+    }
+  }
+
+  private validate(coupon: CouponType, totalPrice: number): void {
+    if (coupon.expiryDate && new Date(coupon.expiryDate) < new Date()) {
+      throw new RpcBadRequestException('Coupon has expired');
+    }
+
+    if (coupon.usedCount >= coupon.usageLimit) {
+      throw new RpcBadRequestException('Coupon usage limit reached');
+    }
+
+    if (coupon.minPurchaseAmount > totalPrice) {
+      throw new RpcBadRequestException(
+        `Minimum purchase amount of ${coupon.minPurchaseAmount} not met for this coupon`,
       );
     }
   }
