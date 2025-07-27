@@ -23,6 +23,12 @@ export class Booking {
 
   @Prop({ unique: true, sparse: true })
   paymentIntent?: string;
+
+  @Prop({ required: false })
+  couponCode?: string;
+
+  @Prop({ required: false })
+  discountAmount?: number;
 }
 
 export const BookingSchema = SchemaFactory.createForClass(Booking);

@@ -9,4 +9,7 @@ export class BookDto {
 
   @IsMongoId()
   ticketTier: string;
+
+  @IsOptional()
+  couponCode?: string;
 }
