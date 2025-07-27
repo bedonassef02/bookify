@@ -27,20 +27,12 @@ export class CouponService {
     return this.couponRepository.findAll({});
   }
 
-  async findOne(id: string): Promise<Coupon> {
-    const coupon = await this.couponRepository.findById(id);
-    if (!coupon) {
-      throw new RpcNotFoundException(`Coupon with ID ${id} not found`);
-    }
-    return coupon;
+  findOne(id: string): Promise<Coupon> {
+    return this.couponRepository.findByIdOrFail(id);
   }
 
-  async findByCode(code: string): Promise<Coupon> {
-    const coupon = await this.couponRepository.findOne({ code });
-    if (!coupon) {
-      throw new RpcNotFoundException(`Coupon with code ${code} not found`);
-    }
-    return coupon;
+  findByCode(code: string): Promise<Coupon> {
+    return this.couponRepository.findOneOrFail({ code });
   }
 
   async update(id: string, updateCouponDto: UpdateCouponDto): Promise<Coupon> {
@@ -53,17 +45,11 @@ export class CouponService {
   }
 
   async delete(id: string): Promise<void> {
-    const result = await this.couponRepository.delete(id);
-    if (!result) {
-      throw new RpcNotFoundException(`Coupon with ID ${id} not found`);
-    }
+    await this.couponRepository.deleteOrFail(id);
   }
 
   async incrementUsage(couponId: string): Promise<void> {
-    const coupon = await this.couponRepository.findById(couponId);
-    if (!coupon) {
-      throw new RpcNotFoundException(`Coupon with ID ${couponId} not found`);
-    }
+    const coupon = await this.couponRepository.findByIdOrFail(couponId);
     if (coupon.usageLimit !== null && coupon.usedCount >= coupon.usageLimit) {
       throw new RpcBadRequestException('Coupon usage limit reached');
     }

@@ -10,4 +10,4 @@ export * from './ticket-tier/update-ticket-tier.dto';
 export * from './user/google-user.dto';
 export * from './user/two-factor-authentication.dto';
 export * from './payment';
-export * from './coupon.dto';
+export * from './coupon';
