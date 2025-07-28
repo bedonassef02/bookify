@@ -2,13 +2,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { Patterns, USER_SERVICE } from '@app/shared';
-import { BookingDocument } from '../entities/booking.entity';
+import { Booking } from '../entities/booking.entity';
 
 @Injectable()
 export class UserService {
   constructor(@Inject(USER_SERVICE) private userService: ClientProxy) {}
 
-  async _process(bookings: BookingDocument[]): Promise<string[]> {
+  async _process(bookings: Booking[]): Promise<string[]> {
     const userIds = bookings.map((booking) => booking.user);
     return this.findEmails(userIds);
   }

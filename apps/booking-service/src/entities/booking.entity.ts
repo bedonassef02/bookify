@@ -2,10 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { BookingStatus } from '@app/shared';
 
-export type BookingDocument = Booking & Document;
-
 @Schema({ timestamps: true })
-export class Booking {
+export class Booking extends Document {
   @Prop({ required: true })
   event: string;
 

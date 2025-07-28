@@ -2,7 +2,7 @@ import { Controller } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { BookDto, Patterns } from '@app/shared';
 import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
-import { BookingDocument } from './entities/booking.entity';
+import { Booking } from './entities/booking.entity';
 
 @Controller()
 export class BookingController {
@@ -12,17 +12,17 @@ export class BookingController {
   findOne(
     @Payload('id') id: string,
     @Payload('user') user: string,
-  ): Promise<BookingDocument> {
+  ): Promise<Booking> {
     return this.bookingService.findOne(id, user);
   }
 
   @MessagePattern(Patterns.BOOKING.FIND_ALL_BY_USER)
-  findAllByUser(@Payload('user') user: string): Promise<BookingDocument[]> {
+  findAllByUser(@Payload('user') user: string): Promise<Booking[]> {
     return this.bookingService.findAllByUser(user);
   }
 
   @MessagePattern(Patterns.BOOKING.BOOK_SEATS)
-  bookSeats(@Payload() bookDto: BookDto): Promise<BookingDocument> {
+  bookSeats(@Payload() bookDto: BookDto): Promise<Booking> {
     return this.bookingService.bookSeats(bookDto);
   }
 

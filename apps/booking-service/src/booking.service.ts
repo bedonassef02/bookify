@@ -7,7 +7,7 @@ import {
   EventType,
 } from '@app/shared';
 import { BookingRepository } from './repositories/booking.repository';
-import { BookingDocument } from './entities/booking.entity';
+import { Booking } from './entities/booking.entity';
 import { NotificationService } from './mailer/notification.service';
 import { EventService } from './services/event.service';
 import { UserService } from './services/user.service';
@@ -27,11 +27,11 @@ export class BookingService {
     private couponService: CouponService,
   ) {}
 
-  findOne(id: string, user: string): Promise<BookingDocument> {
+  findOne(id: string, user: string): Promise<Booking> {
     return this.bookingRepository.findOneOrFail({ _id: id, user });
   }
 
-  findAllByUser(user: string): Promise<BookingDocument[]> {
+  findAllByUser(user: string): Promise<Booking[]> {
     return this.bookingRepository.findAll({ user });
   }
 
