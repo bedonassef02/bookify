@@ -8,6 +8,7 @@ import {
   RpcBadRequestException,
 } from '@app/shared';
 import { EventService } from './services/event.service';
+import { BookingService } from './services/booking.service';
 import { Review } from './entities/review.entity';
 
 @Injectable()
@@ -15,6 +16,7 @@ export class ReviewService {
   constructor(
     private readonly reviewRepository: ReviewRepository,
     private readonly eventService: EventService,
+    private readonly bookingService: BookingService,
   ) {}
 
   async create(createReviewDto: CreateReviewDto): Promise<Review> {
@@ -27,6 +29,18 @@ export class ReviewService {
         'Cannot review an event that is not completed.',
       );
     }
+
+    const hasBooked = await this.bookingService.hasUserBookedEvent(
+      createReviewDto.user,
+      createReviewDto.event,
+    );
+
+    if (!hasBooked) {
+      throw new RpcBadRequestException(
+        'Only users who have booked this event can review it.',
+      );
+    }
+
     return this.reviewRepository.create(createReviewDto);
   }
 
