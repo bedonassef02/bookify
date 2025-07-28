@@ -15,8 +15,8 @@ export class ReviewSeeder {
     const reviews: CreateReviewDto[] = [];
     for (let i = 0; i < 10; i++) {
       reviews.push({
-        userId: faker.database.mongodbObjectId(),
-        eventId: faker.database.mongodbObjectId(),
+        user: faker.database.mongodbObjectId(),
+        event: faker.database.mongodbObjectId(),
         rating: faker.number.int({ min: 1, max: 5 }),
         comment: faker.lorem.sentence(),
       });
