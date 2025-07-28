@@ -5,7 +5,6 @@ import {
   RpcConflictException,
   BookingStatus,
   EventType,
-  TicketTierType,
 } from '@app/shared';
 import { BookingRepository } from './repositories/booking.repository';
 import { BookingDocument } from './entities/booking.entity';
@@ -38,8 +37,8 @@ export class BookingService {
 
   async bookSeats(bookDto: BookDto): Promise<any> {
     await this.isExist(bookDto.event, bookDto.user);
-    const event: EventType = await this._processEvent(bookDto.event);
-    const ticketTier = await this._processTicketTier(
+    const event: EventType = await this.eventService._process(bookDto.event);
+    const ticketTier = await this.ticketTierService._process(
       bookDto.ticketTier,
       bookDto.event,
     );
@@ -64,7 +63,10 @@ export class BookingService {
       couponCode,
       discountAmount,
     });
-    const paymentIntent = await this._processPayment(booking.id, totalPrice);
+    const paymentIntent = await this.paymentService.createIntent(
+      booking.id,
+      totalPrice,
+    );
 
     return { ...booking.toObject(), ...paymentIntent };
   }
@@ -99,7 +101,7 @@ export class BookingService {
       return;
     }
 
-    const emails: string[] = await this.findEmails(bookings);
+    const emails: string[] = await this.userService._process(bookings);
     const eventDetails = await this.eventService.findOne(event);
     this.notificationService.cancel(emails, eventDetails.title);
   }
@@ -139,33 +141,5 @@ export class BookingService {
         'User already has a booking for this event',
       );
     }
-  }
-
-  private findEmails(bookings: BookingDocument[]): Promise<string[]> {
-    const userIds = bookings.map((booking) => booking.user);
-    return this.userService.findEmails(userIds);
-  }
-
-  private async _processEvent(id: string): Promise<EventType> {
-    const event: EventType = await this.eventService.findOne(id);
-    this.eventService.validate(event);
-    return event;
-  }
-
-  private async _processTicketTier(
-    id: string,
-    event: string,
-  ): Promise<TicketTierType> {
-    const ticketTier: TicketTierType = await this.ticketTierService.findOne(
-      id,
-      event,
-    );
-    this.ticketTierService.hasAvailableSeats(ticketTier);
-    this.ticketTierService.updateBookedSeats(ticketTier.id, 1);
-    return ticketTier;
-  }
-
-  private async _processPayment(bookingId: string, totalPrice: number) {
-    return this.paymentService.createIntent(bookingId, totalPrice);
   }
 }

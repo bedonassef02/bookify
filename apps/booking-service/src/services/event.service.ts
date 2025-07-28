@@ -13,13 +13,19 @@ import {
 export class EventService {
   constructor(@Inject(EVENT_SERVICE) private eventService: ClientProxy) {}
 
+  async _process(id: string): Promise<EventType> {
+    const event: EventType = await this.findOne(id);
+    this.validate(event);
+    return event;
+  }
+
   findOne(id: string): Promise<EventType> {
     return firstValueFrom(
       this.eventService.send(Patterns.EVENTS.FIND_ONE, { id }),
     );
   }
 
-  validate(event: EventType): void {
+  private validate(event: EventType): void {
     if (event.date <= new Date()) {
       throw new RpcBadRequestException('Cannot book tickets for past events');
     }
