@@ -31,7 +31,7 @@ export abstract class Repository<T extends Document> implements IRepository<T> {
   async findByIdOrFail(id: string) {
     const entity = await this.findById(id);
     if (!entity) {
-      throw new RpcNotFoundException(`${this.model.name} not found`);
+      throw this.throwNotFound();
     }
     return entity;
   }
@@ -43,13 +43,21 @@ export abstract class Repository<T extends Document> implements IRepository<T> {
   async findOneOrFail(filter: RootFilterQuery<T>) {
     const entity = await this.findOne(filter);
     if (!entity) {
-      throw new RpcNotFoundException(`${this.model.name} not found`);
+      throw this.throwNotFound();
     }
     return entity;
   }
 
   update(id: string, updateDto: RootFilterQuery<T>): Promise<T | null> {
     return this.model.findByIdAndUpdate(id, updateDto, { new: true }).exec();
+  }
+
+  async updateOrFail(id: string, updateDto: RootFilterQuery<T>): Promise<T> {
+    const entity = await this.update(id, updateDto);
+    if (!entity) {
+      throw this.throwNotFound();
+    }
+    return entity;
   }
 
   findOneAndUpdate(
@@ -66,7 +74,7 @@ export abstract class Repository<T extends Document> implements IRepository<T> {
   async deleteOrFail(id: string): Promise<T> {
     const entity = await this.findByIdAndDelete(id);
     if (!entity) {
-      throw new RpcNotFoundException(`${this.model.name} not found`);
+      throw this.throwNotFound();
     }
 
     return entity;
@@ -91,7 +99,7 @@ export abstract class Repository<T extends Document> implements IRepository<T> {
   async findOneAndDeleteOrFail(filter: RootFilterQuery<T>): Promise<T> {
     const entity = await this.findOneAndDelete(filter);
     if (!entity) {
-      throw new RpcNotFoundException(`${this.model.name} not found`);
+      throw this.throwNotFound();
     }
 
     return entity;
@@ -104,5 +112,9 @@ export abstract class Repository<T extends Document> implements IRepository<T> {
   async exists(filter: RootFilterQuery<T>): Promise<boolean> {
     const count = await this.count(filter);
     return count > 0;
+  }
+
+  private throwNotFound(): RpcNotFoundException {
+    return new RpcNotFoundException(`${this.model.name} not found`);
   }
 }

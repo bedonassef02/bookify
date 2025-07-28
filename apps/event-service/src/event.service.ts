@@ -48,11 +48,7 @@ export class EventService {
       await this.validateCategory(eventDto.category);
     }
 
-    const event = await this.eventRepository.update(id, eventDto);
-    if (!event) {
-      throw new RpcNotFoundException(`Event with ID ${id} not found`);
-    }
-
+    const event = await this.eventRepository.updateOrFail(id, eventDto);
     if (eventDto.status === EventStatus.CANCELED) {
       this.bookingService.cancelMany(id);
     }
@@ -60,10 +56,7 @@ export class EventService {
     return event;
   }
 
-  private async validateCategory(id: string) {
-    const category = await this.categoryRepository.findById(id);
-    if (!category) {
-      throw new RpcNotFoundException('Category not found');
-    }
+  private async validateCategory(id: string): Promise<void> {
+    await this.categoryRepository.findByIdOrFail(id);
   }
 }
