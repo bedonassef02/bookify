@@ -24,8 +24,8 @@ export class TokenService {
     return tokenDoc;
   }
 
-  delete(userId: string, type: TokenType): Promise<void> {
-    return this.tokenRepository.deleteOne(userId, type);
+  async delete(userId: string, type: TokenType): Promise<void> {
+    await this.tokenRepository.deleteOne({ userId, type });
   }
 
   create(userId: string, type: TokenType): Promise<Token> {
@@ -56,11 +56,11 @@ export class TokenService {
   }
 
   async invalidateRefreshToken(token: string): Promise<void> {
-    await this.refreshTokenRepository.deleteOne(token);
+    await this.refreshTokenRepository.deleteOne({ token });
   }
 
   async invalidateAllRefreshTokens(userId: string): Promise<void> {
-    await this.refreshTokenRepository.deleteManyByUserId(userId);
+    await this.refreshTokenRepository.deleteMany({ userId });
   }
 
   private async generateRefreshToken(userId: string): Promise<string> {

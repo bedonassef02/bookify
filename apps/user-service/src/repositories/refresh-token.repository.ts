@@ -9,12 +9,4 @@ export class RefreshTokenRepository extends Repository<RefreshToken> {
   constructor(@InjectModel(RefreshToken.name) model: Model<RefreshToken>) {
     super(model);
   }
-
-  deleteOne(token: string): Promise<any> {
-    return this.model.deleteOne({ token }).exec();
-  }
-
-  deleteManyByUserId(userId: string): Promise<any> {
-    return this.model.deleteMany({ userId }).exec();
-  }
 }
