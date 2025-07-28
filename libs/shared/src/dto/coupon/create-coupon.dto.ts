@@ -7,7 +7,7 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { DiscountType } from '@app/shared';
+import { DiscountType } from '../../enums/discount-type.enum';
 
 export class CreateCouponDto {
   @IsString()
