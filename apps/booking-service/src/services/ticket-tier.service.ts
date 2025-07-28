@@ -5,7 +5,6 @@ import {
   EVENT_SERVICE,
   Patterns,
   RpcBadRequestException,
-  RpcNotFoundException,
   TicketTierType,
 } from '@app/shared';
 
@@ -13,15 +12,10 @@ import {
 export class TicketTierService {
   constructor(@Inject(EVENT_SERVICE) private eventService: ClientProxy) {}
 
-  async findOne(id: string, event: string): Promise<TicketTierType> {
-    const ticketTier: TicketTierType | null = await firstValueFrom(
+  findOne(id: string, event: string): Promise<TicketTierType> {
+    return firstValueFrom(
       this.eventService.send(Patterns.TICKET_TIERS.FIND_ONE, { id, event }),
     );
-    if (!ticketTier) {
-      throw new RpcNotFoundException('Ticket tier not found');
-    }
-
-    return ticketTier;
   }
 
   hasAvailableSeats(ticketTier: TicketTierType): void {

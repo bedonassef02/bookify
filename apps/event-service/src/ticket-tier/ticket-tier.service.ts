@@ -16,12 +16,7 @@ export class TicketTierService {
   ) {}
 
   async create(ticketTierDto: CreateTicketTierDto): Promise<TicketTier> {
-    const event = await this.eventRepository.findById(ticketTierDto.event);
-    if (!event) {
-      throw new RpcNotFoundException(
-        `Event with ID ${ticketTierDto.event} not found`,
-      );
-    }
+    await this.eventRepository.findByIdOrFail(ticketTierDto.event);
     return this.ticketTierRepository.create(ticketTierDto);
   }
 
@@ -29,15 +24,11 @@ export class TicketTierService {
     return this.ticketTierRepository.findAll({ event });
   }
 
-  async findOne(id: string, event: string): Promise<TicketTier> {
-    const ticketTier = await this.ticketTierRepository.findOne({
+  findOne(id: string, event: string): Promise<TicketTier> {
+    return this.ticketTierRepository.findOneOrFail({
       _id: id,
       event,
     });
-    if (!ticketTier) {
-      throw new RpcNotFoundException('Ticket tier not found');
-    }
-    return ticketTier;
   }
 
   async update(
@@ -55,11 +46,7 @@ export class TicketTierService {
   }
 
   async remove(id: string): Promise<TicketTier> {
-    const ticketTier = await this.ticketTierRepository.delete(id);
-    if (!ticketTier) {
-      throw new RpcNotFoundException('Ticket tier not found');
-    }
-    return ticketTier;
+    return this.ticketTierRepository.deleteOrFail(id);
   }
 
   updateBookedSeats(id: string, increment: number): Promise<TicketTier | null> {
