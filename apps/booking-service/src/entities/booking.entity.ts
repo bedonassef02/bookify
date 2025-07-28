@@ -16,6 +16,9 @@ export class Booking extends Document {
   @Prop({ required: true })
   quantity: number;
 
+  @Prop({ required: true })
+  totalPrice: number;
+
   @Prop({ enum: BookingStatus, default: BookingStatus.PENDING, type: String })
   status: BookingStatus;
 
