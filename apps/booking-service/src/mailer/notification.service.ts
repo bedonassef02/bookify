@@ -1,6 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { MailDto, NOTIFICATION_SERVICE, Patterns, Template } from '@app/shared';
+import { ConfirmData } from '../interfaces/confirm-data-template.interface';
+import { Booking } from '../entities/booking.entity';
 
 @Injectable()
 export class NotificationService {
@@ -18,6 +20,19 @@ export class NotificationService {
       html: this.template.compile('booking-cancelled.hbs', {
         name: event,
       }),
+    };
+
+    this.notificationService.emit(Patterns.NOTIFICATIONS.SEND_EMAIL, mailDto);
+  }
+
+  confirm(email: string, event: string, booking: Booking): void {
+    const mailDto: MailDto = {
+      to: email,
+      subject: 'Booking Confirmed',
+      html: this.template.compile('booking-confirmed.hbs', {
+        name: event,
+        price: booking.totalPrice,
+      } as ConfirmData),
     };
 
     this.notificationService.emit(Patterns.NOTIFICATIONS.SEND_EMAIL, mailDto);
