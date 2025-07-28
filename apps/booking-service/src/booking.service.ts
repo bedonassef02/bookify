@@ -131,7 +131,10 @@ export class BookingService {
     booking.paymentIntent = paymentIntent; // Store the payment intent ID
     await booking.save();
 
-    // @todo: Emit notification for confirmed booking
+    const user = await this.userService.findOne(booking.user);
+    const event = await this.eventService.findOne(booking.event);
+
+    this.notificationService.confirm(user.email, event.title, booking);
   }
 
   private async isExist(user: string, event: string): Promise<void> {
