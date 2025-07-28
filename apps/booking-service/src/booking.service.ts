@@ -137,6 +137,10 @@ export class BookingService {
     this.notificationService.confirm(user.email, event.title, booking);
   }
 
+  hasUserBookedEvent(user: string, event: string): Promise<boolean> {
+    return this.bookingRepository.exists({ event, user });
+  }
+
   private async isExist(user: string, event: string): Promise<void> {
     const booking = await this.bookingRepository.findOne({ event, user });
     if (booking) {

@@ -40,7 +40,7 @@ export class BookingController {
   }
 
   @EventPattern(Patterns.PAYMENTS.SUCCEEDED)
-  async handlePaymentSucceeded(
+  handlePaymentSucceeded(
     @Payload('bookingId') bookingId: string,
     @Payload('paymentIntentId') paymentIntentId: string,
   ) {
@@ -48,5 +48,10 @@ export class BookingController {
       bookingId,
       paymentIntentId,
     );
+  }
+
+  @MessagePattern(Patterns.BOOKING.HAS_USER_BOOKED_EVENT)
+  hasUserBookedEvent(user: string, event: string): Promise<boolean> {
+    return this.bookingService.hasUserBookedEvent(user, event);
   }
 }
