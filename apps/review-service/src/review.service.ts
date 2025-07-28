@@ -21,9 +21,6 @@ export class ReviewService {
 
   async create(createReviewDto: CreateReviewDto): Promise<Review> {
     const event = await this.eventService.findOne(createReviewDto.event);
-    if (!event) {
-      throw new RpcNotFoundException('Event not found');
-    }
     if (event.status !== EventStatus.COMPLETED) {
       throw new RpcBadRequestException(
         'Cannot review an event that is not completed.',
