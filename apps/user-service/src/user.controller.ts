@@ -14,13 +14,13 @@ export class UserController {
   }
 
   @MessagePattern(Patterns.USERS.FIND_ONE)
-  async findOne(@Payload('id') id: string): Promise<UserType> {
+  async findOne(@Payload() id: string): Promise<UserType> {
     const user = await this.userService.findOne(id);
     return this.userService.sanitize(user);
   }
 
   @MessagePattern(Patterns.USERS.FIND_EMAILS_BY_IDS)
-  findEmailsByIds(@Payload('ids') ids: string[]): Promise<string[]> {
+  findEmailsByIds(@Payload() ids: string[]): Promise<string[]> {
     return this.userService.findEmailsByIds(ids);
   }
 
