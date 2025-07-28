@@ -18,7 +18,8 @@ export class PaymentService implements OnModuleInit {
     private readonly paymentRepository: PaymentRepository,
   ) {
     this.stripe = new Stripe(this.stripeSecret, {
-      apiVersion: '2025-06-30.basil',
+      apiVersion:
+        this.configService.get<Stripe.LatestApiVersion>('STRIPE_API_VERSION'),
     });
   }
 
@@ -58,9 +59,8 @@ export class PaymentService implements OnModuleInit {
         if (payment) {
           payment.status = PaymentStatus.SUCCEEDED;
           await payment.save();
+          this.bookingClient.emit(Patterns.PAYMENTS.SUCCEEDED, { bookingId });
         }
-
-        this.bookingClient.emit(Patterns.PAYMENTS.SUCCEEDED, { bookingId });
       } else if (stripeEvent.type === 'payment_intent.payment_failed') {
         const paymentIntent = stripeEvent.data.object;
         const payment = await this.paymentRepository.findOne({
