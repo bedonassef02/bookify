@@ -11,13 +11,14 @@ import {
 import { MongooseModule } from '@nestjs/mongoose';
 import { Payment, PaymentSchema } from './entities/payment.entity';
 import { PaymentRepository } from './repositories/payment.repository';
+import { validationSchema } from './config/validation.schema';
 
 @Module({
   imports: [
-    CoreModule.forRoot(),
-    ClientModule.register({ name: BOOKING_SERVICE, queue: BOOKING_QUEUE }),
+    CoreModule.forRoot({ validationSchema }),
     DatabaseModule.register({ dbName: 'paymentdb' }),
     MongooseModule.forFeature([{ name: Payment.name, schema: PaymentSchema }]),
+    ClientModule.register({ name: BOOKING_SERVICE, queue: BOOKING_QUEUE }),
   ],
   controllers: [PaymentController],
   providers: [PaymentService, PaymentRepository],

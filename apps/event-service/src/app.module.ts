@@ -14,13 +14,14 @@ import { Event, EventSchema } from './entities/event.entity';
 import { BookingService } from './booking/booking.service';
 import { CategoryModule } from './category/category.module';
 import { TicketTierModule } from './ticket-tier/ticket-tier.module';
+import { validationSchema } from './config/validation.schema';
 
 @Module({
   imports: [
-    CoreModule.forRoot(),
-    ClientModule.register({ name: BOOKING_SERVICE, queue: BOOKING_QUEUE }),
+    CoreModule.forRoot({ validationSchema }),
     DatabaseModule.register({ dbName: 'eventdb' }),
     MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }]),
+    ClientModule.register({ name: BOOKING_SERVICE, queue: BOOKING_QUEUE }),
     CategoryModule,
     TicketTierModule,
   ],

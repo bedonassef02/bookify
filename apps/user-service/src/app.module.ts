@@ -31,10 +31,11 @@ import { RefreshTokenRepository } from './repositories/refresh-token.repository'
 import { TwoFactorAuthenticationService } from './authentication/2fa/2fa.service';
 import { TwoFactorAuthenticationController } from './authentication/2fa/2fa.controller';
 import { ScheduledTasksModule } from './scheduled-tasks/scheduled-tasks.module';
+import { validationSchema } from './config/validation.schema';
 
 @Module({
   imports: [
-    CoreModule.forRoot(),
+    CoreModule.forRoot({ validationSchema }),
     JwtModule,
     ScheduledTasksModule,
     CacheModule.register(),

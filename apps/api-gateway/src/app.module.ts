@@ -16,10 +16,11 @@ import { ReviewModule } from './review/review.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { PaymentModule } from './payment/payment.module';
 import { NotificationModule } from './notification/notification.module';
+import { validationSchema } from './config/validation.schema';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true, validationSchema }),
     CacheModule.register({
       isGlobal: true,
       ttl: 60000,

@@ -23,10 +23,11 @@ import { UserService } from './services/user.service';
 import { TicketTierService } from './services/ticket-tier.service';
 import { PaymentService } from './services/payment.service';
 import { CouponService } from './services/coupon.service';
+import { validationSchema } from './config/validation.schema';
 
 @Module({
   imports: [
-    CoreModule.forRoot(),
+    CoreModule.forRoot({ validationSchema }),
     DatabaseModule.register({ dbName: 'bookingdb' }),
     MongooseModule.forFeature([{ name: Booking.name, schema: BookingSchema }]),
     ClientModule.register([

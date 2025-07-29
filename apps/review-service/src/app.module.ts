@@ -15,10 +15,11 @@ import { Review, ReviewSchema } from './entities/review.entity';
 import { EventService } from './services/event.service';
 import { ReviewService } from './review.service';
 import { BookingService } from './services/booking.service';
+import { validationSchema } from './config/validation.schema';
 
 @Module({
   imports: [
-    CoreModule,
+    CoreModule.forRoot({ validationSchema }),
     DatabaseModule.register({ dbName: 'reviewsdb' }),
     MongooseModule.forFeature([{ name: Review.name, schema: ReviewSchema }]),
     ClientModule.register({ name: EVENT_SERVICE, queue: REVIEW_QUEUE }),

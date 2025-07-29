@@ -6,12 +6,12 @@ import { LoggingInterceptor, ExceptionFilter, Template } from '@app/shared';
 import { ObjectSchema } from 'joi';
 
 interface Options {
-  validationSchema: ObjectSchema;
+  validationSchema?: ObjectSchema;
 }
 
 @Module({})
 export class CoreModule {
-  static forRoot(options: Options): DynamicModule {
+  static forRoot(options?: Options): DynamicModule {
     return {
       module: CoreModule,
       global: true,
@@ -19,7 +19,7 @@ export class CoreModule {
         ConfigModule.forRoot({
           expandVariables: true,
           isGlobal: true,
-          validationSchema: options.validationSchema,
+          validationSchema: options?.validationSchema,
         }),
         CacheModule.register(),
       ],
