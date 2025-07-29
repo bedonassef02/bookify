@@ -3,9 +3,8 @@ import { ObjectSchema } from 'joi';
 
 export const validationSchema: ObjectSchema = Joi.object({
   RABBITMQ_URL: Joi.string().required(),
-  JWT_SECRET: Joi.string().required(),
-  JWT_EXPIRATION: Joi.string().required(),
-  REFRESH_TOKEN_SECRET: Joi.string().required(),
-  REFRESH_TOKEN_EXPIRATION: Joi.string().required(),
+  MONGODB_URI: Joi.string().required(),
+  ACCESS_TOKEN_TTL: Joi.string().default('15m'),
+  REFRESH_TOKEN_TTL: Joi.string().default('7d'),
   DOMAIN: Joi.string().required(),
 });

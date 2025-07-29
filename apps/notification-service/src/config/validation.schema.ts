@@ -9,4 +9,5 @@ export const validationSchema: ObjectSchema = Joi.object({
   REDIS_HOST: Joi.string().required(),
   REDIS_PORT: Joi.number().required(),
   EMAIL_USER: Joi.string().required(),
+  MONGODB_URI: Joi.string().required(),
 });
