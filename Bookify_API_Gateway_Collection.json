@@ -29,8 +29,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/sign-in",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "sign-in"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "sign-in"
+              ]
             }
           },
           "response": [],
@@ -69,8 +74,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/sign-up",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "sign-up"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "sign-up"
+              ]
             }
           },
           "response": []
@@ -96,8 +106,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/change-password",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "change-password"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "change-password"
+              ]
             }
           },
           "response": []
@@ -109,8 +124,14 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/auth/confirm/:token",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "confirm", ":token"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "confirm",
+                ":token"
+              ],
               "variable": [
                 {
                   "key": "token",
@@ -128,8 +149,13 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/auth/resend-confirmation",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "resend-confirmation"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "resend-confirmation"
+              ]
             }
           },
           "response": []
@@ -155,8 +181,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/forgot-password",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "forgot-password"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "forgot-password"
+              ]
             }
           },
           "response": []
@@ -182,8 +213,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/reset-password/:token",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "reset-password", ":token"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "reset-password",
+                ":token"
+              ],
               "variable": [
                 {
                   "key": "token",
@@ -201,8 +238,13 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/auth/google",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "google"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "google"
+              ]
             }
           },
           "response": []
@@ -214,8 +256,14 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/auth/google/redirect",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "google", "redirect"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "google",
+                "redirect"
+              ]
             }
           },
           "response": []
@@ -241,8 +289,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/logout",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "logout"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
             }
           },
           "response": []
@@ -254,8 +307,13 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/auth/logout-all",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "logout-all"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "logout-all"
+              ]
             }
           },
           "response": []
@@ -272,8 +330,13 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/2fa/generate",
-              "host": ["{{baseUrl}}"],
-              "path": ["2fa", "generate"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "2fa",
+                "generate"
+              ]
             }
           },
           "response": []
@@ -299,8 +362,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/2fa/enable",
-              "host": ["{{baseUrl}}"],
-              "path": ["2fa", "enable"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "2fa",
+                "enable"
+              ]
             }
           },
           "response": []
@@ -312,8 +380,13 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/2fa/disable",
-              "host": ["{{baseUrl}}"],
-              "path": ["2fa", "disable"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "2fa",
+                "disable"
+              ]
             }
           },
           "response": []
@@ -339,8 +412,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/2fa/verify",
-              "host": ["{{baseUrl}}"],
-              "path": ["2fa", "verify"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "2fa",
+                "verify"
+              ]
             }
           },
           "response": []
@@ -366,8 +444,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/2fa/verify-signin",
-              "host": ["{{baseUrl}}"],
-              "path": ["2fa", "verify-signin"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "2fa",
+                "verify-signin"
+              ]
             }
           },
           "response": []
@@ -384,8 +467,12 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/booking",
-              "host": ["{{baseUrl}}"],
-              "path": ["booking"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "booking"
+              ]
             }
           },
           "response": []
@@ -397,8 +484,13 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/booking/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["booking", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "booking",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -430,8 +522,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/booking",
-              "host": ["{{baseUrl}}"],
-              "path": ["booking"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "booking"
+              ]
             }
           },
           "response": []
@@ -443,8 +539,13 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/booking/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["booking", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "booking",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -467,8 +568,12 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/categories",
-              "host": ["{{baseUrl}}"],
-              "path": ["categories"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categories"
+              ]
             }
           },
           "response": []
@@ -480,8 +585,13 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/categories/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["categories", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categories",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -513,8 +623,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/categories",
-              "host": ["{{baseUrl}}"],
-              "path": ["categories"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categories"
+              ]
             }
           },
           "response": []
@@ -540,8 +654,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/categories/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["categories", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categories",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -559,8 +678,13 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/categories/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["categories", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categories",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -582,9 +706,50 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/events",
-              "host": ["{{baseUrl}}"],
-              "path": ["events"]
+              "raw": "{{baseUrl}}/events?page=1&limit=10&status=published&category=YOUR_CATEGORY_ID&keyword=searchterm&startDate=2025-01-01T00:00:00Z&endDate=2025-12-31T23:59:59Z",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number (default: 1)"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Number of items per page (default: 10)"
+                },
+                {
+                  "key": "status",
+                  "value": "published",
+                  "description": "Filter by event status (e.g., 'published', 'draft', 'cancelled')"
+                },
+                {
+                  "key": "category",
+                  "value": "YOUR_CATEGORY_ID",
+                  "description": "Filter by category ID"
+                },
+                {
+                  "key": "keyword",
+                  "value": "searchterm",
+                  "description": "Search by keyword in title, description, or location"
+                },
+                {
+                  "key": "startDate",
+                  "value": "2025-01-01T00:00:00Z",
+                  "description": "Filter by start date (ISO 8601 format)"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2025-12-31T23:59:59Z",
+                  "description": "Filter by end date (ISO 8601 format)"
+                }
+              ]
             }
           },
           "response": []
@@ -596,8 +761,13 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/events/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["events", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -629,8 +799,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/events",
-              "host": ["{{baseUrl}}"],
-              "path": ["events"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events"
+              ]
             }
           },
           "response": []
@@ -656,8 +830,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/events/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["events", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -690,8 +869,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/events/:id/images/feature-image",
-              "host": ["{{baseUrl}}"],
-              "path": ["events", ":id", "images", "feature-image"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events",
+                ":id",
+                "images",
+                "feature-image"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -724,8 +910,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/events/:id/images/upload",
-              "host": ["{{baseUrl}}"],
-              "path": ["events", ":id", "images", "upload"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events",
+                ":id",
+                "images",
+                "upload"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -762,8 +955,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/events/:eventId/ticket-tiers",
-              "host": ["{{baseUrl}}"],
-              "path": ["events", ":eventId", "ticket-tiers"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events",
+                ":eventId",
+                "ticket-tiers"
+              ],
               "variable": [
                 {
                   "key": "eventId",
@@ -781,8 +980,14 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/events/:eventId/ticket-tiers",
-              "host": ["{{baseUrl}}"],
-              "path": ["events", ":eventId", "ticket-tiers"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events",
+                ":eventId",
+                "ticket-tiers"
+              ],
               "variable": [
                 {
                   "key": "eventId",
@@ -800,8 +1005,15 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/events/:eventId/ticket-tiers/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["events", ":eventId", "ticket-tiers", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events",
+                ":eventId",
+                "ticket-tiers",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "eventId",
@@ -837,8 +1049,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/events/:eventId/ticket-tiers/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["events", ":eventId", "ticket-tiers", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events",
+                ":eventId",
+                "ticket-tiers",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "eventId",
@@ -860,8 +1079,15 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/events/:eventId/ticket-tiers/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["events", ":eventId", "ticket-tiers", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events",
+                ":eventId",
+                "ticket-tiers",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "eventId",
@@ -902,8 +1128,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/payment/create-intent",
-              "host": ["{{baseUrl}}"],
-              "path": ["payment", "create-intent"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payment",
+                "create-intent"
+              ]
             }
           },
           "response": []
@@ -928,8 +1159,203 @@
             },
             "url": {
               "raw": "{{baseUrl}}/payment/webhook",
-              "host": ["{{baseUrl}}"],
-              "path": ["payment", "webhook"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payment",
+                "webhook"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "Get All Notifications for User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/notifications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "notifications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark Notification as Read",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/notifications/:id/read",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "notifications",
+                ":id",
+                "read"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "YOUR_NOTIFICATION_ID"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reviews",
+      "item": [
+        {
+          "name": "Create Review",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"rating\": 5,\n\t\"comment\": \"Great event!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/events/:eventId/reviews",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events",
+                ":eventId",
+                "reviews"
+              ],
+              "variable": [
+                {
+                  "key": "eventId",
+                  "value": "YOUR_EVENT_ID"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Reviews for Event",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/events/:eventId/reviews",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events",
+                ":eventId",
+                "reviews"
+              ],
+              "variable": [
+                {
+                  "key": "eventId",
+                  "value": "YOUR_EVENT_ID"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Review",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"rating\": 4,\n\t\"comment\": \"It was good.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/events/:eventId/reviews/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events",
+                ":eventId",
+                "reviews",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "eventId",
+                  "value": "YOUR_EVENT_ID"
+                },
+                {
+                  "key": "id",
+                  "value": "YOUR_REVIEW_ID"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Review",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/events/:eventId/reviews/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events",
+                ":eventId",
+                "reviews",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "eventId",
+                  "value": "YOUR_EVENT_ID"
+                },
+                {
+                  "key": "id",
+                  "value": "YOUR_REVIEW_ID"
+                }
+              ]
             }
           },
           "response": []
@@ -946,8 +1372,12 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/users",
-              "host": ["{{baseUrl}}"],
-              "path": ["users"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
             }
           },
           "response": []
@@ -959,8 +1389,13 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/users/me",
-              "host": ["{{baseUrl}}"],
-              "path": ["users", "me"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
             }
           },
           "response": []
@@ -986,8 +1421,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/users/me",
-              "host": ["{{baseUrl}}"],
-              "path": ["users", "me"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
             }
           },
           "response": []
@@ -999,8 +1439,13 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/users/deactivate",
-              "host": ["{{baseUrl}}"],
-              "path": ["users", "deactivate"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "deactivate"
+              ]
             }
           },
           "response": []
@@ -1012,8 +1457,14 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/users/reactivate/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["users", "reactivate", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "reactivate",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -1041,8 +1492,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/users/profile-picture",
-              "host": ["{{baseUrl}}"],
-              "path": ["users", "profile-picture"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "profile-picture"
+              ]
             }
           },
           "response": []
@@ -1059,8 +1515,13 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/images/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["images", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "images",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
