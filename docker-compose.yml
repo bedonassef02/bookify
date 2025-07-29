@@ -22,6 +22,7 @@ services:
   api-gateway:
     build:
       context: .
+      target: development
       args:
         SERVICE_NAME: api-gateway
     restart: always
@@ -42,6 +43,7 @@ services:
   booking-service:
     build:
       context: .
+      target: development
       args:
         SERVICE_NAME: booking-service
     restart: always
@@ -62,6 +64,7 @@ services:
   event-service:
     build:
       context: .
+      target: development
       args:
         SERVICE_NAME: event-service
     restart: always
@@ -82,6 +85,7 @@ services:
   notification-service:
     build:
       context: .
+      target: development
       args:
         SERVICE_NAME: notification-service
     restart: always
@@ -103,6 +107,7 @@ services:
   user-service:
     build:
       context: .
+      target: development
       args:
         SERVICE_NAME: user-service
     restart: always
@@ -123,6 +128,7 @@ services:
   payment-service:
     build:
       context: .
+      target: development
       args:
         SERVICE_NAME: payment-service
     restart: always
@@ -143,6 +149,7 @@ services:
   review-service:
     build:
       context: .
+      target: development
       args:
         SERVICE_NAME: review-service
     restart: always
