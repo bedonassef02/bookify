@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { LocalStrategy } from './strategies/local.strategy';
 import { JwtAuthGuard } from './guards/auth.guard';
 import { RolesGuard } from './guards/roles.guard';
 import {
@@ -19,7 +20,13 @@ import { TwoFactorAuthenticationController } from './2fa/2fa.controller';
     PassportModule.register({ defaultStrategy: 'jwt' }),
     ClientModule.register({ name: USER_SERVICE, queue: USERS_QUEUE }),
   ],
-  providers: [JwtStrategy, JwtAuthGuard, RolesGuard, GoogleStrategy],
+  providers: [
+    JwtStrategy,
+    LocalStrategy,
+    JwtAuthGuard,
+    RolesGuard,
+    GoogleStrategy,
+  ],
   controllers: [AuthController, TwoFactorAuthenticationController],
   exports: [JwtModule, JwtStrategy, JwtAuthGuard, RolesGuard],
 })

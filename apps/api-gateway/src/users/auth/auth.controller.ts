@@ -14,7 +14,6 @@ import {
 import {
   AuthResponse,
   Patterns,
-  SignInDto,
   SignUpDto,
   USER_SERVICE,
   ChangePasswordDto,
@@ -26,6 +25,7 @@ import { CurrentUser } from './decorators/current-user.decorator';
 import { GoogleAuthGuard } from './guards/google-auth.guard';
 import { Request } from 'express';
 import { map } from 'rxjs/operators';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller({ path: 'auth', version: '1' })
 export class AuthController {
@@ -34,8 +34,9 @@ export class AuthController {
   @Public()
   @Post('sign-in')
   @HttpCode(HttpStatus.OK)
-  signIn(@Body() signInDto: SignInDto): Observable<AuthResponse> {
-    return this.client.send(Patterns.AUTH.SIGN_IN, signInDto).pipe(
+  @UseGuards(AuthGuard('local'))
+  signIn(@CurrentUser() user: any): Observable<AuthResponse> {
+    return this.client.send(Patterns.AUTH.SIGN_IN, user).pipe(
       map((response: AuthResponse) => {
         if (response.twoFactorAuthenticationRequired) {
           return {
