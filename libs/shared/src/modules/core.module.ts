@@ -3,10 +3,15 @@ import { ConfigModule } from '@nestjs/config';
 import { CacheModule } from '@nestjs/cache-manager';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor, ExceptionFilter, Template } from '@app/shared';
+import { ObjectSchema } from 'joi';
+
+interface Options {
+  validationSchema: ObjectSchema;
+}
 
 @Module({})
 export class CoreModule {
-  static forRoot(): DynamicModule {
+  static forRoot(options: Options): DynamicModule {
     return {
       module: CoreModule,
       global: true,
@@ -14,6 +19,7 @@ export class CoreModule {
         ConfigModule.forRoot({
           expandVariables: true,
           isGlobal: true,
+          validationSchema: options.validationSchema,
         }),
         CacheModule.register(),
       ],
