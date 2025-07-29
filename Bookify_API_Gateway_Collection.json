@@ -44,9 +44,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "var jsonData = pm.response.json();",
-                  "pm.environment.set(\"accessToken\", jsonData.accessToken);",
-                  "pm.environment.set(\"refreshToken\", jsonData.refreshToken);"
+                  "var jsonData = pm.response.json();",                  "pm.environment.set(\"accessToken\", jsonData.tokens.accessToken);",                  "pm.environment.set(\"refreshToken\", jsonData.tokens.refreshToken);"
                 ],
                 "type": "text/javascript"
               }
@@ -250,23 +248,7 @@
           "response": []
         },
         {
-          "name": "Google Login Callback",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/auth/google/redirect",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "google",
-                "redirect"
-              ]
-            }
-          },
-          "response": []
+          "name": "Google Login Callback",          "request": {            "method": "GET",            "header": [],            "url": {              "raw": "{{baseUrl}}/auth/google/redirect",              "host": [                "{{baseUrl}}"              ],              "path": [                "auth",                "google",                "redirect"              ]            }          },          "response": [],          "event": [            {              "listen": "test",              "script": {                "exec": [                  "var jsonData = pm.response.json();",                  "pm.environment.set(\"accessToken\", jsonData.tokens.accessToken);",                  "pm.environment.set(\"refreshToken\", jsonData.tokens.refreshToken);"                ],                "type": "text/javascript"              }            }          ]
         },
         {
           "name": "Logout",
