@@ -14,10 +14,11 @@ import {
 import { NotificationRepository } from './repositories/notification.repository';
 import { UserPreferenceRepository } from './repositories/user-preference.repository';
 import { MailQueueModule } from './mail-queue/mail-queue.module';
+import { validationSchema } from './config/validation.schema';
 
 @Module({
   imports: [
-    CoreModule.forRoot(),
+    CoreModule.forRoot({ validationSchema }),
     DatabaseModule.register({ dbName: 'notificationdb' }),
     MongooseModule.forFeature([
       { name: Notification.name, schema: NotificationSchema },
