@@ -15,6 +15,7 @@ import { BookingModule } from './booking/booking.module';
 import { ReviewModule } from './review/review.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { PaymentModule } from './payment/payment.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { PaymentModule } from './payment/payment.module';
     BookingModule,
     PaymentModule,
     ReviewModule,
+    NotificationModule,
   ],
   providers: [
     {

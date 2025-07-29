@@ -53,6 +53,9 @@ export const Patterns = {
   },
   NOTIFICATIONS: {
     SEND_EMAIL: 'notifications.sendEmail',
+    SEND_IN_APP: 'notifications.sendInApp',
+    FIND_ALL: 'notifications.findAll',
+    MARK_AS_READ: 'notifications.markAsRead',
   },
   PAYMENTS: {
     CREATE_INTENT: 'payments.createIntent',
