@@ -8,7 +8,7 @@ import { PaymentRepository } from './repositories/payment.repository';
 
 @Injectable()
 export class PaymentService implements OnModuleInit {
-  private readonly stripe: Stripe;
+  private stripe: Stripe;
   private stripeSecret: string;
   private webhookSecret: string;
 
@@ -16,12 +16,7 @@ export class PaymentService implements OnModuleInit {
     private readonly configService: ConfigService,
     @Inject(BOOKING_SERVICE) private readonly bookingClient: ClientProxy,
     private readonly paymentRepository: PaymentRepository,
-  ) {
-    this.stripe = new Stripe(this.stripeSecret, {
-      apiVersion:
-        this.configService.get<Stripe.LatestApiVersion>('STRIPE_API_VERSION'),
-    });
-  }
+  ) {}
 
   async createPaymentIntent(
     paymentIntentDto: CreatePaymentIntentDto,
@@ -87,5 +82,10 @@ export class PaymentService implements OnModuleInit {
     this.webhookSecret = this.configService.get<string>(
       'STRIPE_WEBHOOK_SECRET',
     ) as string;
+
+    this.stripe = new Stripe(this.stripeSecret, {
+      apiVersion:
+        this.configService.get<Stripe.LatestApiVersion>('STRIPE_API_VERSION'),
+    });
   }
 }
