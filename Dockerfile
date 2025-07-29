@@ -1,5 +1,5 @@
 # Base stage for installing dependencies
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 WORKDIR /app
 COPY package*.json ./
 
@@ -14,7 +14,7 @@ ARG SERVICE_NAME
 RUN npm run build ${SERVICE_NAME}
 
 # Production stage
-FROM node:18-alpine AS production
+FROM node:20-alpine AS production
 WORKDIR /app
 ARG SERVICE_NAME
 COPY --from=build /app/dist/apps/${SERVICE_NAME} /app/dist
